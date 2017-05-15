@@ -1,0 +1,192 @@
+- var subtitle = Vars.instanciaModel.displayName
+
+style.
+  .dl-show dt { padding:3px; }
+  .dl-show dd { padding:3px; }
+  .min-margin { margin-right: 5px; }
+
+include ../includes/show/subhead
+.row
+  .col-md-12
+    ol.breadcrumb(style="margin-bottom: 10px;")
+      li
+        a(href='/')
+          i.fa.fa-home
+      li
+        a(href='/#{Vars.pluralmodel}')
+          | #{Vars.titlemodel}
+.row
+  .col-md-12
+    include ../includes/show/btns_left
+    .pull-right
+      a.btn.btn-sm.btn-success.min-margin(href="#")
+        i.fa.fa-arrow-right
+        |  Transferir cuenta
+      a.btn.btn-sm.btn-warning.min-margin(href="#")
+        i.fa.fa-arrow-right
+        |  Crear nuevo propietario
+      a.btn.btn-sm.btn-danger.min-margin(href="#")
+        i.fa.fa-arrow-right
+        |  Deshabilitar cuenta
+
+br
+
+.row
+  .col-md-12
+    .box.box-info
+      .box-header
+        h3.box-title Detalles
+      .box-body
+        .callout.callout-success
+          h4 #{Vars.instanciaModel.displayName}
+          p #{Vars.instanciaModel.email}
+        .nav-tabs-custom
+          ul.nav.nav-tabs
+            li
+              a(href='#datos_cuenta', data-toggle='tab')
+                i.fa.fa-edit
+                |  Detalles de la cuenta
+            li.active
+              a(href='#datos_personales', data-toggle='tab')
+                i.fa.fa-user
+                |  Detalles del usuario
+            li
+              a(href='#datos_iglesia', data-toggle='tab')
+                i.fa.fa-home
+                |  Iglesia
+            li
+              a(href='#datos_modulos', data-toggle='tab')
+                i.fa.fa-list-ul
+                |  Módulos
+          .tab-content
+            #datos_cuenta.tab-pane.fade
+              - var form = formFor(account, {action: '/clients/updateAccount/' + account.id, method: 'PUT', id: "account_form", role:'form'})
+              != form.begin()
+              .form-group
+                != form.label("nombre", false, {class: "control-label"})
+                != form.input("nombre", {class: "form-control"})
+              .form-group
+                != form.label("apellido", false, {class: "control-label"})
+                != form.input("apellido", {class: "form-control",placeholder:'Calle, Número, Piso, Dpto.'})
+              .form-group
+                != form.label("telefonos", false, {class: "control-label"})
+                != form.input("telefonos", {class: "form-control"})
+              .form-group
+                != form.label("emails", false, {class: "control-label"})
+                != form.input("emails", {class: "form-control"})
+              .form-group
+                != form.label("pais", false, {class: "control-label"})
+                != form.input("pais", {class: "form-control"})
+              .form-group
+                != form.label("fecha de alta", false, {class: "control-label"})
+                != form.input("fechaAlta", {class: "form-control", disabled:'disabled'})
+              .form-actions
+                != form.submit('<i class="fa fa-check"></i> Guardar cambios', {class: 'btn btn-primary'})
+              != form.end()
+            #datos_personales.tab-pane.fade.in.active
+              - var form = formFor(item, {action: '/clients/updateUser/' + item.id, method: 'PUT', id: "User_form", role:'form'})
+              != form.begin()
+              .form-group
+                != form.label("Nombre a mostrar", false, {class: "control-label"})
+                != form.input("displayName", {class:'form-control', autofocus:'', required:''})
+              //- .form-group
+                != form.label("rol", false, {class: "control-label"})
+                != form.select("roles", false, {class:'form-control'})
+              .form-group.hide
+                != form.label("account_emails", false, {class: "control-label"})
+                != form.input("account_emails", {class:'form-control'})
+              legend Cuentas de correo
+              .callout.callout-info
+                p.text-primary
+                  b Ingresa aquí las cuentas de correo que usará este usuario para ingresar al sistema
+              table.table.table-responsive.user-emails
+                tbody
+              br
+
+              .form-group
+                .input-group
+                  input.form-control#newEmail(type="email",placeholder="Añadir una cuenta de correo")
+                  span.input-group-addon @
+                  select.form-control#domainEmail
+                    //- for email in ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'live.com']
+                    for email in ['gmail.com', 'yahoo.com']
+                      option(value="#{email}") #{email}
+                  .input-group-btn
+                    a.btn.btn-default.btn-add-email(disabled)
+                      i.fa.fa-plus
+                      |  Añadir
+                .control-label
+                  label#info-msg
+              .form-actions
+                != form.submit('<i class="fa fa-check"></i> Guardar cambios', {class: 'btn btn-primary'})
+              != form.end()
+            #datos_iglesia.tab-pane.fade
+              - var form = formFor(iglesia, {action: '/clients/updateChurch/' + iglesia.id, method: 'PUT', id: "iglesia_form", role:'form'})
+              != form.begin()
+              .form-group
+                != form.label("nombre de la iglesia", false, {class: "control-label"})
+                != form.input("nombre", {class: "form-control"})
+              .form-group
+                != form.label("dirección", false, {class: "control-label"})
+                != form.input("direccion", {class: "form-control",placeholder:'Calle, Número, Piso, Dpto.'})
+              .row
+                .col-md-6
+                  .form-group
+                    != form.label("provincia", false, {class: "control-label"})
+                    != form.select("provincia", false, {class: "form-control"})
+                .col-md-6
+                  .form-group
+                    != form.label("localidad", false, {class: "control-label"})
+                    != form.select("localidad", false, {class: "form-control"})
+              .form-group
+                != form.label("país", false, {class: "control-label"})
+                != form.input("pais", {class: "form-control"})
+              .form-group
+                != form.label("telefonos", false, {class: "control-label"})
+                != form.input("telefonos", {class: "form-control"})
+              .form-group
+                != form.label("emails", false, {class: "control-label"})
+                != form.input("emails", {class: "form-control"})
+              .form-group
+                != form.label("sitio_web", false, {class: "control-label"})
+                != form.input("sitio_web", {class: "form-control"})
+              .form-group
+                != form.label("día servicio semana", false, {class: "control-label"})
+                != form.select("dia_servicio_semana", false, {class: "form-control"})
+              .form-group
+                != form.label("día servicio principal", false, {class: "control-label"})
+                != form.select("dia_servicio_principal", false, {class: "form-control"})
+              .form-group
+                != form.label("nombre pastor", false, {class: "control-label"})
+                != form.input("nombre_pastor", {class: "form-control"})
+              .form-group
+                != form.label("información adicional", false, {class: "control-label"})
+                != form.textarea("info_adicional", {class: "form-control", rows:'4'})
+              .form-actions
+                != form.submit('<i class="fa fa-check"></i> Guardar cambios', {class: 'btn btn-primary'})
+              != form.end()
+            #datos_modulos.tab-pane.fade
+script
+  :coffeescript
+
+    @urlGetUserItem = '/clients/getUser/#{item.id}'
+
+!= javascriptIncludeTag('meg/utils/server','meg/utils/select','meg/utils/gui','jquery.chained.min', 'values/defaults','bootbox.min','forms/users','async')
+
+script
+  :coffeescript
+
+    #### IGLESIA TAB
+
+    model_id = '#Iglesia_'
+
+    defValues = 
+      'model_id' : model_id
+      'barrio' : ''
+      'localidad' : '!{iglesia.localidad}'
+      'provincia' : '!{iglesia.provincia}'
+      'provinciaSelector': model_id + 'provincia'
+    meg.gui.loadGeographicsSelects defValues, () ->
+
+    meg.gui.loadSelectFromValues defaults.dias_semanales, model_id + 'dia_servicio_semana', '!{iglesia.dia_servicio_semana}', false
+    meg.gui.loadSelectFromValues defaults.dias_semanales, model_id + 'dia_servicio_principal', '!{iglesia.dia_servicio_principal}', false

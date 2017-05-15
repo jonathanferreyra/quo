@@ -1,0 +1,142 @@
+script
+  :coffee
+
+    $('section.content-header').empty().append('''
+      <h1 class="head-title">
+        <i class="fa fa-trash-o"></i>  Eliminar | Dependencias del elemento <b id="item-name"></b>
+      </h1>
+      ''')
+
+.row.mb8
+  .col-md-12
+    a.btn.btn-sm.btn-primary(href="/#{Vars.pluralmodel}")
+      i.fa.fa-arrow-left
+      |  Volver a la lista
+
+.row
+  .col-md-12
+    .box.box-danger
+      .box-header
+        //- h1.box-title Eliminar | Dependencias del elemento
+          b#item-name
+      .box-body
+        .callout.callout-warning.loader.hide
+          h4 Verificando si este elemento posee referencias...
+            img.center-block(src="/images/loader.gif")
+          p Espera un instante por favor.
+        .callout.callout-warning.refs.hide
+          h4 AVISO: este item se encuentra usado en las partes del sistema listadas debajo
+          p
+            b Eliminarlo quitará la referencia existente en cada uno de los elementos listados.
+          p.text-danger Esto NO elimina los elementos a los que referencia
+        .callout.callout-danger.hard.hide
+          h4
+            | AVISO: este item no puede ser eliminado debido a que
+            | los elementos listados debajo dependen de su existencia
+          p
+            b Eliminarlo provocaría inconsistencia en los datos.
+        .callout.callout-info.hard-info.hide
+          h4 ¿Que puedo hacer?
+          p Prueba alguna de las siguientes opciones:
+          ul
+            li
+              p Eliminar los elementos listados debajo
+            li
+              p Ir a uno de los elementos de la lista, y, editarlo seleccionando otr#{Vars.letraGenero} #{Vars.singleTitleModel}
+        .actions.hide
+          a.btn.btn-danger.btn-lg.btn-del
+            i.fa.fa-trash-o
+            |  Eliminar
+        br
+        #references
+          #ref-items.panel-group
+            //- .panel.panel-danger
+            //-   .panel-heading
+            //-     h4.panel-title
+            //-       a(data-toggle='collapse', data-parent='#ref-items', href='#module1')
+            //-         | Module #1
+            //-   #module1.panel-collapse.collapse.in
+            //-     .panel-body
+            //-       | Anim pariatur
+
+!= javascriptIncludeTag('meg/utils/server','bootbox.min')
+
+script
+  :coffeescript(minify=true)
+
+    panel = '<div class="panel panel-danger">
+      <div class="panel-heading">
+        <h4 class="panel-title"><a data-toggle="collapse" data-parent="#ref-items" href="{name1}">{title}</a></h4>
+      </div>
+      <div id="{name2}" class="panel-collapse collapse in">
+        <div class="row">
+          <div class="col-md-12">
+            <table class="table table-condensed">
+              <tbody>{rows}</tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>'
+    countItems = 0
+    opts = {}
+    opts.beforeSend = () ->
+      $('.loader').removeClass('hide')
+    opts.success = (data, textStatus, jqXHR) ->
+      $('.loader').addClass('hide')
+      countItems = data.count
+
+      if data.type == 'hard'
+        $('.hard, .hard-info').removeClass('hide')
+      else if data.type == 'soft'
+        $('.actions, .refs').removeClass('hide')
+
+      if data.count > 0
+        panels = ''
+        for model in data.models
+          _panel = panel
+          _rows = ''
+          for item in model.items
+            item_text = ''
+            if typeof model.attrText == 'string'
+              item_text = item[model.attrText]
+            else if typeof model.attrText == 'object'
+              for k in model.attrText
+                item_text += item[k] + ' '
+            _rows += '<tr><td><a href="/{url}/{id}">{text}</a></td></tr>'
+              .replace('{text}', item_text)
+              .replace('{url}', model.url).replace('{id}', item.id)
+          console.log _rows
+
+          panels += _panel
+            .replace('{name1}', '#' + model.url)
+            .replace('{name2}', model.url)
+            .replace('{title}', model.pluralTitle + ' (' + model.items.length + ')')
+            .replace('{rows}', _rows)
+        $('#ref-items').append(panels)
+
+    meg.server.ajax '/#{Vars.pluralmodel}/getItem/id', {}, (err, item) ->
+      $('#item-name').text(' ' + item[item.__attrText])
+      @item = item
+      meg.server.ajax '/#{Vars.pluralmodel}/getDependences/' + item.id, opts, () ->
+
+      $('.btn-del').on 'click', ->
+        bootbox.dialog
+          message: "Procederás a eliminar el elemento: <b>" + item.nombre + "</b> y quitar sus <b>" + countItems + "</b> referencias.",
+          title: "Eliminar",
+          buttons:
+            success:
+              label: "Cancelar",
+              className: "btn-default",
+              callback: () ->
+                bootbox.hideAll()
+            danger:
+              label: "Confirmar",
+              className: "btn-danger btn-lg",
+              callback: () ->
+                a = $('<a>',{
+                  'href':"/" + '#{Vars.pluralmodel}' + "/" + @item.id
+                  'data-remote':"true"
+                  'data-method':"delete"
+                  'data-jsonp':"(function (u) {location.href = u;})"
+                }).appendTo('#ref-items').click()

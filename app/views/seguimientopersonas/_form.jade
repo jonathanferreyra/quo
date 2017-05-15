@@ -1,0 +1,10 @@
+include ../includes/forms/errorMessages 
+.form-group
+  != form.label("fecha", false, {class: "control-label"})
+  != form.input("fecha", {class: "form-control"})
+.form-group
+  != form.label("comentarios", false, {class: "control-label"})
+  != form.input("comentarios", {class: "form-control"})
+.form-group
+  != form.label("estado", false, {class: "control-label"})
+  != form.select("estado", false, {class: "form-control"})

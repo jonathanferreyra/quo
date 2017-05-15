@@ -1,0 +1,71 @@
+- var subtitle = Vars.instanciaModel.nombre
+include ../includes/show/configs_actions
+
+.row
+  .col-md-12
+    .box.box-info
+      .box-header
+        h4.box-title Personas incluídas en esta clasificación
+      .box-body
+        label
+          b Características
+        pre #{Vars.instanciaModel.caracteristicas}
+        hr
+        .row
+          .col-md-12
+            .col-md-8(style="padding: 0px 0px")
+              include ../includes/index/table
+            .col-md-4
+              legend Por sexo
+              #gp-sexo
+
+!= javascriptIncludeTag('meg/utils/server', 'taffy')
+include ../includes/import/morris
+
+script
+  :coffeescript(minify=true)
+
+    # table
+    columns = [
+      name: "ide"
+      showname: "#"
+    ,
+      name: "nombre"
+      showname: "Apellido y Nombre"
+      params: [ "id","nombre","apellido" ]
+      parser: (ide, nom, ap) ->
+        value = ''
+        if ap.length > 0
+          value = ap
+        if nom.length > 0
+          value = ap + ', ' + nom
+        '<a href="/miembros/' + ide + '">' + value + '</a>'
+    ]
+    _items = null
+    fields = 'id,ide,nombre,apellido,sexo'
+    url = '/clasificacionsocials/getMembers/#{Vars.instanciaModel.id}?f=' + fields
+    meg.server.ajax url, {}, (err, res) ->
+      _items = TAFFY(res)
+      meg.table.create "#table",columns, res, () ->
+        $('.loader').hide()
+        if res.length > 0
+          # graphic
+          gp = Morris.Donut({
+            element: 'gp-sexo',
+            colors:['#E25AA1','#3980b5']
+            data: [
+              {
+                label: "Femenino",
+                value: _items().filter({sexo:'f'}).get().length
+              },{
+                label: "Masculino",
+                value: _items().filter({sexo:'m'}).get().length
+              }
+            ]
+          })
+          $(window).on 'resize', ->
+            gp.redraw()
+        else
+          $('#gp-sexo').append(
+            '<div class="alert alert-info">No hay datos para mostrar</div>')
+

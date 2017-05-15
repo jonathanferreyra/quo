@@ -1,0 +1,126 @@
+doctype html
+html(lang="es-AR")
+  head
+    title= title + ' | QUO'
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(rel='stylesheet', href='/vendor/AdminLTE/1.2/css/bootstrap.min.all.css')
+    link(rel='stylesheet', href='/vendor/AdminLTE/1.2/css/font-awesome.min.all.css')
+    link(rel='stylesheet', href='/vendor/AdminLTE/1.2/css/AdminLTE.all.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/base.css')
+    != csrfMetaTag()
+    != contentFor('css-up')
+    != javascriptIncludeTag('jquery-2.0.3.min')
+    script(src='/vendor/AdminLTE/1.2/js/jquery-ui-1.10.3.min.js')
+    script(src='/vendor/AdminLTE/1.2/js/bootstrap.min.js')
+    script(src='/vendor/AdminLTE/1.2/js/AdminLTE/app.js')
+    script(src='/javascripts/rails-2.0.3.min.js')
+    script(src='/javascripts/lodash.min.js')
+    != contentFor('js-up')
+
+  body.skin-black.fixed
+    include navheader
+    .wrapper.row-offcanvas.row-offcanvas-left
+      aside.left-side.sidebar-offcanvas
+        include sidebar
+      aside.right-side
+        section.content-header(style='margin-bottom:10px')
+        section.content(style='padding-top:0px')
+          include flashdiv
+          != body
+
+  != contentFor('js')
+  != contentFor('css')
+  if isDemo
+    if settings.env == 'production'
+      script.
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-56258309-1', 'auto');
+        ga('send', 'pageview');
+
+  if is_desktop
+    div.modal.fade#md-shortcuts
+      div.modal-dialog
+        div.modal-content
+          div.modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+            h3.modal-title
+              i.fa.fa-keyboard-o.fa-1x
+              |  Atajos de teclado
+          div.modal-body
+            table.table.table-bordered#tb-shortcuts
+              thead
+                tr
+                  th.text-center Combinación de teclas
+                  th.text-center Acción
+              tbody
+          div.modal-footer
+            button.btn.btn-success(type='button', data-dismiss='modal') Aceptar
+
+    script(src='/javascripts/keymaster.min.js')
+    script
+      :coffeescript
+
+        shortcuts =
+          'alt + n':
+            'text':'Nuevo'
+            'fn':() ->
+              if $('#btnNew, #actnNew').length > 0
+                window.location.href = $('#btnNew, #actnNew').attr('href')
+          'alt + g':
+            'text':'Crear'
+            'fn':() ->
+              if $('#btcreate').length > 0
+                $('#btcreate').trigger('click')
+          'alt + c':
+            'text':'Crear y continuar'
+            'fn':() ->
+              if $('#btcontinue').length > 0
+                $('#btcontinue').trigger('click')
+          'alt + x':
+            'text':'Cancelar'
+            'fn':() ->
+              if $('#btcancel').length > 0
+                window.location.href = $('#btcancel').attr('href')
+          'alt + l':
+            'text':'Volver a la lista'
+            'fn':() ->
+              if $('#btBackToList').length > 0
+                window.location.href = $('#btBackToList').attr('href')
+          'alt + m':
+            'text':'Editar'
+            'fn':() ->
+              if $('#actnEdit').length > 0
+                window.location.href = $('#actnEdit').attr('href')
+          'alt + d':
+            'text':'Eliminar'
+            'fn':() ->
+              if $('.item-del').length > 0
+                $('.item-del').click()
+
+        $(document).on 'ready', ->
+
+          for comb, data of shortcuts
+            key(comb, data.fn)
+
+          $('#bt-shortcuts').on 'click', ->
+            $('#md-shortcuts').modal('show')
+
+          $('#md-shortcuts').on 'show.bs.modal', ->
+            trs = ''
+            for comb, data of shortcuts
+              trs += '<tr><td class="text-center"><b>' + comb + '</b></td><td class="text-center">' + data.text + '</td></tr>'
+            $('table#tb-shortcuts > tbody').empty().append(trs)
+
+        path = window.location.pathname.split('/')[1]
+        li = $("a[href='/" + path + "']").parent().addClass( "active" )
+        if path.length > 0
+          menu = $(li).parent().parent()
+          $(menu).addClass('active')
+          $(menu).find(".treeview-menu").slideDown()
+

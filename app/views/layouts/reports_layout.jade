@@ -1,0 +1,120 @@
+doctype html
+html(lang="es-AR")
+  head
+    title= title + ' - Reportes | QUO'
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(rel='stylesheet', href='/vendor/AdminLTE/1.2/css/bootstrap.min.all.css')
+    link(rel='stylesheet', href='/vendor/AdminLTE/1.2/css/font-awesome.min.all.css')
+    link(rel='stylesheet', href='/vendor/AdminLTE/1.2/css/AdminLTE.all.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/base.css')
+    != csrfMetaTag()
+    != contentFor('css-up')
+    script(src='/javascripts/jquery-2.0.3.min.js')
+    script(src='/vendor/AdminLTE/1.2/js/jquery-ui-1.10.3.min.js')
+    script(src='/vendor/AdminLTE/1.2/js/bootstrap.min.js')
+    script(src='/vendor/AdminLTE/1.2/js/AdminLTE/app.js')
+    script(src='/javascripts/rails-2.0.3.min.js')
+    script(src='/javascripts/lodash.min.js')
+    script(src='/javascripts/date.js')
+    != contentFor('js-up')
+
+    style.
+      body.fixed .wrapper {margin-top: 0px;}
+      .main-title {margin-top: 0px}
+      .checkbox {padding-left: 25px;}
+      .print-params {
+        margin-top: 50px;
+        margin-bottom: 0px;
+      }
+      .print-params .box-body{
+        padding-top: 0px;
+        padding-left: 5px;
+        padding-bottom: 5px;
+      }
+      .print-params .box-header{
+        padding-bottom: 0px;
+      }
+      .main-header hr {margin-top: 5px;}
+      legend {margin-top: 5px;}
+
+  body.skin-black.fixed
+    include ../includes/navheader
+    .wrapper.row-offcanvas.row-offcanvas-left
+      aside.left-side.sidebar-offcanvas
+        include ../includes/sidebar
+      // Right side column. Contains the navbar and content of the page
+      aside.right-side
+        //- section.content-header
+        //-   h1
+        //-     | Reporte de un miembro
+        //-     small
+        //-   ol.breadcrumb
+        //-     li
+        //-       a(href='/')
+        //-         i.fa.fa-house
+        //-         | Inicio
+        //-     li
+        //-       a(href='#') Reportes
+        //-     li.active Miembro
+
+        .pad.margin.no-print
+          .box.box-primary.print-params
+              .box-header
+                h1.box-title
+                  i.fa.fa-cog
+                  |  Parámetros del reporte | #{reportName}
+              .box-body
+                .row
+                  .col-md-12
+                    .col-md-6
+                      .checkbox
+                        label
+                          input(type='checkbox',name='main-header')
+                          | Cabecera
+                      .checkbox
+                        label
+                          input(type='checkbox',name='current-date')
+                          | Fecha
+                    .col-md-6.custom-params
+                hr(style='margin-bottom: 5px;margin-top: 5px;')
+                .row
+                  .col-xs-12
+                    button.btn.btn-primary(onclick='window.print();')
+                      i.fa.fa-print
+                      |  Imprimir
+                    span=' | '
+                    button.btn.btn-default(onclick='history.back();')
+                      i.fa.fa-arrow-left
+                      |  Volver
+                    a.btn.btn-default(href='#{itemUrl}', style='margin-left:5px;')
+                      i.fa.fa-search
+                      |  Ver detalles del elemento
+
+        section.content.invoice
+          != body
+
+  != contentFor('js')
+  != contentFor('css')
+
+  script
+    :coffee
+
+      $('.current-date').text(new Date().toString('dd/MM/yyyy'))
+
+      if typeof @custom_params != 'undefined'
+        tmlp = '<div class="checkbox"><label><input type="checkbox" name="{n}" checked="checked">{t}</label></div>'
+        checks = ''
+        for k, v of @custom_params
+          checks += tmlp.replace('{n}',k).replace('{t}',v)
+        $('.custom-params').append(checks)
+
+      $('.checkbox > label > input').attr('checked', true)
+      $('.checkbox > label > input').on 'change', ->
+        _id = $(@).attr('name')
+        obj_id = $('.' + _id)
+        if obj_id.is(':visible')
+          obj_id.hide()
+        else
+          obj_id.show()

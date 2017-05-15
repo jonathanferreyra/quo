@@ -1,0 +1,7 @@
+es:
+  login:
+    index:'Ingresar'
+    email_not_valid:'Email no válido'
+  members:
+    title:'Miembro'
+    pluralTitle:'Miembros'

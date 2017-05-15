@@ -1,0 +1,17 @@
+style.
+  h1 {
+    margin-top: 0px;
+  }
+
+script
+  :coffee
+
+    $('section.content-header').empty().append('''
+      <h1 class="head-title">#{subtitle}
+        <small>#{Vars.singleTitleModel} | Configuraciones del sistema</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-home"></i></a></li>
+        <li><a href="#"> Configuraciones</a></li>
+        <li><a href="/#{Vars.pluralmodel}"> #{Vars.titlemodel}</a></li>
+      </ol>''')

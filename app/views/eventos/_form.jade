@@ -1,0 +1,20 @@
+include ../includes/forms/errorMessages
+
+.form-group
+  != form.label("fecha", false, {class: "control-label"})
+  .input-group
+    span.input-group-addon
+      i.glyphicon.glyphicon-calendar
+    != form.input("fecha", {class: "form-control", type:'date'})
+.form-group
+  != form.label("nombre", false, {class: "control-label"})
+  .required-field-block
+    != form.input("nombre", {class: "form-control", required:'', placeholder:'Nombre del evento o actividad especial'})
+    .required-icon
+      .text *
+.form-group
+  != form.label("descripción", false, {class: "control-label"})
+  != form.textarea("descripcion", {class: "form-control", rows:'4'})
+
+include ../includes/import/pickadate_base
+include ../includes/import/pickadate_date

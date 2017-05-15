@@ -1,0 +1,12 @@
+link(href="/vendor/humanejs/libnotify.css", rel='stylesheet')
+script(src='/vendor/humanejs/humane.min.js')
+
+script
+  :coffeescript(minify=true)
+
+    $(document).on 'ready', ->
+
+      humane.baseCls = 'humane-libnotify'
+      humane.ok = humane.spawn({addnCls: 'humane-libnotify-success'})
+      humane.info = humane.spawn({addnCls: 'humane-libnotify-info'})
+      humane.error = humane.spawn({addnCls: 'humane-libnotify-error', timeout:3500})

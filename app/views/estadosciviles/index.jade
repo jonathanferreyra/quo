@@ -1,0 +1,26 @@
+include ../includes/index/configs_metahead
+
+//- include ../includes/index/configs_graphic_index
+
+script
+  :coffeescript(minify=true)
+
+    @mainItemsUrl = '/!{Vars.pluralmodel}.json'
+    @chartDataKey = 'estado_civil'
+    @setActions = (id)=>
+      editAct =   {title:"Editar",       url:"/"+ @pluralModel + "/"+id+"/edit", class:"",           icon:"fa fa-edit",   extra:'data-rel="tooltip"'}
+      deleteAct = {title:"Eliminar",     url:"#",         class:"item-del",   icon:"fa fa-trash-o",  extra:'data-rel="tooltip" item='+id};
+      htmlActions = ''
+      for item in [editAct,deleteAct]
+        htmlActions += '<a class="btn '+item.class+'" href="'+item.url+'" title="'+item.title+'" '+item.extra+'><i class="glyphicon glyphicon-color '+item.icon+'"></i></a>'
+      '<div class="btn-group">' + htmlActions + '</div>'
+    @listaordenada = () ->
+      [
+        name: "nombre"
+        showname: "Nombre"
+      ,
+        name: "accciones"
+        parser: @setActions
+        params: [ "id" ]
+        showname: "Acciones"
+      ]

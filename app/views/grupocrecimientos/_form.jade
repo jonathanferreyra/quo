@@ -1,0 +1,74 @@
+include ../includes/forms/errorMessages
+style.
+  .mid {padding-left:0px;padding-right:0px;}
+
+.form-group
+  != form.label("Nro (debe ser único)")
+  .required-field-block
+    != form.input("nro" ,{"type":"number","required":"", class:"form-control", autofocus:'', min:1})
+    .required-icon
+      .text *
+.form-group
+  != form.label("Líder/encargado")
+  .required-field-block
+    != form.input("timonel" ,{"type":"text","required":"", class:"form-control"})
+    .required-icon
+      .text *
+.form-group
+  != form.label("Colaborador/ayudante")
+  != form.input("timoteo" ,{"type":"text", class:"form-control"})
+.form-group
+  != form.label("anfitrión")
+  .required-field-block
+    != form.input("anfitrion" ,{"type":"text","required":"", class:"form-control"})
+    .required-icon
+      .text *
+.form-group
+  != form.label("dirección")
+  != form.input("direccion" ,{"type":"text", class:"form-control", placeholder:'Calle, Número, Piso, Dpto.'})
+.form-group
+  != form.label("horario")
+  .input-group
+    != form.input("horario" ,{class:"form-control clockpicker", required:''})
+    span.input-group-addon
+      i.glyphicon.glyphicon-time
+.form-group
+  != form.label("día de la semana")
+  != form.select("dia_de_la_semana", false, {class: "form-control"})
+.row
+  .col-md-12.mid
+    .col-md-4
+      .form-group
+        label.control-label(for="provincia") Provincia
+        select.form-control#provincia(name="provincia")
+    .col-md-4
+      .form-group
+        != form.label("localidad", false, {class: "control-label"})
+        != form.select("localidad", false, {class: "form-control"})
+    .col-md-4
+      .form-group
+        != form.label("barrio", false, {class: "control-label"})
+        .input-group
+          != form.select("barrio", false, {class: "form-control"})
+          .input-group-btn
+            button.btn.btn-success#btn-barrio(type="button", title="Agregar nuevo barrio")
+              i.fa.fa-plus
+
+!= javascriptIncludeTag('meg/utils/server','meg/utils/select','meg/utils/gui','values/defaults', 'async')
+include ../includes/import/clockpicker
+
+script
+  :coffeescript(minify=true)
+
+    model_id = '#Grupocrecimiento_'
+
+    meg.gui.loadSelectFromValues defaults.dias_semanales, model_id + 'dia_de_la_semana', '!{Vars.instanciaModel.dia_de_la_semana}', false
+
+    defValues = 
+      'model_id' : model_id
+      'barrio' : '!{Vars.instanciaModel.barrio}'
+      'localidad' : '!{Vars.instanciaModel.localidad}'
+      'provincia' : ''
+    meg.gui.loadGeographicsSelects defValues, () ->
+
+include ../includes/forms/createBarrioByRef

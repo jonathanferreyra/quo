@@ -1,0 +1,169 @@
+- var subtitle = '#' + grupo.nro + ' - ' + Vars.instanciaModel.fecha
+- var item = Vars.instanciaModel
+include ../includes/show/actions
+
+style.
+  pre {
+    font-size:16px
+  }
+  dl > dt { font-size: 16px }
+.row
+  .col-md-6
+    .box.box-info
+      .box-header.npb
+        h4.box-title Detalle de registro de asistencia
+      .box-body
+        if item.reunion_suspendida
+          label.label.label-danger(style='font-size:22px') La reunión ha sido suspendida
+          .well(style='margin-top: 15px;')
+            p
+              b Motivo:
+            p #{item.motivo_reunion_suspendida}
+
+          hr
+        dl.dl-horizontal
+          dt Fecha
+          dd #{item.fecha}
+          dt Total asistencias
+          dd #{item.total_asistencias}
+          dt Hora inicio
+          dd #{item.hora_inicio}
+          dt Hora cierre
+          dd #{item.hora_cierre}
+  .col-md-6
+    .box.box-success
+      .box-header.npb
+        h4.box-title Datos del grupo
+      .box-body.npt
+        dl.dl-horizontal
+          dt(style='font-size:24px') Nro
+          dd.text-green(style='font-size:24px')
+            b #{grupo.nro}
+          dt Líder/encargado
+          dd #{grupo.timonel}
+          dt Colaborador/ayudante
+          dd #{grupo.timoteo}
+          dt Anfitrion
+          dd #{grupo.anfitrion}
+          dt Dirección
+          dd #{grupo.direccion}
+        a(href="/grupocrecimientos/#{grupo.id}") Ver detalles del grupo
+
+.row
+  .col-md-6
+    .box.box-danger
+      .box-header
+        h3.box-title Tema compartido
+      .box-body
+        if item.tema_compartido
+          pre #{item.tema_compartido}
+        else
+          pre No especificado.
+  .col-md-6
+    .box.box-warning
+      .box-header
+        h3.box-title Observaciones
+      .box-body
+        if item.observaciones
+          pre #{item.observaciones}
+        else
+          pre Sin observaciones.
+
+.row
+  .col-md-12
+    .box.box-info
+      .box-header
+        h3.box-title Asistencias (#{item.total_asistencias})
+      .box-body
+        table.table
+          tbody
+            if item.anfitriones.length > 0
+              for actual in item.anfitriones
+                tr
+                  td #{actual}
+                  td
+                    span.label.label-info Anfitrion
+            if item.miembros_de_equipo.length > 0
+              for actual in item.miembros_de_equipo
+                tr
+                  td #{actual}
+                  td
+                    span.label.label-default Miembro de equipo
+            if item.asistentes_frecuentes.length > 0
+              for actual in item.asistentes_frecuentes
+                tr
+                  td #{actual}
+                  td
+                    span.label.label-primary Asistente frecuente
+            if item.personas_por_primera_vez.length > 0
+              for actual in item.personas_por_primera_vez
+                tr
+                  td #{actual}
+                  td
+                    span.label.label-success Persona por 1era vez
+            if item.nuevos_iglesia.length > 0
+              for actual in item.nuevos_iglesia
+                tr
+                  td #{actual}
+                  td
+                    span.label.label-danger Nuevos de esta iglesia
+            if item.otras_iglesias.length > 0
+              for actual in item.otras_iglesias
+                tr
+                  td #{actual}
+                  td
+                    span.label.label-warning De otra iglesia
+            tr
+              td Niños menores de 10 años
+              td #{item.ninios_menores}
+
+.row
+  .col-md-6
+    .box.box-info
+      .box-header
+        h4.box-title Actividades
+      .box-body
+        dl
+          dt Dirigió el devocional
+          dd #{item.dirigio_el_devocional}
+          hr
+          dt Oró por las necesidades
+          dd #{item.oro_por_las_necesidades}
+          hr
+          dt Recogió la ofrenda
+          dd #{item.recogio_la_ofrenda}
+          hr
+          dt Oró por la silla vacia
+          dd #{item.oro_por_la_silla_vacia}
+  .col-md-6
+    .box.box-success
+      .box-header
+        h4.box-title Ofrendas
+      .box-body
+        table.table
+          body
+            tr
+            td
+              b Ofrenda habitual
+            td
+              span.green $ #{item.ofrenda_habitual}
+            tr
+            td
+              b Ofrenda misionera
+            td
+              span.green $ #{item.ofrenda_misionera}
+            tr
+            td
+              b Otras ofrendas
+            td
+              span.green $ #{item.otras_ofrendas}
+            tr
+            td
+              b Diezmos
+            td
+              span.green $ #{item.diezmos}
+            tr
+            td
+              b Nro de sobres
+            td
+              span.green $ #{item.nro_sobres}

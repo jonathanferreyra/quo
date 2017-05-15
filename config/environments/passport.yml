@@ -1,0 +1,12 @@
+development:
+  baseURL: 'http://localhost:3000/'
+  redirURL: '/'
+  local: yes
+test:
+  baseURL: 'http://localhost:3000/'
+  redirURL: '/'
+  local: yes
+production:
+  baseURL: 'http://0.0.0.0:3000/'
+  redirURL: '/'
+  local: yes

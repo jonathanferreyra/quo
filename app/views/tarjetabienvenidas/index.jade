@@ -1,0 +1,131 @@
+include ../includes/index/subhead
+include ../includes/index/filters
+
+.box.box-success
+  .box-header(style="padding-bottom:0px;")
+    .pull-right.box-tools
+      button.btn.btn-primary.btn-xs.pull-right(data-widget='collapse', data-toggle='tooltip', title='', style='margin-left: 5px;', data-original-title='Minimizar')
+        i.fa.fa-minus
+      if !isDemo
+        button.btn.btn-default.btn-sm.pull-right.btn-export-table(type='button', data-toggle='tooltip', data-original-title='Exportar', style='margin-left: 5px;')
+          i.fa.fa-download
+      a.btn.btn-default.btn-sm.pull-right(data-toggle='tooltip', data-original-title='Ver estadísticas', href='/tarjetabienvenidas/stats/view')
+        i.fa.fa-bar-chart-o  Estadísticas
+
+  .box-body(style="padding-top: 0px;")
+    hr(style="margin-top:3px;margin-bottom:8px;")
+    .row
+      .col-md-12
+        .col-md-2(style="padding-top:5px")
+          span.label.label-primary(style="font-size:12px") Último seguimiento
+        .col-md-2
+          select.form-control#sel-flt-op
+            option(value="may") mayor a
+            option(value="men") menor a
+        .col-md-1
+          select.form-control#sel-flt-value
+            for i in [1,2,3,4,5,6,7,8,9,10]
+              option(value="#{i}") #{i}
+        .col-md-2
+          select.form-control#sel-flt-periodo
+            option(value="d") días
+            option(value="s") semanas
+            option(value="m") meses
+        .col-md-2
+          button.btn.btn-default.btn-sm#btn-filtrar-ult-seg Filtrar
+          i.fa.fa-spin.fa-spinner#loader-filter(style="margin-left:5px;display:none")
+
+    hr(style="margin-top:5px;margin-bottom:5px;")
+    include ../includes/index/table
+    include ../includes/index/coffees
+
+
+style.
+  h3 { margin-top :0px;}
+  .btn {padding: 6px 6px;}
+  .tname { font-size: 1.4em; font-weight: bold;}
+  .tdet {font-size:14px; color:gray;}
+hr
+
+!= javascriptIncludeTag('doT.min','meg/meg-filter','values/tarjetabienvenidas','values/defaults','async','indexs/tarjetabienvenidas', 'date')
+script(src="/vendor/parallel/parallel.js")
+
+include ../includes/index/md_export
+//- .row
+//-   .col-md-12
+//-     .col-md-8.filters-list
+//-       for step in steps
+//-         .row.filter(id="#{step}")
+//-           .col-md-4.field
+//-             .checkbox
+//-               input(id="#{step}",name='#{step}', type='checkbox')
+//-               label(for='#{step}') Fieldname #{step}
+//-           .col-md-4.operator
+//-             select.form-control(id="op_#{step}")
+//-               option(value="=") igual
+//-               option(value="!") no igual
+//-               option(value="!*") ninguno
+//-               option(value="*") todos
+//-           .col-md-4.values
+//-             select.form-control(id="val_#{step}")
+//-               option
+//-               option(value="") AlgoAlgoAlgo
+//-     .col-md-4.add-filter
+//-       form.form-inline
+//-         label(for="add_filter_select") Añadir filtro
+//-         select.form-control#add_filter_select
+//-           option
+//-           option(value="") AlgoAlgoAlgo
+//-           option(value="") AlgoAlgo
+//-           option(value="") Algo
+//- .row.filter
+//-   .col-md-4.field
+//-     .checkbox
+//-       input#fieldname(name='fieldname', type='checkbox')
+//-       label(for='fieldname') Fieldname
+//-   .col-md-4.operator
+//-     select.form-control#op_fieldname
+//-       option
+//-       option(value="") AlgoAlgoAlgo
+//-   .col-md-4.values
+//-     .col-xs-6
+//-       input.form-control(type='text')
+//-     .col-xs-6
+//-       input.form-control(type='text')
+//- .row.filter
+//-   .col-md-4.field
+//-     .checkbox
+//-       input#fieldname(name='fieldname', type='checkbox')
+//-       label(for='fieldname') Fieldname
+//-   .col-md-4.operator
+//-     select.form-control#op_fieldname
+//-       option
+//-       option(value="") AlgoAlgoAlgo
+//-   .col-md-4.values
+//-     .col-xs-4
+//-       input.form-control(type='text')
+
+//- .row.col-md-12
+  .row
+    .col-md-10
+      h3
+        b #1 Juan, Perez
+    .col-md-2
+      .pull-right
+        a.btn
+          i.fa.fa-plus
+        a.btn
+          i.fa.fa-plus
+        a.btn
+          i.fa.fa-plus
+  .row
+    .col-md-6
+      p Lopez y Planez 465 | 03758 - 424578
+    .col-md-6
+      p.text-right 20-05-2014 | Campaña en el terreno
+    //- .col-md-4
+    //-   dl.dl-horizontal
+    //-     dt Fecha
+    //-     dd 20/02/2014
+    //-     dt Evento
+    //-     dd Reunion 15-02-2014

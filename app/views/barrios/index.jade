@@ -1,0 +1,63 @@
+script
+  :coffee
+
+    $('section.content-header').empty().append('''
+    <h1 class="head-title">#{Vars.titlemodel}
+      <a id="btnNew" href="#{Vars.pluralmodel}/new" style="margin-left:5px" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Nuevo</a>
+    </h1>
+    <ol class="breadcrumb">
+      <li><a href="/"><i class="fa fa-home"></i></a></li>
+      <li><a href="#"> #{Vars.subsection}</a></li>
+      <li><a href="/paises"> Paises</a></li>
+      <li><a href="/provincias"> Provincias</a></li>
+      <li><a href="/localidades"> Localidades</a></li>
+      <li class="active">#{Vars.titlemodel}</li>
+    </ol>''')
+
+include ../includes/index/filters
+include ../includes/index/container_table
+
+!= javascriptIncludeTag('async','meg/meg-filter')
+
+script
+  :coffeescript(minify=true)
+
+    @fnFormatField =
+      localidad:(value) ->
+        meg.data.references['idx']['localidad'][value]['name']
+      provincia:(value) ->
+        meg.data.references['idx']['provincia'][value]['name']
+
+    @listaordenada = () ->
+      [
+        name: "name"
+        showname: "Nombre"
+        parser: @showDetails
+        params: [ "id","name" ]
+      ,
+        name: "localidad_text"
+        showname: "Localidad"
+        params: [ "localidad", "localidad_text" ]
+        parser: (id, text) ->
+          '<a href="/localidades/' + id + '">' + text + '</a>'
+      ,
+        name: "accciones"
+        showname: "Acciones"
+        params: [ "id" ]
+        parser: @setActions
+      ]
+
+    @references = {}
+    @referencesUrls = [
+      {url:'localidades.json?f=id,name&force=true', name:'localidad', attr:'name'}
+      {url:'provincias.json?f=id,name', name:'provincia', attr:'name'}
+    ]
+
+    @filter_fields_ajax = {
+      'localidad':{t:'Localidad',u:'/localidades.json?f=id,name'}
+      'provincia':{t:'Provincia',u:'/provincias.json?f=id,name'}
+    }
+    @load_filter_fields_ajax()
+    # init filter plugin
+    @filter_fields = _.sortBy(@filter_fields, 'text')
+    $("#filters").MEGFilter(fields:@filter_fields)

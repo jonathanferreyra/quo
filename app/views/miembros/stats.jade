@@ -1,0 +1,496 @@
+script
+  :coffee
+
+    $('section.content-header').empty().append('''
+      <h1 class="head-title">
+        <i class="fa fa-bar-chart-o"></i>  Estadísticas de miembros
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-home"></i></a></li>
+        <li><a href="#"> #{Vars.subsection}</a></li>
+        <li><a href="/#{Vars.pluralmodel}"> #{Vars.titlemodel}</a></li>
+        <li class="active"> Estadísticas</li>
+      </ol>''')
+
+style.
+  .center-block {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .text-purple {color:#E554C2}
+  .title-status {font:bold;font-size:24px}
+  .box {border-top: 3px solid #c1c1c1;}
+  .count-items { font-size:200%;font:bold}
+  .min-margin {margin-left:5px;}
+
+mixin toolbuttons(name)
+  .box-tools.pull-right(data-toggle='tooltip', title='')
+    .btn-group(data-toggle='btn-toggle')
+      button.btn.btn-default.btn-xs.switch-view.active(type='button',name=name)
+        i.fa.fa-bar-chart-o.text-red  Gráfico
+      button.btn.btn-default.btn-xs.switch-view(type='button',name=name)
+        i.fa.fa-table.text-primary  Datos
+    button.btn.btn-primary.btn-xs(data-widget='collapse', data-toggle='tooltip', title='', style='margin-left: 5px;', data-original-title='Minimizar')
+      i.fa.fa-minus
+
+.row
+  .col-md-12(style='margin-bottom: 10px')
+    a.btn.btn-sm.btn-primary.min-margin(href="/#{Vars.pluralmodel}")
+      i.fa.fa-arrow-left
+      |  Volver a la lista
+    button.btn.btn-default.min-margin#show-filter(type='button', data-toggle="button")
+      i.fa.fa-filter
+      |  Filtrar miembros
+
+//- FILTER START
+
+!= stylesheetLinkTag('meg-filter')
+
+.row#filter-zone(style='display:none')
+  .col-md-12
+    .box
+      .box-header
+        h3.box-title
+          i.fa.fa-filter
+          |  Filtrar miembros
+        div.pull-right.box-tools
+          button.btn.btn-primary.btn-xs.pull-right(data-widget='collapse', data-toggle='tooltip', title='', style='margin-right: 5px;', data-original-title='Colapsar')
+            i.fa.fa-minus
+
+      .box-body.panel-filters.npt
+        .row
+          .col-md-12
+            .callout.callout-info
+              p Actualmente las estadísticas que se están mostrando sobre todos los miembros
+              p Aquí puedes confeccionar un filtro personalizado para ver estadísticas sobre parámetros de interés
+            #filters
+        .row
+          .col-md-12
+            button.btn.btn-default.btn-sm.btn-filter(type='button',data-loading-text="Filtrando...")
+              i.fa.fa-check
+              |  Filtrar
+            a.btn.btn-default.btn-sm.btn-reload
+              i.fa.fa-refresh
+              |  Recargar todo
+
+!= javascriptIncludeTag('meg/meg-filter','values/miembros', 'meg/meg-filter-utils', 'indexs/miembros_filters')
+
+script
+  :coffeescript
+
+    $('#show-filter').on 'click', ->
+      if not $('#show-filter').hasClass('active')
+        $('#filter-zone').show()
+      else
+        $('#filter-zone').hide()
+
+
+//- FILTER END
+
+.row.loader
+  p.text-center.title-status
+  img.center-block(src="/images/loader.gif")
+
+.stats-zone.hide
+  .row
+    .col-md-12.npr
+      .col-md-3.npl
+        .box
+          .box-header.nmb
+            h3.box-title Por sexo
+          .box-body.npb
+            p.label.label-primary.count-items.center-block
+            #chart-sexo(style='height:180px')
+
+            table.table
+              tbody
+                tr
+                  th.npr
+                    i.fa.fa-male.fa-2x
+                  td.npl
+                    p.count-male(style='font-size: 22px;')
+                  th.npr
+                    i.fa.fa-female.fa-2x
+                  td.npl
+                    p.count-female(style='font-size: 22px;')
+
+      .col-md-9.npl
+        .box
+          .box-header.nmb
+            h3.box-title
+          .box-body.npb
+            .row
+              .col-md-6.col-sm-6.col-xs-6.text-center
+                input.knob.bautizado_por_inmersion(type='text', value='0', data-fgcolor='#3c8dbc')
+                .knob-label Bautizados por inmersion
+              .col-md-6.col-sm-6.col-xs-6.text-center
+                input.knob.bautizado_en_esta_iglesia(type='text', value='0', data-fgcolor='#00a65a')
+                .knob-label Bautizados en esta iglesia
+              //- .col-md-3.col-sm-6.col-xs-6.text-center
+              //-   input.knob.recibio_bautismo_es(type='text', value='0', data-fgcolor='#00c0ef')
+              //-   .knob-label Recibieron bautismo E.S.
+            .row(style='margin-top:20px;')
+              .col-md-6.col-sm-6.col-xs-6.text-center
+                input.knob.sin_bautizar(type='text', value='0', data-fgcolor='#f56954')
+                .knob-label Sin bautizar
+              .col-md-6.col-sm-6.col-xs-6.text-center
+                input.knob.activos_en_ministerios(type='text', value='0', data-fgcolor='#932ab6')
+                .knob-label Activos en algún ministerio
+              //- .col-md-3.col-sm-6.col-xs-6.text-center
+              //-   input.knob(type='text', value='0', data-fgcolor='#39CCCC')
+              //-   .knob-label ...
+              //- .col-md-3.col-sm-6.col-xs-6.text-center
+              //-   input.knob(type='text', value='0', data-fgcolor='#f39c12')
+              //-   .knob-label ...
+              //- .col-md-3.col-sm-6.col-xs-6.text-center
+              //-   input.knob(type='text', value='0', data-fgcolor='#85144b')
+              //-   .knob-label ...
+
+  .row
+    .col-md-12.npr
+      .box
+        .box-header.nmb
+          h3.box-title Por edades
+          .pull-right.box-tools
+            button.btn.btn-primary.btn-xs.pull-right(data-widget='collapse', data-toggle='tooltip', title='', style='margin-left: 5px;', data-original-title='Minimizar')
+              i.fa.fa-minus
+        .box-body.npb
+          .row#div-edades
+            .col-md-12
+              .col-md-2.npl.npr
+                legend.nmb.npb Masculino
+                table.table
+                  tbody
+                    tr
+                      th Porcentaje
+                      td.porc-edad-m 0 %
+                    tr
+                      th Sin especificar
+                      td.count-edad-m-se 0
+              .col-md-10.npl.npr
+                #chart-edades-m(style='height:180px;margin-bottom:50px')
+          .row
+            .col-md-12
+              .col-md-2.npl.npr
+                legend.nmb.npb Femenino
+                table.table
+                  tbody
+                    tr
+                      th Porcentaje
+                      td.porc-edad-f 0 %
+                    tr
+                      th Sin especificar
+                      td.count-edad-f-se 0
+              .col-md-10.npl.npr
+                #chart-edades-f(style='height:180px;margin-bottom:50px')
+
+  .row
+    .col-md-12.npr
+      .box.box-warning
+        .box-header.nmb
+          h3.box-title Por clasificación social
+          +toolbuttons('clasificacion_social')
+        .box-body.nmb.npt
+          #chart-clasificacion_social
+          #tb-clasificacion_social
+  .row
+    .col-md-12.npr
+        .box.box-success
+          .box-header.nmb
+            h3.box-title Por estado civil
+            +toolbuttons('estado_civil')
+          .box-body.nmb.npt
+            #chart-estado_civil
+            #tb-estado_civil
+
+  .row
+    .col-md-12.npr
+      //- .col-md-6.npl
+      .box.box-danger
+        .box-header.nmb
+          h3.box-title Por estado de membresía
+          +toolbuttons('estado_membresia')
+        .box-body.nmb.npt
+          #chart-estado_membresia
+          #tb-estado_membresia
+      //- .col-md-6.npl
+        .box.box-primary
+          .box-header.nmb
+            h3.box-title Por localidad
+            +toolbuttons('localidad')
+          .box-body.nmb.npt
+            #chart-localidad
+            #tb-localidad
+
+  //- .row
+    .col-md-12.npr
+      .box.box-info
+        .box-header.nmb
+          h3.box-title Por ministerios
+          +toolbuttons('ministerio')
+        .box-body.nmb.npt
+          #chart-ministerio
+          #tb-ministerio
+
+!= javascriptIncludeTag('meg/utils/server', 'async','taffy', 'values/stats','gui_things')
+include ../includes/import/morris
+script(src="/vendor/AdminLTE/1.2/js/plugins/jqueryKnob/jquery.knob.js")
+script(src="/vendor/parallel/parallel.js")
+
+script
+  :coffeescript(minify=true)
+
+    $(".knob").knob({
+      readOnly:true
+      width:90
+      height:90
+    })
+
+    $('.switch-view').on 'click', ->
+      attr = $(@).attr('name')
+      if $('#chart-' + attr).is(':visible')
+        $('#chart-' + attr).hide()
+        $('#tb-' + attr).show()
+      else
+        $('#chart-' + attr).show()
+        $('#tb-' + attr).hide()
+
+    countEdades = (items) ->
+      key = 'fecha_nacimiento'
+      counts =
+        f :
+          edad : {}
+          sin_especificar : 0
+        m :
+          edad : {}
+          sin_especificar : 0
+      for n in [1..120]
+        counts['f']['edad'][n] = 0
+        counts['m']['edad'][n] = 0
+
+      for item in items
+        if item['sexo']
+          if item.hasOwnProperty(key)
+            if item[key].length > 0
+              age = gui_things.calculateAge(item[key])
+              counts[item['sexo']]['edad'][age] += 1
+            else
+              counts[item['sexo']]['sin_especificar'] += 1
+          else
+            counts[item['sexo']]['sin_especificar'] += 1
+      rangos = [
+        [0,12], [13,17], [18,24],[25,34],[35,44],
+        [45,54],[55,64],[65,120]
+      ]
+      counts.f.rango = {}
+      counts.m.rango = {}
+      # refact to best performance
+      for rango in rangos
+        st_rango = rango[0] + '-' + rango[1]
+        for sexo in ['m', 'f']
+          for k, v of counts[sexo].edad
+            if k >= rango[0] and k <= rango[1]
+              if not counts[sexo].rango.hasOwnProperty(st_rango)
+                counts[sexo].rango[st_rango] = 0
+              counts[sexo].rango[st_rango] += v
+
+      return counts
+
+    countBoolValues = (items, attrs) ->
+      values = {}
+      for attr in attrs
+        values[attr] = 0
+      for item in items
+        for attr in attrs
+          if item.hasOwnProperty(attr)
+            if item[attr] in [true, 'true', '1', 1]
+              values[attr] += 1
+      values
+
+    generateTables = (items, div, cb=null) ->
+      table = '<table class="table table-bordered table-responsive"><tbody>{trs}</tbody></table>'
+      trs = ''
+      items.reverse()
+      for item in items
+        tr_smpl = '<tr><th>{k}</th><td>{v}</td></tr>'
+        trs += tr_smpl.replace('{k}', item.label).replace('{v}', item.value)
+      table = table.replace('{trs}', trs)
+      $(div).empty().append(table).hide()
+      if cb
+        cb()
+
+    loader = (div, show) ->
+      _div = div.replace('#','').replace('.','')
+      img = '<img src="/images/loader.gif" class="center-block ' + _div + '"/>'
+      if show
+        $('#chart-' + div).append(img)
+      else
+        $('.' + _div).remove()
+
+    allProcess = (items) ->
+      if items
+        _items = TAFFY(items['all'])
+        countItems = items['all'].length
+        $('.count-items').text(countItems + ' miembros')
+        # count
+        _counts = {}
+        _counts.male = _items().filter({sexo:'m'}).get().length
+        _counts.female = _items().filter({sexo:'f'}).get().length
+
+        sexo_counts_data = [
+          {label:'Femenino', value:_counts.female}
+          {label:'Masculino', value:_counts.male},
+        ]
+
+        # calc percent by sex
+        pm = 100 - (((countItems - _counts.male) / countItems) * 100)
+        pf = 100 - (((countItems - _counts.female) / countItems) * 100)
+        $('.porc-edad-m').text(pm.toFixed(0).toString() + ' %')
+        $('.porc-edad-f').text(pf.toFixed(0).toString() + ' %')
+
+        # show data
+        $('.count-female').text(_counts.female)
+        $('.count-male').text(_counts.male)
+
+        ############
+        ## PREPARING DATA
+        attrs = ['clasificacion_social', 'estado_civil',
+          'estado_membresia']
+
+        #attrs_counts = @countByField(items['all'], items, attrs)
+
+        new Parallel([items['all'], items, attrs], { evalPath: '/vendor/parallel/eval.js' })
+          .require('/javascripts/lodash.min.js')
+          .require('/javascripts/gui_things.js')
+          .require(fn:@countByField, name:'countByField')
+          .require(fn:countEdades, name:'countEdades')
+          .require(fn:countBoolValues, name:'countBoolValues')
+          .spawn (data) ->
+            res = {}
+            # count by field
+            res.attrs_counts = countByField(data[0], data[1], data[2])
+
+            # count by edades
+            res.edades = countEdades(data[0])
+            res.edades_data = {m:[], f:[]}
+            for sexo in ['m','f']
+              for k, v of res.edades[sexo]['rango']
+                if isNaN(v)
+                  v = 0
+                if k.indexOf('120') != -1
+                  k = '65+'
+                res.edades_data[sexo].push({label:k, value:v})
+
+            # fill donuts count
+            attrs = ['bautizado_por_inmersion','bautizado_en_esta_iglesia']
+            res.boolValues = countBoolValues(data[0], attrs)
+
+            # count ministerios
+            res.activos_en_ministerios = 0
+            res.items_ministerios = []
+            attr = 'ministerio'
+            items = data[0]
+            for item in items
+              if item.hasOwnProperty(attr)
+                if item[attr].length > 0
+                  ides = item[attr].match(/"ministerio":"(.+?)"/g)
+                  if ides
+                    res.activos_en_ministerios += 1
+                    for _id in ides
+                      res.items_ministerios.push(JSON.parse('{' + _id + '}'))
+
+            res.ministerios_counts = countByField(res.items_ministerios, data[1], ['ministerio'])
+
+            return res
+
+          .then (res, err) ->
+
+            $('.loader').addClass('hide')
+            $('.stats-zone').removeClass('hide')
+
+            $('.activos_en_ministerios').val(res.activos_en_ministerios).trigger('change')
+            res.boolValues.sin_bautizar = countItems - res.boolValues.bautizado_por_inmersion
+            # set max value
+            $('.knob').trigger('configure',{ "max": countItems })
+            # set value to donuts
+            for k, v of res.boolValues
+              $('.' + k).val(v).trigger('change')
+
+            attrs_counts = res.attrs_counts
+            for _attr in ['clasificacion_social', 'estado_civil','estado_membresia']
+              _counts = attrs_counts[_attr]
+              @renderChart('chart-' + _attr, _counts, 'Bar')
+              generateTables _counts, '#tb-' + _attr
+
+            counts = attrs_counts['localidad']
+            @renderChart('chart-localidad', counts)
+            counts = _.sortBy(counts, 'value')
+            counts = counts.splice(0,10)
+            generateTables counts, '#tb-localidad'
+
+            @renderChart('chart-sexo', sexo_counts_data)
+
+            $('.count-edad-f-se').text(res.edades.f.sin_especificar)
+            $('.count-edad-m-se').text(res.edades.m.sin_especificar)
+
+            @renderChart('chart-edades-m', res.edades_data.m, 'Bar')
+            @renderChart('chart-edades-f', res.edades_data.f, 'Bar')
+
+            items_ministerios = res.items_ministerios
+            ministerios = res.ministerios_counts.ministerio
+            #@renderChart('chart-ministerio', ministerios, 'Bar')
+            #generateTables ministerios, '#tb-ministerio'
+
+    runProcess = (items, cb) ->
+      p = new Parallel(items, { evalPath: '/vendor/parallel/eval.js' })
+      p.require('/javascripts/jquery-2.0.3.js')
+      p.require('/javascripts/taffy.js')
+      p.require('/javascripts/lodash.min.js')
+      p.spawn(allProcess).then(cb)
+
+    attrs = ['sexo','clasificacion_social',
+      'estado_civil', 'estado_membresia','fecha_nacimiento',
+      'bautizado_por_inmersion', 'recibio_bautismo_es',
+      'bautizado_en_esta_iglesia','localidad','ministerio']
+    url = '/miembros.json?f=' + attrs.join(',')
+
+    $('.title-status').text('Obteniendo información...')
+    async.series({
+      all: (callback) ->
+        meg.server.ajax url, {}, callback
+      clasificacion_social: (callback) ->
+        meg.server.ajax '/clasificacionsocials.json?f=id,nombre', {}, callback
+      estado_civil: (callback) ->
+        meg.server.ajax '/estadosciviles.json?f=id,nombre', {}, callback
+      estado_membresia: (callback) ->
+        meg.server.ajax '/estadomembresias.json?f=id,nombre', {}, callback
+      ministerio: (callback) ->
+        meg.server.ajax '/ministerios.json?f=id,nombre', {}, callback
+      localidad: (callback) ->
+        meg.server.ajax '/localidades.json?f=id,name', {}, callback
+    }, (err, items) ->
+      @items = items
+      if items.all.length > 0
+        if !err
+          #$('.title-status').text('Procesando información...')
+          #console.time('Load stats')
+          allProcess(items)
+          #console.timeEnd('Load stats')
+        else
+          $('.loader > img').hide()
+          $('.title-status').text('Oops! Un error ha ocurrido. Intenta recargar la página nuevamente').addClass('text-danger')
+      else
+        $('.stats-zone').prepend('<div class="callout callout-info">
+          <h4>Todavía no se han cargados miembros, no es posible visualizar estadísticas.</h4></div>')
+    )
+
+    @fn_btn_filter = () =>
+      $('.loader > img').show()
+      $('.title-status').text('Procesando información...')
+      _items = JSON.parse(JSON.stringify(@items))
+      _items['all'] = $('#filters').MEGFilter('filterData', @items['all'])
+      allProcess(_items)
+
+    @fn_btn_reload = () =>
+      allProcess(@items)

@@ -1,0 +1,27 @@
+script
+  :coffee
+
+    $('section.content-header').empty().append('''
+      <h1 class="head-title">#{Vars.titlemodel}
+        <a id="btnNew" href="#{Vars.pluralmodel}/new" style="margin-left:5px" class="btn btn-danger btn-xs"><i class="fa fa-plus"></i> Nuevo</a>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-home"></i> #{Vars.subsection}</a></li>
+        <li class="active">#{Vars.titlemodel}</li>
+      </ol>''')
+
+include ../includes/index/container_table
+
+script
+  :coffeescript
+
+    @listaordenada = () ->
+      [
+        name: "displayName"
+        showname: "Nombre"
+        params: ['id', 'displayName']
+        parser: @showDetails
+      ,
+        name: "email"
+        showname: "Email"
+      ]

@@ -1,0 +1,37 @@
+include ../includes/forms/errorMessages
+.form-group
+  != form.label("nombre", false, {class: "control-label"})
+  != form.input("name", {class: "form-control", autofocus:'', required:''})
+.row
+  .col-md-6
+    .form-group
+      label.control-label(for="provincia") Provincia
+      select.form-control#provincia(name="provincia")
+  .col-md-6
+    .form-group
+      != form.label("localidad", false, {class: "control-label"})
+      != form.select("localidad", false, {class: "form-control"})
+.form-group
+  != form.label("latitud", false, {class: "control-label"})
+  != form.input("lat", {class: "form-control", type:'number'})
+.form-group
+  != form.label("longitud", false, {class: "control-label"})
+  != form.input("long", {class: "form-control", type:'number'})
+
+!= javascriptIncludeTag('meg/utils/server','meg/utils/select','meg/utils/gui','async')
+
+script
+  :coffeescript(minify=true)
+
+    model_id = '#Barrio_'
+    #meg.gui.loadSelect '/localidades.json', model_id + 'localidad', '!{Vars.instanciaModel.localidad}', {showname:'name'}, () ->
+    #  params = meg.gui.getURLParameters()
+    #  if params['p']
+    #    $(model_id + 'localidad').val(params['p'])
+
+    defValues =
+      'model_id' : model_id
+      'barrio' : ''
+      'localidad' : '!{Vars.instanciaModel.localidad}'
+      'provincia' : ''
+    meg.gui.loadGeographicsSelects defValues, () ->

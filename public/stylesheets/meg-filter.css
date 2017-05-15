@@ -1,0 +1,38 @@
+select {
+  margin-left: 2px;
+  margin-bottom: 5px;
+}
+.field label {
+  margin-left: 2px;
+}
+.col-xs-4,
+.col-xs-6 {
+  padding: 0px;
+}
+.btn-reload {
+  margin-left: 5px;
+}
+.checkbox input[type="checkbox"] {
+  margin-left: -15px;
+}
+.add-filter {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+#filtering-state {
+  margin-left: 5px;
+  display: none;
+}
+#row-filter {
+  margin-top: 10px;
+}
+#box-filters {
+  margin-bottom: 10px;
+}
+#box-filters .box-header {
+  padding-bottom: 0px;
+}
+#box-filters .box-title {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}

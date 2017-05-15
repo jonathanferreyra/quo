@@ -1,0 +1,15 @@
+.row
+  .col-md-12
+    - var flash = request.flash('info').pop(); if (flash) {
+      br
+      .alert.alert-info= flash
+        .fa.fa-info-circle
+        a.close(data-dismiss="alert") x
+    - }
+
+    - flash = request.flash('error').pop(); if (flash) {
+      br
+      .alert.alert-danger= flash
+        .fa.fa-times
+        a.close(data-dismiss="alert") x
+    - }

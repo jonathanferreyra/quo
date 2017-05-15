@@ -1,0 +1,16 @@
+li#gruposRootMenu.treeview
+  a(href='#')
+    i.fa.fa-group
+    span Grupos
+    i.fa.fa-angle-left.pull-right
+  ul.treeview-menu
+    if user.can('grupocrecimientos')
+      li#grupocrecimientosMenu
+        a(href='/grupocrecimientos')
+          i.fa.fa-angle-double-right
+          |  Grupos
+    if user.can('regsemanalgcs')
+      li#regsemanalgcsMenu
+        a(href='/regsemanalgcs')
+          i.fa.fa-angle-double-right
+          |  Registro asistencias

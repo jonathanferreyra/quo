@@ -1,0 +1,214 @@
+- var subtitle = "N° " + Vars.instanciaModel.nro
+include ../includes/show/subhead
+
+style.
+  .min-margin {margin-right: 5px;}
+.row.mb5
+  .col-md-12
+    a.btn.btn-sm.btn-primary.min-margin#btBackToList(href="/#{Vars.pluralmodel}")
+      i.fa.fa-arrow-left
+      |  Volver a la lista
+    a.btn.btn-sm.btn-success.min-margin(href="/regsemanalgcs/new?g=#{Vars.instanciaModel.id}")
+      i.fa.fa-plus
+      |  Nuevo registro de asistencias
+    .btn-group.pull-right
+      button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+        i.fa.fa-cog
+        |  Opciones
+        span.caret
+      ul.dropdown-menu(role='menu')
+        li
+          a(href='/#{Vars.pluralmodel}/#{Vars.instanciaModel.id}/edit')
+            i.fa.fa-pencil.text-warning
+            |  Editar
+        li
+          a.item-del(href="#", item="#{Vars.instanciaModel.id}")
+            i.fa.fa-trash-o.text-danger
+            |  Eliminar
+        li.divider
+        li
+          a(href='/#{Vars.pluralmodel}/new')
+            i.fa.fa-plus.text-success
+            |  Crear nuev#{Vars.letraGenero}
+
+!= javascriptIncludeTag('bootbox.min')
+
+script
+  :coffeescript
+
+    $('.item-del').on 'click', ->
+      item = $(@)
+      item_id = $(@).attr('item')
+      bootbox.confirm 'Confirmar eliminación...', (result) =>
+        if result
+          $('<a>').attr({
+            'href':"/" + '!{Vars.pluralmodel}' + "/" + item_id
+            'data-remote':"true"
+            'data-method':"delete"
+            'data-jsonp':"(function (u) {location.href = u;})"
+          }).appendTo('body').click()
+
+.row
+  .col-md-12
+    .box.box-default
+      .box-header
+        h4.box-title Detalles
+        div.pull-right.box-tools
+          button.btn.btn-primary.btn-xs.pull-right(data-widget='collapse', data-toggle='tooltip', title='', style='margin-right: 5px;', data-original-title='Colapsar')
+            i.fa.fa-minus
+      .box-body
+        table.table
+          tbody
+            tr
+              tr
+              td
+                b Líder/encargado
+              td
+                != Vars.instanciaModel.timonel
+              tr
+              td
+                b Colaborador/ayudante
+              td
+                != Vars.instanciaModel.timoteo
+              tr
+              td
+                b Anfitrión
+              td
+                != Vars.instanciaModel.anfitrion
+              tr
+              td
+                b Dirección
+              td
+                != Vars.instanciaModel.direccion
+              tr
+              td
+                b Horario de reunión
+              td
+                != Vars.instanciaModel.horario
+              tr
+              td
+                b Dia de la semana
+              td#dia_de_la_semana
+              tr
+              th Barrio
+              td#barrio
+              tr
+              th Localidad
+              td#localidad
+
+.row
+  .col-md-12
+    .box.box-default
+      .box-header
+      .box-body
+        legend Total de asistencias mensuales
+        .row
+          .col-md-12
+            table.table
+              tbody
+                tr
+                  th Mes con mayor asistencias
+                  td#mes-may-asist
+                tr
+                  th Mes con menor asistencias
+                  td#mes-men-asist
+                tr
+                  th Promedio de asistencias
+                  td#prom-asist
+        br
+        div.data-container.hide
+          .row
+            .col-md-4
+              form.form-horizontal
+                .form-group
+                  label.control-label.col-sm-2(name='#anios') Año
+                  .col-sm-5
+                    select.form-control.sel-asistencias-mensuales
+          .row
+            .col-md-4
+              table.table.highchart.tb-asistencias-mensuales(data-graph-container='.highchart-container', data-graph-type='column')
+                thead
+                  tr
+                    th Mes
+                    th Asistencias
+                tbody
+
+            .col-md-8
+              .highchart-container
+        div.alert.alert-info.alert-dismissable
+          i.fa.fa-info
+          | No se han registrado asistencias todavía.
+
+!= javascriptIncludeTag('meg/utils/server','meg/utils/gui','highcharts', 'jquery.highchartTable-min', 'doT.min','values/defaults')
+
+script
+  :coffeescript(minify=true)
+
+    meg.gui.showFromValueName '#dia_de_la_semana', defaults.dias_semanales, '#{Vars.instanciaModel.dia_de_la_semana}'
+    meg.gui.showRefName 'barrios', 'name', '#{Vars.instanciaModel.barrio}', '#barrio'
+    meg.gui.showRefName 'localidades', 'name', '#{Vars.instanciaModel.localidad}', '#localidad'
+
+    fields = 'fecha,total_asistencias'
+    url = '/regsemanalgcs/getByGrupo/#{Vars.instanciaModel.id}?f=' + fields
+    meg.server.ajax url, {}, (err, res) ->
+      if res.length > 0
+        counted = {}
+
+        # parse and generate counters
+        for item in res
+          fecha = item.fecha.split('-') #aaaa-mm-dd
+          dia = parseInt(fecha[2])
+          mes = parseInt(fecha[1])
+          anio = parseInt(fecha[0])
+          # key año
+          if not counted.hasOwnProperty(anio)
+            counted[anio] = {}
+          # key mes
+          if not counted[anio].hasOwnProperty(mes)
+            counted[anio][mes] = 0
+            counted[anio]['total'] = 0
+          counted[anio][mes] += item.total_asistencias
+          counted[anio]['total'] += item.total_asistencias
+
+        # generate data to table
+        meses_names = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+          'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+        anios = Object.keys(counted)
+        anios.sort()
+        anios.reverse()
+        sel_options = ['<option value="' + a + '">' + a + '</option>' for a in anios]
+        $('.sel-asistencias-mensuales').empty().append(sel_options.join(''))
+        generateByYear = (anio_selected) ->
+          meses_values = counted[anio_selected]
+          result = []
+          for nro_mes in [1..12]
+            if not meses_values.hasOwnProperty(nro_mes)
+                result.push([meses_names[nro_mes-1], 0])
+              else
+                result.push([meses_names[nro_mes-1], meses_values[nro_mes]])
+
+          mayor_mes = _.max result, (item) -> item[1]
+          menor_mes = _.min result, (item) -> item[1]
+
+          trs = ''
+          for row in result
+            trs += '<tr><td>'+row[0]+'</td><td>'+row[1]+'</td></tr>'
+          $('.tb-asistencias-mensuales > tbody').empty().append(trs)
+          $('.data-container').removeClass('hide')
+          $('.alert-info').hide()
+          $('.tb-asistencias-mensuales').highchartTable()
+
+          # promedio asistencias
+          total = parseFloat(meses_values.total / 12).toFixed(0)
+          $('#prom-asist').text(total)
+          # mayor-menor mes
+          mayText = mayor_mes[0] + ' / ' + mayor_mes[1] + ' asist.'
+          menText = menor_mes[0] + ' / ' + menor_mes[1] + ' asist.'
+          $('#mes-may-asist').append('<span class="label label-success">' + mayText + '</span>')
+          $('#mes-men-asist').append('<span class="label label-warning">' + menText + '</span>')
+
+        $('.sel-asistencias-mensuales').on 'change', ->
+          anio_selected = parseInt($('.sel-asistencias-mensuales').val())
+          generateByYear(anio_selected)
+
+        $('.sel-asistencias-mensuales').change()

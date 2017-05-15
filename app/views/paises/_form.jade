@@ -1,0 +1,16 @@
+include ../includes/forms/errorMessages
+.form-group
+  != form.label("nombre", false, {class: "control-label"})
+  != form.input("name", {class: "form-control", autofocus:'', required:''})
+.form-group
+  != form.label("Idioma", false, {class: "control-label"})
+  select.form-control#Pais_locale(name="Pais[locale]")
+    option(value="es") es - Español
+    option(value="en") en - Inglés
+    option(value="pt-BR") pt-BR - Portugués (Brasil)
+.form-group
+  != form.label("Prefijo numérico", false, {class: "control-label"})
+  .input-group
+    span.input-group-addon
+      i.fa.fa-plus
+    != form.input("phonePrefix", {class: "form-control", type:"number", placeholder:"Ej: 54"})

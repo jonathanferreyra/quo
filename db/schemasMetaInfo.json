@@ -1,0 +1,166 @@
+{
+  "User": {
+    "title":"",
+    "showAttr":"email",
+    "url":"users",
+    "references":[
+    ]
+  },
+  "Producto": {
+    "title":"Productos",
+    "showAttr":"nombre",
+    "url":"productos",
+    "references":[      
+    ]
+  },
+  "Cliente": {
+    "title":"Clientes",
+    "showAttr":"nombre",
+    "url":"clientes",
+    "references":[
+      {
+        "model": "Pedido",
+        "attr": "cliente_id",
+        "type": "id"
+      }
+    ]
+  },
+  "Contacto": {
+    "title":"",
+    "showAttr":"nombre",
+    "url":"contactos",
+    "references":[
+      {
+        "model": "User",
+        "attr": "contacto",
+        "type": "id"
+      }
+    ]
+  },
+  "Catalogo": {
+    "title":"Catalogos",
+    "showAttr":"nombre",
+    "url":"catalogos",
+    "references":[    
+    ]
+  },
+  "Categoria": {
+    "title":"Categorias",
+    "showAttr":"nombre",
+    "url":"categorias",
+    "references":[
+      {
+        "model": "Producto",
+        "attr": "categoria_id",
+        "type": "id"
+      }
+    ]
+  },
+  "Pedido": {
+    "title":"Pedidos",
+    "showAttr":"_id",
+    "url":"pedidos",
+    "references":[      
+    ]
+  },
+  "Proveedor": {
+    "title":"Proveedores",
+    "showAttr":"",
+    "url":"proveedors",
+    "references":[
+      {
+        "model": "ProveedorComponente",
+        "attr": "proveedor_id",
+        "type": "id"
+      }
+    ]
+  },
+  "Pago": {
+    "title":"",
+    "showAttr":"fecha_creacion",
+    "url":"pagos",
+    "references":[
+      {
+        "model": "Venta",
+        "attr": "lista_de_pagos",
+        "type": "json"
+      }
+    ]
+  },
+  "OrdenDeProduccion": {
+    "title":"",
+    "showAttr":"fecha_creacion",
+    "url":"ordendeproduccions",
+    "references":[
+      {
+        "model": "Producto",
+        "attr": "producto",
+        "type": "id"
+      }
+    ]
+  },
+  "Venta": {
+    "title":"",
+    "showAttr":"fecha",
+    "url":"ventas",
+    "references":[
+    ]
+  },
+  "PrecioProducto": {
+    "title":"",
+    "showAttr":"fecha_creacion",
+    "url":"precioproductos",
+    "references":[
+      {
+        "model": "Producto",
+        "attr": "precio",
+        "type": "id"
+      }
+    ]
+  },
+  "Stock": {
+    "title":"",
+    "showAttr":"fecha_creacion",
+    "url":"stocks",
+    "references":[
+      {
+        "model": "OrdenDeProduccion",
+        "attr": "stock_producidos",
+        "type": "id"
+      }
+    ]
+  },
+  "ProveedorComponente": {
+    "title":"",
+    "showAttr":"fecha_creacion",
+    "url":"proveedorcomponentes",
+    "references":[
+    ]
+  },
+  "Timespan": {
+    "title":"",
+    "showAttr":"",
+    "url":"",
+    "references":[
+    ]
+  },
+  "Setting": {
+    "title":"",
+    "showAttr":"",
+    "url":"",
+    "references":[
+    ]
+  },
+  "Role": {
+    "title":"",
+    "showAttr":"name",
+    "url":"roles",
+    "references":[
+      {
+        "model": "User",
+        "attr": "roles",
+        "type": "id"
+      }
+    ]
+  }
+}

@@ -1,0 +1,82 @@
+style.
+  .img-user{
+    width: 70%;
+    margin-left: 30px;
+  }
+  .min-margin {margin-right: 5px;}
+  .mt10 {margin-top:10px}
+  .ml5 {margin-left:5px}
+
+- var subtitle = Vars.instanciaModel.displayName
+include ../includes/show/subhead
+
+.row.mb8
+  .col-md-12
+    a.btn.btn-sm.btn-primary.min-margin#btBackToList(href="/#{Vars.pluralmodel}")
+      i.fa.fa-arrow-left
+      |  Volver a la lista
+    .btn-group.pull-right
+      button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+        i.fa.fa-cog
+        |  Opciones
+        span.caret
+      ul.dropdown-menu(role='menu')
+        li
+          a#actnEdit(href='/#{Vars.pluralmodel}/#{Vars.instanciaModel.id}/edit')
+            i.fa.fa-pencil.text-warning
+            |  Editar
+        li
+          a.item-del(href="#", item="#{Vars.instanciaModel.id}")
+            i.fa.fa-ban.text-danger
+            |  Deshabilitar
+        li.divider
+        li
+          a(href='/#{Vars.pluralmodel}/new')
+            i.fa.fa-plus.text-success
+            |  Crear nuev#{Vars.letraGenero}
+
+.row
+  .col-md-12
+    .box.box-info
+      .box-header
+        h3.box-title Detalles
+      .box-body
+        .callout.callout-danger#disabled-user(style="display:none")
+          h4 Este usuario se encuentra deshabilitado
+          p Fecha en que fue deshabilitado:
+            span
+              b#disabled-date
+            | . Puedes volverlo a habilitar
+            a#enable-user(href="#")  aquí
+        .row
+          .col-md-2
+            if Vars.instanciaModel.avatar_url
+              img.img-circle.img-responsive.img-user(src='#{Vars.instanciaModel.avatar_url}')
+            else
+              img.img-circle.img-responsive.img-user(src='/images/user-profile.jpg')
+          .col-md-10
+            blockquote
+              p #{Vars.instanciaModel.displayName}
+              span.label.label-default #{Vars.instanciaModel.rolesNames}
+              footer.mt10
+                a(href="mailto:#{Vars.instanciaModel.email}")  #{Vars.instanciaModel.email}
+              if Vars.instanciaModel.lastActionDate
+                span.mt10.label.label-primary Última acción
+                label.mt10.ml5#lastActionDate
+        br
+        .box
+          .box-header
+            h1.box-title
+              i.fa.fa-envelope-o  Cuentas de correo
+          .box-body
+            table.table.table-responsive.user-emails
+              tbody
+
+!= javascript_include_tag('meg/utils/server','bootbox.min', 'date', 'shows/users')
+
+script
+  :coffee
+
+    lastActionDate = '#{Vars.instanciaModel.lastActionDate}'
+    if lastActionDate.length > 0
+      $('#lastActionDate').text(new Date(lastActionDate).toString('dd-MM-yyyy HH:mm'))

@@ -1,0 +1,36 @@
+include ../includes/forms/edit/headtitle
+
+.row
+  .col-md-12
+    .panel.panel-default
+      .panel-body
+        include ../includes/forms/edit/form
+        != form.begin()
+        include _form
+      .panel-footer
+        include ../includes/forms/edit/actions
+        != form.end()
+
+!= javascriptIncludeTag('meg/utils/server')
+
+script
+  :coffeescript
+
+    meg.server.ajax '/regsemanalgcs/getItem/id', {}, (err, item) ->    
+
+      if item['reunion_suspendida']
+        $('#Regsemanalgc_reunion_suspendida').attr('checked','checked')
+        $('#Regsemanalgc_motivo_reunion_suspendida').removeAttr('disabled')
+        
+      $ ->    
+
+        ides = "#Regsemanalgc_anfitriones," + 
+          "#Regsemanalgc_miembros_de_equipo," + 
+          "#Regsemanalgc_asistentes_frecuentes," + 
+          "#Regsemanalgc_personas_por_primera_vez," + 
+          "#Regsemanalgc_nuevos_iglesia," +
+          "#Regsemanalgc_otras_iglesias"
+
+        # parse date and time
+        #meg.server.ajax "/regsemanalgcs_allasistentes",{}, (err, data)->
+        #  meg.select.loadMultipleEdit ides, data, () ->

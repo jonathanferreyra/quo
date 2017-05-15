@@ -1,0 +1,18 @@
+include ../includes/index/metahead
+
+script
+  :coffeescript(minify=true)
+
+    @itemsUrl = '/roles.json?f=id,name'
+    @listaordenada = () ->
+      [
+        name: "name"
+        showname: "Nombre"
+        parser: @showDetails
+        params: [ "id","name" ]
+      ,
+        name: "accciones"
+        parser: @setActions
+        params: [ "id" ]
+        showname: "Acciones"
+      ]

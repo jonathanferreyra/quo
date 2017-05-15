@@ -1,0 +1,32 @@
+link(href='/vendor/pickadate.js/3.5.2/themes/default.date.css',rel="stylesheet")
+script(src='/vendor/pickadate.js/3.5.2/picker.date.js')
+script(src='/vendor/pickadate.js/3.5.2/translations/es_ES.js')
+
+style.
+  .picker__select--month, .picker__select--year {padding-top: 2px}
+script
+  :coffeescript
+
+    $(document).on 'ready', ->
+      options =
+        selectMonths: true
+        selectYears: true
+        format: 'yyyy-mm-dd'
+        formatSubmit: 'yyyy-mm-dd'
+        hiddenName: true
+
+      _pickadate_items = $('input[type=date]')
+      $.each  _pickadate_items, (index, value) ->
+        $(value).attr "data-value", $(value).val()
+
+      _pickadate_items.pickadate(options)
+
+      # bind span icon calendar to show modal
+      for item in _pickadate_items
+        $($(item).parent().find('span.input-group-addon')).on 'click', ->
+          # forma1
+          $($(@).parent().find('input.form-control')).click()
+
+          # forma2
+          #$('#' + $(@).parent().find('input.form-control').attr('id')).click()
+

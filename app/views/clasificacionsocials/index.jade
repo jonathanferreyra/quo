@@ -1,0 +1,24 @@
+include ../includes/index/configs_metahead
+
+//- include ../includes/index/configs_graphic_index
+
+script
+  :coffeescript
+
+    @mainItemsUrl = '/!{Vars.pluralmodel}.json'
+    @chartDataKey = 'clasificacion_social'
+    @listaordenada = () ->
+      [
+        name: "nombre"
+        showname: "Nombre"
+        params: [ "id","nombre" ]
+        parser: @showDetails
+      ,
+        name: "caracteristicas"
+        showname: "Características"
+      ,
+        name: "accciones"
+        params: [ "id" ]
+        parser: @setActions
+        showname: "Acciones"
+      ]

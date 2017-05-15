@@ -1,0 +1,40 @@
+{
+  "development": {
+    "settings": {
+      "cacheRoles": "true",
+      "cacheAbilities": "true"
+    }
+  },
+  "test": {
+    "settings": {
+      "cacheRoles": "true",
+      "cacheAbilities": "true"
+    },
+    "roles": {
+      "super user": {
+        "displayName": "Super User",
+        "description": "Super Users Can Do Anything",
+        "abilities": [{
+            "controller": "admin",
+            "actions": ["*"]
+          }, {
+            "controller": "admin/comments",
+            "actions": ["*"]
+          }, {
+            "controller": "admin/memberships",
+            "actions": ["*"]
+          }, {
+            "controller": "admin/posts",
+            "actions": ["*"]
+          }, {
+            "controller": "admin/roles",
+            "actions": ["*"]
+          }, {
+            "controller": "admin/users",
+            "actions": ["*"]
+          }
+        ]
+      }
+    }
+  }
+}

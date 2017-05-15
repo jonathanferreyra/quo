@@ -1,0 +1,14 @@
+include ../includes/index/metahead
+
+:coffeescript
+
+  @listaordenada = () ->
+    [
+      name: "nombre"
+      showname: "Nombre"
+    ,
+      name: "accciones"
+      parser: @setActions
+      params: [ "id" ]
+      showname: "Acciones"
+    ]

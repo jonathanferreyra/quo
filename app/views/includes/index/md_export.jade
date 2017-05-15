@@ -1,0 +1,184 @@
+#md-exp.modal(tabindex='-1', role='dialog', aria-hidden='true')
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+        h2.modal-title
+          i.fa.fa-download  Exportar datos
+      .modal-body
+        .stepwizard
+          .stepwizard-row.setup-panel
+            .stepwizard-step
+              a.btn.btn-primary.btn-circle(href='#step-1', type='button') 1
+              p Selección de campos
+            .stepwizard-step
+              a.btn.btn-default.btn-circle(href='#step-2', type='button', disabled='disabled') 2
+              p Formato a exportar
+        #step-1.row.setup-content(name="1")
+          .col-md-12
+            .callout.callout-info
+              h4 Selecciona aquí los campos a exportar
+              p Solamente se tendrán en cuenta los elementos actualmente listados
+
+            button.btn.btn-default.btn-mark-all(type='button', style="margin-bottom:10px")
+              i.fa.fa-check-square-o
+              |  Marcar todos
+            button.btn.btn-success.nextBtn.pull-right(type='button') Siguiente
+            div.well(style='max-height: 300px;overflow: auto;')
+              ul.list-group.checked-list-box
+
+            button.btn.btn-success.nextBtn.pull-right(type='button') Siguiente
+        #step-2.row.setup-content(name="2")
+          .col-md-12
+            .btn-group(data-toggle="buttons",style="width:100%")
+              label.btn.btn-lg.col-sm-6.btn-default.btn-exp-type.active
+                input.text-success(type="radio",name="xls",checked)
+                |  MS Excel
+              label.btn.btn-lg.col-sm-6.btn-default.btn-exp-type
+                input(type="radio",name="csv")
+                |  CSV
+            hr
+            .form-group(style="margin-left: 15px;")
+              .checkbox
+                label
+                  input(id='exp-header', type='checkbox', checked='checked')
+                  | Incluir cabecera?
+            .form-group
+              label.control-label Ordenar por
+              select.form-control#exp-orderBy
+            .form-group.hide
+              label.control-label Separador
+              select.form-control#exp-delimiter
+                option(value=";") ; (Punto y coma)
+                option(value=",") , (Coma)
+                option(value="|") | (Barra vertical)
+
+              //- label.btn.btn-lg.col-sm-3.btn-default.btn-exp-type
+                input(type="radio",name="options",id="pdf")
+                |  PDF
+              //- label.btn.btn-lg.col-sm-3.btn-default.btn-exp-type
+                input(type="radio",name="options",id="doc")
+                |  MS Word
+            hr
+            i.fa.fa-spinner.fa-spin.fa-2x#loader(style="display:none")
+            button.btn.btn-danger.btn-lg.pull-right.btn-exp-data(type='button')
+              i.fa.fa-download
+              |  Exportar
+
+!= javascriptIncludeTag('meg/meg-export','papaparse.min', 'async')
+link(href='/vendor/meg/export/style.css', rel="stylesheet")
+script(src='/vendor/meg/export/script.js', type="text/javascript")
+script(src='/vendor/tableExport/jquery.base64.js', type="text/javascript")
+script
+  :coffee
+    $('.btn-export-table').on 'click', ->
+      $($('.btn.btn-circle')[0]).trigger('click')
+      $('#md-exp').modal('show')
+
+    $('#md-exp').on 'show.bs.modal', ->
+      loadFields = (fields) ->
+        lis = ''
+        for k, v of fields
+          lis += '<li class="list-group-item" name="' + k + '">' + v.text + '</li>'
+        $('.checked-list-box').empty().append(lis)
+        initListChecked()
+
+      if typeof meg.data is 'undefined'
+        meg.data = {}
+      if meg.data.metaFields is undefined
+        $.get '/#{Vars.pluralmodel}/metaFields/id', (res) ->
+          meg.data.metaFields = res
+          loadFields(meg.data.metaFields)
+          # load combo ordenar por
+          opts = ''
+          for k, v of res
+            opts += '<option value="' + k + '">' + v.text + '</option>'
+          $('#exp-orderBy').empty().append(opts)
+      else
+        loadFields(meg.data.metaFields)
+
+
+    $('.btn-exp-type').on 'click', ->
+      type = $(@).find('input').attr('name')
+
+      $('#exp-delimiter').parent().addClass('hide')
+
+      if type == 'csv'
+        $('#exp-delimiter').parent().removeClass('hide')
+
+    # establece los parser predeterminados
+    # para los tipos: bool, ref
+    _setDefaultsParsers = (parsers) ->
+      metaFields = meg.data.metaFields
+
+      for field, infoField of metaFields
+        if infoField.hasOwnProperty('type')
+          if infoField.type == 'bool'
+            parsers[field] = (value) ->
+              if !value?
+                return 'NO'
+              if value in ['true', '1', true, 1]
+                return 'SI'
+              else if value in ['false', '0', false, 0]
+                return 'NO'
+      parsers
+
+    # load in meg.data.references the ref models
+    _loadReferences = (cb) =>
+
+      if not meg.data?
+        meg.data = {}
+      meg.data.references = {all:{}, idx:{}}
+
+      _filter_fields_ajax = @filter_fields_ajax
+      meg.server.ajax '/' + @pluralModel + '.json', {}, (err, items) ->
+        meg.data.currentItems = items
+
+        if _filter_fields_ajax
+          async.map Object.keys(_filter_fields_ajax), (field, mapCb) ->
+            if not meg.data.references['all'].hasOwnProperty(field)
+              url = _filter_fields_ajax[field]['u']
+              meg.server.ajax url, {}, (err, items) ->
+                meg.data.references['all'][field] = items
+                meg.data.references['idx'][field] = _.indexBy(items, 'id')
+                mapCb()
+            else
+              mapCb()
+          , cb
+        else
+          cb()
+
+    $('.btn-exp-data').on 'click', =>
+      $('.btn-exp-data').attr('disabled', 'disabled')
+      type = $('.btn-exp-type.active').find('input').attr('name')
+      # get the checked fields to export
+      checkedFields = getCheckedFields()
+
+      opts =
+        delimiter: $('#exp-delimiter').val()
+        fields: checkedFields['keys']
+        header: $('#exp-header').is(':checked')
+        headerLabels: checkedFields['text']
+        orderBy: $('#exp-orderBy').val()
+
+      # set parsers
+      defParsers = _setDefaultsParsers({})
+      if typeof(@fnFormatField) isnt 'undefined'
+        for k in Object.keys(@fnFormatField)
+          defParsers[k] = @fnFormatField[k]
+      opts.fnParsers = defParsers
+
+      $('#loader').show()
+      _loadReferences () ->
+        $('#loader').hide()
+
+        # export the data
+        meg['export'].exportData(type, meg.data.currentItems, opts)
+        # close modal
+        $('.btn-exp-data').removeAttr('disabled')
+        $('#md-exp').modal('hide')
+
+
+//- script(type="text/javascript", src="/vendor/tableExport/jspdf/libs/sprintf.js")
+//- script(type="text/javascript", src="/vendor/tableExport/jspdf/jspdf.js")
+//- script(type="text/javascript", src="/vendor/tableExport/jspdf/libs/base64.js")

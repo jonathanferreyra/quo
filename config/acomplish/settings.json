@@ -1,0 +1,22 @@
+{
+	"owners": [
+		"your_account@gmail.com",
+		"admin@admin.com",
+		"develop@quo.com"
+	],
+	"environments": {
+		"development": {
+			"url root": "http://localhost:3000",
+			"url path": "/"
+		},
+		"staging": {
+			"base url": "http://staging.mysite.com"
+		},
+		"test": {
+			"base url": "http://qa.mysite.com"
+		},
+		"production": {
+			"base url": "http://www.mysite.com"
+		}
+	}
+}

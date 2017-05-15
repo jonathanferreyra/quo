@@ -1,0 +1,65 @@
+.contenedor{
+	background: rgb(239,239,239); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(239,239,239,1) 0%, rgba(242,242,242,1) 42%, rgba(255,255,255,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(239,239,239,1)), color-stop(42%,rgba(242,242,242,1)), color-stop(100%,rgba(255,255,255,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(239,239,239,1) 0%,rgba(242,242,242,1) 42%,rgba(255,255,255,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(239,239,239,1) 0%,rgba(242,242,242,1) 42%,rgba(255,255,255,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(239,239,239,1) 0%,rgba(242,242,242,1) 42%,rgba(255,255,255,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(239,239,239,1) 0%,rgba(242,242,242,1) 42%,rgba(255,255,255,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#efefef', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+}
+
+div.dataTables_length label {
+	float: left;
+	text-align: left;
+}
+
+div.dataTables_length select {
+	width: 75px;
+}
+
+div.dataTables_filter label {
+	float: right;
+}
+
+div.dataTables_info {
+	padding-top: 8px;
+}
+
+div.dataTables_paginate {
+	float: right;
+	margin: 0;
+}
+
+table.table {
+	clear: both;
+	margin-bottom: 6px !important;
+}
+
+table.table thead .sorting,
+table.table thead .sorting_asc,
+table.table thead .sorting_desc,
+table.table thead .sorting_asc_disabled,
+table.table thead .sorting_desc_disabled {
+	cursor: pointer;
+	*cursor: hand;
+}
+
+table.table thead .sorting { background: url('img/sort_both.png') no-repeat center right; }
+table.table thead .sorting_asc { background: url('img/sort_asc.png') no-repeat center right; }
+table.table thead .sorting_desc { background: url('img/sort_desc.png') no-repeat center right; }
+
+table.table thead .sorting_asc_disabled { background: url('img/sort_asc_disabled.png') no-repeat center right; }
+table.table thead .sorting_desc_disabled { background: url('img/sort_desc_disabled.png') no-repeat center right; }
+
+table.dataTable th:active {
+	outline: none;
+}
+
+.titles{
+	/*background-image: url('img/patron_title.png');*/
+	background-repeat: repeat;
+	background-color: #EFEFEF;
+	/*color: white;*/
+	font-style: italic;
+}

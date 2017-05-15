@@ -1,0 +1,206 @@
+.callout.callout-info
+  p En esta sección podrás establecer las acciones permitidas para el rol en cuestión
+  p.text-danger Para ser efectivo este rol debe ser asignado a un usuario
+include ../includes/forms/errorMessages
+.form-group
+  != form.label("nombre", false, {class: "control-label"})
+  != form.input("name", {class:'form-control',autofocus:'',required:''})
+.form-group
+  != form.label("descripción", false, {class: "control-label"})
+  != form.textarea("description", {class:'form-control'})
+.form-group.hide
+  != form.label("permisos", false, {class: "control-label"})
+  != form.input("permissions")
+
+legend Permisos
+style.
+  .list-group-item {cursor: pointer;}
+  .list-group-item-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+  }
+
+div#perms-list
+
+//- #perms-list.box-group
+//-   .panel.box.box-primary
+//-     .box-header
+//-       h4.box-title
+//-         a.collapsed(data-toggle='collapse', data-parent='#perms-list', href='#module1')
+//-           | Module 1
+//-     #module1.panel-collapse.collapse
+//-       .box-body
+//-         ul.list-group.checked-list-box#check-list-box
+//-           li.list-group-item(data-color='success',name='action1') Action 1
+//-           li.list-group-item(data-color='success',name='action2') Action 2
+
+
+//- .box.box-solid
+//-   .box-header
+//-     h3.box-title
+//-       i.fa.fa-group
+//-       |  RRHH
+//-   .box-body
+//-     #accordion.box-group
+//-       .panel.box.box-primary
+//-         .box-header
+//-           h4.box-title
+//-             a.collapsed(data-toggle='collapse', data-parent='#accordion', href='#collapseOne')
+//-               | Collapsible Group Item #1
+//-         #collapseOne.panel-collapse.collapse(style='height: 0px;')
+//-           .box-body
+//-             | Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+
+!= javascript_include_tag('meg/utils/server', 'values/roles')
+
+script
+  :coffeescript(minify=true)
+
+    #<div class="pull-right box-tools">
+    #  <button type="button" data-toggle="button" class="btn btn-xs pull-right btn-check" ctrl="{ctrlName2}">Marcar todos</button>
+    #</div>
+    skeleton = '<div class="box-group" id="box-perms">{modules}</div>'
+    action = '<li data-color="success" name="{action_name}" ctrl="{ctrlName2}" class="list-group-item"><span class="state-icon glyphicon glyphicon-unchecked"></span> {action_text}</li>'
+    module_main = '<div class="panel box box-success">
+      <div class="box-header">
+        <h4 class="box-title">
+          <a id="box_{ctrlName2}" data-toggle="collapse" data-parent="#box-perms" href="{ctrlName1}" class="collapsed">
+          <i class="{icon}"></i>  {ctrlText}
+          </a>
+        </h4>
+      </div>
+      <div id="{ctrlName2}" class="panel-collapse collapse">
+        <div class="box-body">
+          {submodules}
+        </div>
+      </div>
+    </div>'
+    module = '<div class="panel box box-primary">
+      <div class="box-header">
+        <h4 class="box-title"><a data-toggle="collapse" data-parent="#box_{ctrlName2}" href="{ctrlName1}" class="collapsed">{ctrlText}</a></h4>
+      </div>
+      <div id="{ctrlName2}" class="panel-collapse collapse">
+        <div class="box-body">
+          <ul class="list-group checked-list-box">
+            {actions}
+          </ul>
+        </div>
+      </div>
+    </div>'
+
+    generatePanels = (ctrls, item) ->
+      genSubModule = (ctrl, data) ->
+        st_sub_module = ''
+        st_actions = ''
+        for act in data.actions
+          _action = action
+          _action = _action.replace('{action_name}', act.action)
+          _action = _action.replace('{action_text}', act.showName)
+          _action = _action.replace('{ctrlName2}', data.rawName)
+          st_actions += _action
+        _module = module
+        _module = _module.replace('{actions}', st_actions)
+        _module = _module.replace('{ctrlName1}', '#' + data.rawName)
+        _module = _module.replace('{ctrlName2}', data.rawName)
+        _module = _module.replace('{ctrlName2}', data.rawName)
+        _module = _module.replace('{ctrlText}', data.showName)
+        st_sub_module += _module
+        st_sub_module
+      ###############################################################
+
+      st_modules = ''
+      for position in values.positions
+        raw_m = position.m.toLowerCase().replace(' ','_')
+        st_submodules = ''
+        for ctrl_rawname in position.ctrls
+          ctrl = ctrl_rawname
+          data = ctrls[ctrl_rawname]
+          st_submodules += genSubModule(ctrl, data)
+        _module = module_main
+        _module = _module.replace('{submodules}', st_submodules)
+        _module = _module.replace('{ctrlName1}', '#' + raw_m)
+        _module = _module.replace('{ctrlName2}', raw_m)
+        _module = _module.replace('{ctrlName2}', raw_m)
+        _module = _module.replace('{ctrlText}', position.m)
+        _module = _module.replace('{icon}', position.i)
+        st_modules += _module
+      $('#perms-list').append skeleton.replace('{modules}', st_modules)
+
+      $('.btn-check').on 'click', ->
+        if not $(@).hasClass('active')
+          $(@).text('Desmarcar todos')
+        else
+          $(@).text('Marcar todos')
+
+      perms = ''
+      if item.hasOwnProperty('permissions')
+        perms = item.permissions
+      if perms.length > 0
+        perms = JSON.parse(perms)
+        if typeof perms == 'string'
+          perms = JSON.parse(perms)
+
+      $.each $(".list-group.checked-list-box .list-group-item"), () ->
+        widget = $(@)
+
+        updateDisplay = () ->
+          isChecked = checkbox.is(":checked")
+          widget.data "state", (if (isChecked) then "on" else "off")
+          widget.find(".state-icon").removeClass().addClass "state-icon " + settings[widget.data("state")].icon
+          if isChecked
+            widget.addClass style + color + " active"
+          else
+            widget.removeClass style + color + " active"
+        init = () ->
+          if widget.data("checked") is true
+            checkbox.prop "checked", not checkbox.is(":checked")
+          updateDisplay()
+          widget.prepend "<span class=\"state-icon " + settings[widget.data("state")].icon + "\"></span>"  if widget.find(".state-icon").length is 0
+
+        checkbox = $('<input type="checkbox" class="hidden"/>')
+        if perms
+          ctrl = widget.attr('ctrl')
+          act = widget.attr('name')
+          if perms.hasOwnProperty(ctrl)
+            if perms[ctrl].indexOf(act) != -1
+              checkbox.attr('checked','checked')
+        color = (if widget.data("color") then widget.data("color") else "primary")
+        style = (if widget.data("style") is "button" then "btn-" else "list-group-item-")
+        settings =
+          on:
+            icon: "glyphicon glyphicon-check"
+
+          off:
+            icon: "glyphicon glyphicon-unchecked"
+
+        widget.css "cursor", "pointer"
+        widget.append checkbox
+
+        widget.on "click", () ->
+          checkbox.prop "checked", not checkbox.is(":checked")
+          checkbox.triggerHandler "change"
+          updateDisplay()
+
+        checkbox.on "change", () ->
+          updateDisplay()
+
+        init()
+
+    getActions = () ->
+      items = $(".list-group.checked-list-box .list-group-item.active")
+      data = {}
+      for item in items
+        a = $(item)
+        if not data.hasOwnProperty(a.attr('ctrl'))
+          data[a.attr('ctrl')] = []
+        data[a.attr('ctrl')].push(a.attr('name'))
+      data
+
+    $("form").submit (e) ->
+      e.preventDefault()
+      $('#Role_permissions').val(JSON.stringify(getActions()))
+      @submit()
+
+    meg.server.ajax '/roles/id/actions', {}, (err, ctrls) ->
+      meg.server.ajax '/roles/getItem/id', {}, (err, item) ->
+        generatePanels(ctrls, item)

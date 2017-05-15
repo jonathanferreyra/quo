@@ -1,0 +1,7 @@
+en:
+  login:
+    index:'Sing in'
+    email_not_valid:'Email not valid'
+  members:
+    title:'Member'
+    pluralTitle:'Members'

@@ -1,0 +1,211 @@
+ <!--
+  tabla.html
+  
+  Copyright 2012 Informatica MEG <contacto@informaticameg.com>,
+                emiliano <emilianohfernandez@gmail.com>, 
+                david <ebermania@gmail.com
+  
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+  MA 02110-1301, USA.
+-->
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	
+	<meta charset="UTF-8">
+	{% block title %}
+	  <title>Tabla</title>
+	{% endblock %}
+	
+	{% block css %}
+	  <link rel="stylesheet" type="text/css" href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css">
+	  <link rel="stylesheet" href="css/dinamictable.css" type="text/css" media="print, projection, screen" />
+	{% endblock %}
+
+	{% block js %}
+	  <script type="text/javascript" charset="utf-8" language="javascript" src="js/jquery.js"></script>
+	  <script type="text/javascript" charset="utf-8" language="javascript" src="js/jquery.dataTables.js"></script>
+	  <script type="text/javascript" charset="utf-8" language="javascript" src="js/dinamictable.js"></script>
+	{% endblock%}
+
+</head>
+<body>
+  {% block body %}
+	<div class="contenedor">
+		<div class="container">
+		{% block table %}
+		  <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
+			  <thead>
+				<tr>
+				  <td>Apellido</td>
+				  <td>Nombre</td>
+				  <td>Teléfono</td>
+				</tr>
+			  </thead>
+			  <tbody>
+			    <tr>
+			      <td>Perez</td>
+			      <td>Pedro</td>
+			      <td>01234567890</td>
+			    </tr>
+			    <tr>
+			      <td>Rodriguez</td>
+			      <td>Juan</td>
+			      <td>01234567891</td>
+			    </tr>
+			    <tr>
+			      <td>Garcia</td>
+			      <td>Ariel</td>
+			      <td>01234567892</td>
+			    </tr>
+			    <tr>
+			      <td>Gonzalez</td>
+			      <td>Benito</td>
+			      <td>01234567893</td>
+			    </tr>
+			    <tr>
+			      <td>Franco</td>
+			      <td>Francisco</td>
+			      <td>01234567894</td>
+			    </tr>
+			  </tbody>
+		  </table>
+		{% endblock %}
+		</div>
+	</div>
+  {% endblock %}
+</body>
+
+
+<!--
+	This is an example by default, shows a table previously formatted by the programmer,
+	also works with another type of table generators, like jinja templates.
+-->
+<!--
+<script type="text/javascript" charset="utf-8" language="javascript">
+  /* Table initialisation */
+  $(document).ready(function() {
+	showTableStatic();
+  } );
+</script>
+-->
+
+
+<!--
+	This is an example for a table generated from an array of objects or a JSON.
+	Uncomment if you want to see how it works :)
+-->
+<!--
+<script type="text/javascript" charset="utf-8" language="javascript">
+	
+  /* Table initialisation */
+  $(document).ready(function() {
+	  
+    // Test Array of Objects Data
+    var objectsArray = [{"Last Name":"Smith","First Name":"John","Email":"jsmith@gmail.com","Due":"<b> $350.00 </b>","Web Site":'http://www.jsmith.com'},
+					    {"Last Name":"Mastropiero","First Name":"Johan Sebastian","Email":"mastropiero@gmail.com","Due":"$10.00","Web Site":"http://www.mastropiero.com"},
+					    {"Last Name":"Perez","First Name":"Marcos","Email":"marquitosperez@yahoo.com","Due":"$810.00","Web Site":"http://www.perezmarcos.com"},
+					    {"Last Name":"Sanchez","First Name":"Mariana","Email":"marianitaaa53@hotmail.com","Due":"$200.00","Web Site":"http://www.marianis.com"},
+					    {"Last Name":"Rodriguez","First Name":"Cassandra","Email":"cassandrar@yahoo.com","Due":"$48.00","Web Site":"http://www.cassandrita.com"},
+					    {"Last Name":"Cordera","First Name":"Pelado","Email":"cordera@bersuit.com","Due":"$4.00","Web Site":"http://www.peladocordera.com"},
+					    {"Last Name":"García","First Name":"Charly","Email":"saynomore@gmail.com","Due":"$253.00","Web Site":"http://www.charlysnm.com"},
+					    {"Last Name":"Hendrix","First Name":"Jimmy","Email":"jhendrix@gmail.com","Due":"$20.00","Web Site":"http://www.jimmyhendrix.com"},
+					    {"Last Name":"Marley","First Name":"Bob","Email":"bobmarley@yahoo.com","Due":"$10.00","Web Site":"http://www.bobmarley.com"},
+					    {"Last Name":"Starr","First Name":"Ringo","Email":"rstarr@yahoo.com","Due":"$5.00","Web Site":"http://www.ringobeatle.com"},
+					    {"Last Name":"Lennon","First Name":"John","Email":"jlennon@yahoo.com","Due":"$50.00","Web Site":"http://www.lennon.com"},
+					    {"Last Name":"Bach","First Name":"George","Email":"gbach@yahoo.com","Due":"$50.00","Web Site":"http://www.george.com"},
+					    {"Last Name":"Doe","First Name":"Jason","Email":"jdoe@hotmail.com","Due":"$99.00","Web Site":"http://www.jdoe.com"},
+					    {"Last Name":"Conway","First Name":"Tim","Email":"tconway@earthlink.net","Due":"$50.00","Web Site":"http://www.timconway.com"}];
+
+	// This function creates the table
+    var data = createTableFromJSON(objectsArray);
+    
+	/* 
+	  You can add an html tag to a specific column.
+	
+	  convertToLink returns a new dataArray with text of a specific column (e.g. "www.google.com") 
+		converted into a link (e.g. "<a href='www.google.com' target='_blank'>www.google.com</a>).
+		
+	  convertToBold returns a new dataArray with text of a specific column with its text in bold.
+	
+	  convertToSomeTag returns a new dataArray with text of a specific column with its text whitin
+		a specific tag (e.g. if the tag is ["<i>","</i>] the text will be in italic.
+	*/
+	tableData = data[0];
+	convertToLink(tableData,4);
+	convertToBold(tableData,3);
+	convertToSomeTag(tableData,2,["<i>","</i>"])
+	convertToSomeTag(tableData,0,["<u>","</u>"])
+	
+	// Shows the table
+	showTableDinamic(data);
+  } );
+</script>
+-->
+
+<!--
+	This is an example for a table generated from an array of arrays.
+	Uncomment if you want to see how it works :)
+-->
+<script type="text/javascript" charset="utf-8" language="javascript">
+	
+  /* Table initialisation */
+  $(document).ready(function() {
+		
+	// Test Array of Arrays Data
+	var arraysArray = [["Last Name","First Name","Email","Due","Web Site","Is Alive?"],
+					   ["Smith","John","jsmith@gmail.com","<b> $350.00 </b>",'http://www.jsmith.com',"No"],
+					   ["Mastropiero","Johan Sebastian","mastropiero@gmail.com","$10.00","http://www.mastropiero.com","No"],
+					   ["Perez","Marcos","marquitosperez@yahoo.com","$810.00","http://www.perezmarcos.com","Yes"],
+					   ["Sanchez","Mariana","marianitaaa53@hotmail.com","$200.00","http://www.marianis.com","Yes"],
+					   ["Rodriguez","Cassandra","cassandrar@yahoo.com","$48.00","http://www.cassandrita.com","Yes"],
+					   ["García","Charly","saynomore@gmail.com","$253.00","http://www.charlysnm.com","Yes"],
+					   ["Hendrix","Jimmy","jhendrix@gmail.com","$20.00","http://www.jimmyhendrix.com","No"],
+					   ["Marley","Bob","bobmarley@yahoo.com","$10.00","http://www.bobmarley.com","No"],
+					   ["Starr","Ringo","rstarr@yahoo.com","$5.00","http://www.ringobeatle.com","Yes"],
+					   ["Lennon","John","jlennon@yahoo.com","$50.00","http://www.lennon.com","No"],
+					   ["Bach","George","gbach@yahoo.com","$50.00","http://www.george.com","No"],
+					   ["Doe","Jason","jdoe@hotmail.com","$99.00","http://www.jdoe.com","Yes"],
+					   ["Conway","Tim","tconway@earthlink.net","$50.00","http://www.timconway.com","Yes"]];
+		
+	// This function creates the table
+	var data = createTableFromArraysArray(arraysArray);
+
+	/* 
+	You can add an html tag to a specific column.
+	
+	convertToLink returns a new dataArray with text of a specific column (e.g. "www.google.com") 
+		converted into a link (e.g. "<a href='www.google.com' target='_blank'>www.google.com</a>).
+		
+	convertToBold returns a new dataArray with text of a specific column with its text in bold.
+	
+	convertToSomeTag returns a new dataArray with text of a specific column with its text whitin
+		a specific tag (e.g. if the tag is ["<i>","</i>] the text will be in italic.
+	*/
+	tableData = data[0];
+	convertToLink(tableData,4);
+	convertToBold(tableData,3);
+	convertToSomeTag(tableData,2,["<i>","</i>"]);
+	convertToSomeTag(tableData,0,["<u>","</u>"]);
+	// You can also add some bootstrap
+	convertToSomeTag(tableData,5,["<a class='btn btn-success' href='#'>","</a>"]);
+	
+	// Shows the table
+	showTableDinamic(data);
+
+	} );
+
+</script>
+

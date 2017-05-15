@@ -1,0 +1,50 @@
+- var subtitle = Vars.instanciaModel.nombre
+include ../includes/show/actions
+.row
+  .col-md-12
+    .box.box-info
+      .box-header
+        h3.box-title Detalles
+      .box-body
+        table.table
+          tbody
+            tr
+              td
+                b Fecha
+              td
+                != Vars.instanciaModel.fecha
+            tr
+              td
+                b Descripción
+              td
+                if Vars.instanciaModel.descripcion
+                  pre
+                    != Vars.instanciaModel.descripcion
+
+.row
+  .col-md-12
+    .box.box-success
+      .box-header
+        h3.box-title Tarjetas de bienvenida capturadas
+      .box-body
+        include ../includes/index/table
+        include ../includes/index/coffees
+
+script
+  :coffeescript(minify=true)
+
+    @pluralmodel = 'tarjetabienvenidas'
+    @itemsUrl = '/tarjetabienvenidas/getby/id?f=evento&v=#{Vars.instanciaModel.id}'
+    @listaordenada = () ->
+      [
+        name: "apellido"
+        showname: "Apellido y nombre"
+        params: [ "id", "apellido", "nombre" ]
+        parser: (id, nom, ap) ->
+          value = ''
+          if ap.length > 0
+            value = ap
+          if nom.length > 0
+            value = ap + ', ' + nom
+          '<a href="/tarjetabienvenidas/' + id + '">' + value + '</a>'
+      ]

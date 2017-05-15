@@ -1,0 +1,85 @@
+doctype html
+html(lang="es-AR")
+  head
+    title #{title}
+    meta(charset='utf-8')
+    meta(http-equiv="X-UA-Compatible",content="IE=edge")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    link(href="/page/css/bootstrap.css",rel="stylesheet")
+    link(href="/page/css/main.css",rel="stylesheet")
+    link(rel='stylesheet', href='/vendor/AdminLTE/1.2/css/font-awesome.min.all.css')
+    link(href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic',rel='stylesheet', type='text/css')
+    link(href='http://fonts.googleapis.com/css?family=Raleway:400,300,700',rel='stylesheet',type='text/css')
+    script(src='/page/js/jquery-1.11.0.js')
+    script(src='/page/js/bootstrap.min.js')
+    style.
+      .ref-section {
+        font-family: "Raleway";
+        font-weight: 300;
+        color: #333;
+        font:bold;
+        text-align: center;
+      }
+  body
+    section#home(name='home')
+    #headerwrap
+      .container
+        .row.centered
+          .col-md-12
+            h3
+              i.fa.fa-wrench.fa-4x(style="color:white")
+          .col-md-12
+            h1 Mantenimiento en curso
+            h3
+              b Todo va bien,
+              |  solamente estamos trabajando para poder ofrecerte un mejor servicio ;)
+
+    #features
+      .container
+        .row.centered
+          h3 Mientras tanto puedes conocernos más a través de las siguientes secciones
+          br
+        .row.center-block
+          .col-md-2
+          .col-md-2
+            span.fa-stack.fa-2x
+              i.fa.fa-circle.fa-stack-2x.text-inverse
+              i.fa.fa-globe.fa-stack-1x.fa-inverse
+            br
+            a.ref-section(href="/site") Sitio QUO
+
+          .col-md-2
+            span.fa-stack.fa-2x
+              i.fa.fa-circle.fa-stack-2x.text-inverse
+              i.fa.fa-facebook.fa-stack-1x.fa-inverse
+            br
+            a.ref-section(href="https://www.facebook.com/QUOChurchApp") Facebook
+
+          .col-md-2
+            span.fa-stack.fa-2x
+              i.fa.fa-circle.fa-stack-2x.text-inverse
+              i.fa.fa-twitter.fa-stack-1x.fa-inverse
+            br
+            a.ref-section(href="https://www.twitter.com/QUOChurchApp") Twitter
+
+          .col-md-2
+            span.fa-stack.fa-2x
+              i.fa.fa-circle.fa-stack-2x.text-inverse
+              i.fa.fa-google-plus.fa-stack-1x.fa-inverse
+            br
+            a.ref-section(href="https://plus.google.com/102009379274927530198") Google +
+      br
+      br
+      br
+
+      hr
+      .container
+        .row
+          span.copyright
+            | Copyright ©
+            a(href='http://informaticameg.com/')  Informática MEG 2014
+          br
+          a(href='mailto:contacto@informaticameg.com')  contacto@informaticameg.com
+          br
+          span (+54) 3758 424344
+

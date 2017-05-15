@@ -1,0 +1,12 @@
+include ../includes/forms/new/configs_headtitle
+
+.row
+  .col-md-12
+    .panel.panel-default
+      .panel-body
+        include ../includes/forms/new/form
+        != form.begin()
+        include _form
+      .panel-footer
+        include ../includes/forms/new/actions
+        != form.end()

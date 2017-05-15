@@ -1,0 +1,36 @@
+include ../includes/forms/errorMessages
+.form-group
+  != form.label("Nombre a mostrar", false, {class: "control-label"})
+  != form.input("displayName", {class:'form-control', autofocus:'', required:''})
+.form-group
+  != form.label("rol", false, {class: "control-label"})
+  != form.select("roles", false, {class:'form-control'})
+.form-group.hide
+  != form.label("account_emails", false, {class: "control-label"})
+  != form.input("account_emails", {class:'form-control'})
+legend Cuentas de correo
+.callout.callout-info
+  p.text-primary
+    b Ingresa aquí las cuentas de correo que usará este usuario para ingresar al sistema
+table.table.table-responsive.user-emails
+  tbody
+br
+.form-group.nmb
+  .input-group
+    input.form-control#newEmail(type="email",placeholder="Añadir una cuenta de correo")
+    span.input-group-addon @
+    select.form-control#domainEmail
+      //- for email in ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'live.com']
+      for email in ['gmail.com', 'yahoo.com']
+        option(value="#{email}") #{email}
+  .control-label
+    label#info-msg
+a.btn.btn-default.btn-add-email(disabled)
+  i.fa.fa-plus
+  |  Añadir
+
+script(src='/javascripts/meg/utils/server.js')
+script(src='/javascripts/meg/utils/select.js')
+script(src='/javascripts/bootbox.min.js')
+
+!= javascript_include_tag('forms/users')

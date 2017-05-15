@@ -1,0 +1,99 @@
+- var demo_url = 'http://goo.gl/zmsBE8'
+- var parent_url = '/site'
+doctype html
+html(lang="es-AR")
+  head
+    title #{title} | Sistema de gestión para iglesias
+    meta(charset='utf-8')
+    meta(http-equiv="X-UA-Compatible",content="IE=edge")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    link(href="/page/css/bootstrap.css",rel="stylesheet")
+    link(href="/page/css/main.css",rel="stylesheet")
+    link(rel='stylesheet', href='/vendor/AdminLTE/1.2/css/font-awesome.min.all.css')
+    link(href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic',rel='stylesheet', type='text/css')
+    link(href='http://fonts.googleapis.com/css?family=Raleway:400,300,700',rel='stylesheet',type='text/css')
+    script(src='/page/js/jquery-1.11.0.js')
+    script(src='/page/js/bootstrap.min.js')
+  body
+    #navigation.navbar.navbar-default.navbar-fixed-top.navbar-right
+      .container
+        .navbar-header
+          button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand.logo(href='#{parent_url}')
+            //- img.img-responsive(src="/page/img/logo.png", alt='')
+            img(src="/img/blogo.png")
+        .navbar-collapse.collapse
+          ul.nav.navbar-nav.navbar-right
+            li
+              a.page-scroll(href='#caracteristicas', name="caracteristicas") Características
+            li
+              a.page-scroll(href='#beneficios', name="beneficios") Beneficios
+            li
+              a.page-scroll(href='#{parent_url}/planes', name="planes") Planes
+            li
+              a.page-scroll(href='#{parent_url}/contactar', name="contactar") Contactar
+        //- if settings.env == 'development'
+        //-   a.btn.btn-xs.btn-danger.toggleDebug.notLoad(href="#") Debug Mode
+        //-   style
+        //-     :stylus(minify=true)
+        //-       .debug * {
+        //-         -webkit-box-shadow: 0px 0px 3px red;
+        //-       }
+        //-       .toggleDebug{
+        //-         margin-top: 15px;
+        //-       }
+        //-   script
+        //-     :coffeescript(minify=true)
+        //-       @develop = true
+        //-       $(document).on "click", ".toggleDebug", (e) ->
+        //-         $("body").toggleClass "debug"
+        //-         e.preventDefault()
+
+    != body
+
+    footer.hidden-print
+      #footerwrap
+        .container
+          .row
+            .col-md-6
+              span.copyright
+                | Copyright ©
+                a(href='http://informaticameg.com/')  Informática MEG 2014
+              br
+            .col-md-6
+              ul.list-inline.quicklinks.pull-right
+                li
+                  a(href='#{parent_url}/faq') Preguntas frecuentes
+                //- li
+                //-   a(href='#') Políticas de privacidad
+                li
+                  a(href='#{parent_url}/contrato') Contrato de servicio
+
+                li
+                  a.btn.bg-light-blue.btn-circle(href='https://www.facebook.com/QUOChurchApp', title="QUO en Facebook")
+                    i.fa.fa-facebook
+                li
+                  a.btn.bg-aqua.btn-circle(href='https://www.twitter.com/QUOChurchApp', title="QUO en Twitter")
+                    i.fa.fa-twitter
+                li
+                  a.btn.bg-red.btn-circle(href='https://plus.google.com/102009379274927530198', title="QUO en Google+", rel="publisher")
+                    i.fa.fa-google-plus
+          .row
+            .col-md-12
+
+    script(src="/page/js/jquery.easing.min.js")
+    script(src="/page/js/classie.js")
+    script(src="/page/js/cbpAnimatedHeader.min.js")
+    if isDemo
+      if settings.env == 'production'
+        script.
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-56258309-1', 'auto');
+          ga('send', 'pageview');

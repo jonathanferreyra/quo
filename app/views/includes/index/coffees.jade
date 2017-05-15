@@ -1,0 +1,112 @@
+!= contentFor('js-up',javascriptIncludeTag('meg/utils/server', 'bootbox.min'))
+
+script
+  :coffeescript
+
+    @items = null
+    @pluralModel = '!{Vars.pluralmodel}'
+    @itemsUrl = '/' + @pluralModel + '.json'
+    @references = {}
+    @referencesUrls = {}
+    # REQUIRE IMPORT: values/pluralmodel.js
+    # return a string csv
+    @getCSV = (fields=null, delimiter=';', header=true) ->
+      csv = ''
+      if not fields
+        fields = [row.name for row in @listaordenada()]
+      if @items.length > 0
+        items = []
+        header = [row.showname for row in @listaordenada()]
+        for item in @items
+          this_item = []
+          for field in fields
+            this_item.push item[field]
+          items.push this_item.join(delimiter)
+
+        header = header.join(delimiter).replace(',', delimiter)
+        if header
+          csv = header + '\n'
+        csv += items.join('\n')
+        csv
+
+    @showDetails = (ide, value) =>
+      '<a href="/'+ @pluralModel + '/' + ide + '">' + value + '</a>'
+    @getModel = (id,model,opts = {},cb) ->
+      opts.id = 'id' if !opts.id?
+      opts.showname = 'nombre' if !opts.showname?
+      meg.storage.getItem model,id,(err,item)->
+        if item?
+          cb '<a class="show_'+model+'" item="'+item[opts.id]+'" href="">'+item[opts.showname]+'</a>'
+        else
+          cb "    -    "
+
+    @setActions = (id)=>
+      showAct =   {title:"Ver detalles", url:"/"+ @pluralModel + "/"+id,                            class:"", icon:"fa fa-search", extra:'data-rel="tooltip" item='+id};
+      editAct =   {title:"Editar",       url:"/"+ @pluralModel + "/"+id+"/edit", class:"",           icon:"fa fa-edit",   extra:'data-rel="tooltip"'}
+      deleteAct = {title:"Eliminar",     url:"#",         class:"item-delx",   icon:"fa fa-trash-o",  extra:'data-rel="tooltip" onclick="fnItemDel(this)" item='+id};
+      htmlActions = ''
+      for item in [showAct,editAct,deleteAct]
+        htmlActions += '<a class="btn '+item.class+'" href="'+item.url+'" title="'+item.title+'" '+item.extra+'><i class="glyphicon glyphicon-color '+item.icon+'"></i></a>'
+      '<div class="btn-group">' + htmlActions + '</div>'
+
+    @fnItemDel = (_this) ->
+      item_id = $(_this).attr('item')
+      bootbox.confirm 'Confirmar eliminación...', (result) =>
+        if result
+          $('<a>').attr({
+            'href':"/" + '!{Vars.pluralmodel}' + "/" + item_id
+            'data-remote':"true"
+            'data-method':"delete"
+            'data-jsonp':"(function (u) {location.href = u;})"
+          }).appendTo('#table').click()
+
+    @bindEvents = (cb=null) =>
+      if cb
+        cb()
+
+    @reloadTable = (rows, cb=null) ->
+      meg.table.create "#table",@listaordenada(), rows, () ->
+        $('.loader').hide()
+        #$('#table').parent().parent().fadeIn()
+        $('[data-rel="tooltip"]').tooltip()
+        if cb
+          cb()
+
+    @documentReady = (cb=null) =>
+      $('.loader').show()
+      meg.server.ajax @itemsUrl,{}, (err, listadatos) ->
+        # si el index actual posee referencias
+        if Object.keys(@referencesUrls).length > 0
+          if listadatos.length > 0
+
+            async.map @referencesUrls, (ref, cb) ->
+              meg.server.ajax ref.url, {}, (err, items) ->
+                @references[ref.name] = _.indexBy(items, 'id')
+                for item in listadatos
+                  item[ref.name + '_text'] = ''
+                  if item.hasOwnProperty(ref.name)
+                    if item[ref.name].length > 0
+                      item[ref.name + '_text'] = @references[ref.name][item[ref.name]][ref.attr]
+                cb()
+            , (err, res) ->
+              @items = listadatos
+              if not meg.data?
+                meg.data = {}
+              meg.data.currentItems = listadatos
+              @reloadTable listadatos, cb
+          else
+            @items = listadatos
+            @reloadTable listadatos, cb
+        else
+          @items = listadatos
+          if not meg.data?
+            meg.data = {}
+          meg.data.currentItems = listadatos
+          @reloadTable listadatos, cb
+
+    $ =>
+      bootbox.setDefaults
+        locale:'es'
+
+      @documentReady () ->
+        @bindEvents()

@@ -1,0 +1,17 @@
+include ../includes/forms/edit/headtitle
+
+.row
+  .col-md-12
+    .panel.panel-default
+      .panel-body
+        include ../includes/forms/edit/form
+        != form.begin()
+        include _form
+      .panel-footer
+        include ../includes/forms/edit/actions
+        != form.end()
+script
+  :coffeescript
+
+    $ ->
+      $('#Grupocrecimiento_dia_de_la_semana').val('!{Vars.instanciaModel.dia_de_la_semana}')

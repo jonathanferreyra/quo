@@ -1,0 +1,216 @@
+style.
+  address {margin-bottom: 0px;}
+  .invoice-col {
+    width: 50%;
+  }
+  table > tbody > tr > td {padding-left:5px;}
+  .sec_contact_info legend {margin-bottom: 0px;}
+script
+  :coffee
+    @custom_params = 
+      sec_contact_info:'Información de contacto'
+      sec_ocupacion: 'Ocupación'
+      sec_salud:'Datos de salud'
+      sec_iglesia:'Datos de la iglesia'
+
+include ../base_header
+
+.row.invoice-info
+  .col-md-6.invoice-col
+    table
+      tbody
+        tr
+          th Nombre 
+          td 
+            != item.nombre
+        tr
+          th Apellido 
+          td 
+            != item.apellido
+        tr
+          th Dirección 
+          td 
+            != item.direccion
+        tr
+          th Barrio 
+          td #{item.barrio.nombre}
+        tr
+          th Localidad 
+          td #{item.localidad.nombre}
+        tr
+          th Sexo 
+          if item.sexo == 'm'
+            td Masculino
+          else
+            td Femenino
+        tr
+          th Clasificación social 
+          td #{item.clasificacion_social.nombre}
+  .col-md-6.invoice-col
+    table
+      tbody
+        tr
+          th Nro documento 
+          td 
+            != item.nro_documento
+        tr
+          th Fecha de nacimiento 
+          td 
+            != item.fecha_nacimiento
+        tr
+          th Lugar de nacimiento 
+          td 
+            != item.lugar_nacimiento
+        tr
+          th Estado civil 
+          td #{item.estado_civil.nombre}
+        tr
+          th Fecha de matrimonio 
+          td 
+            != item.fecha_matrimonio
+        tr
+          th Nacionalidad 
+          td 
+            != item.nacionalidad
+        tr
+          th Familia 
+          td #{item.familia.nombre}
+        tr
+          th Relación con la familia
+          td#relacion_familia
+
+.row.invoice-info.sec_contact_info
+  .col-md-6.invoice-col
+    legend Teléfonos
+    #div-telefonos
+  .col-md-6.invoice-col
+    legend Emails
+    #div-emails
+
+.row.invoice-info
+  .col-md-6.invoice-col.sec_ocupacion
+    legend Ocupación
+    table
+      tr
+        th Profesión u oficio
+        td
+          != item.profesion_oficio
+      tr
+        th Lugar de trabajo
+        td
+          != item.lugar_trabajo
+      tr
+        th Puesto que ocupa
+        td
+          != item.puesto
+  .col-md-6.invoice-col.sec_salud
+    legend Datos de salud
+    table
+      tbody
+        tr
+          th Tipo de sangre
+          td
+            != item.tipo_sangre
+        tr
+          th Alergias o indicaciones médicas
+          td
+            != item.alergias
+        tr
+          th Capacidades diferentes o especiales
+          td
+            != item.capacidades_diferentes
+
+.row.invoice-info.sec_iglesia
+  .col-md-12
+    legend Datos de la iglesia
+    .col-md-6.invoice-col(style='padding-left: 0px')
+      table
+        tbody
+          tr
+            th Razon de la alta
+            td#razon_alta
+          tr
+            th Grupo al que pertenece
+            td #{item.pertenece_gc.nro}
+          tr
+            th Estado de membresía
+            td #{item.estado_membresia.nombre}
+          tr
+            th Fecha de conversión
+            td
+              != item.fecha_conversion
+          tr
+            th Fecha de bautismo
+            td
+              != item.fecha_bautismo
+          tr
+            th Lugar e iglesia de bautismo
+            td
+              != item.iglesia_bautismo
+          tr
+            th Fué bautizado en esta iglesia
+            if item.bautizado_en_esta_iglesia
+              td SI
+            else
+              td NO
+          tr
+            th Recibió bautismo del Espíritu Santo
+            if item.recibio_bautismo_es
+              td SI
+            else
+              td NO
+    .col-md-6.invoice-col
+      table
+        tbody
+          tr
+            th Ministro que lo/a bautizó
+            td
+              != item.ministro_bautizo
+          tr
+            th Fecha inicio membresía aquí
+            td
+              != item.fecha_inicio_membresia
+          tr
+            th A que iglesia asistía
+            td
+              != item.asistia_otra_iglesia
+          tr
+            th Invitado por
+            td
+              != item.invitado_por
+          tr
+            th Forma en que fue contactado
+            td
+              != item.forma_contactado
+          tr
+            th Nombre del cónyuge
+            td
+              != item.nombre_conyuge
+          tr
+            th Número de hijos
+            td
+              != item.nro_hijos
+          tr
+            th Padres son miembros de esta iglesia
+            if item.padres_miembros_esta_iglesia
+              td SI
+            else
+              td NO
+          tr
+            th Cónyuge miembro esta iglesia
+            if item.conyuge_miembro_esta_iglesia
+              td SI
+            else
+              td NO
+
+!= javascriptIncludeTag('meg/utils/gui', 'values/miembros','values/defaults','meg/meg-simpletable','gui_things')
+
+script
+  :coffee
+
+    meg.gui.showFromValueName '#razon_alta', values.razon_alta, '#{item.razon_alta}'
+    meg.gui.showFromValueName '#relacion_familia', values.relacion_familia, '#{item.relacion_familia}'
+
+    gui_things.instanceTelefonosSimpleTable('', '!{item.telefonos}')
+    gui_things.instanceEmailsSimpleTable('', '!{item.emails}')
+    $('table.table').addClass('table-condensed')

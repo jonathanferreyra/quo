@@ -1,0 +1,33 @@
+//- .row
+//-   .col-md-12
+//-     h1.head-title
+//-       | #{Vars.titlemodel}
+//-       a#btnNew.btn.btn-success.btn-sm(href='#{Vars.pluralmodel}/new', style='margin-left:5px')
+//-         i.fa.fa-plus
+//-         |  Nuev#{Vars.letraGenero}
+//-     ol.breadcrumb
+//-       li
+//-         a(href='/', title="Inicio")
+//-           i.fa.fa-home
+//-       li
+//-         a(href="#") #{Vars.subsection}
+//-       li.active #{Vars.titlemodel}
+
+script
+  :coffee
+
+    tmlp = '''
+    <h1>#{Vars.titlemodel}
+      <a id="btnNew" href="#{Vars.pluralmodel}/new" style="margin-left:5px" class="btn btn-success btn-xs"><i class="fa fa-plus">
+        </i> Nuev#{Vars.letraGenero}
+      </a>
+      <small> | Configuraciones del sistema</small>
+    </h1>
+    <ol class="breadcrumb">
+      <li><a href="/" title="Inicio"><i class="fa fa-home"></i></a></li>
+      <li><a href="#">Configuraciones</a></li>
+      <li class="active">#{Vars.titlemodel}</li>
+    </ol>'''
+    $('section.content-header').empty().append(tmlp)
+
+include container_table

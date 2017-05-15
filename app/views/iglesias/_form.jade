@@ -1,0 +1,55 @@
+include ../includes/forms/errorMessages
+.form-group
+  != form.label("nombre de la iglesia", false, {class: "control-label"})
+  != form.input("nombre", {class: "form-control"})
+.form-group
+  != form.label("dirección", false, {class: "control-label"})
+  != form.input("direccion", {class: "form-control",placeholder:'Calle, Número, Piso, Dpto.'})
+.form-group
+  != form.label("provincia", false, {class: "control-label"})
+  != form.select("provincia", false, {class: "form-control"})
+.form-group
+  != form.label("localidad", false, {class: "control-label"})
+  != form.select("localidad", false, {class: "form-control"})
+.form-group
+  != form.label("país", false, {class: "control-label"})
+  != form.input("pais", {class: "form-control"})
+.form-group
+  != form.label("telefono", false, {class: "control-label"})
+  != form.input("telefonos", {class: "form-control"})
+.form-group
+  != form.label("email", false, {class: "control-label"})
+  != form.input("emails", {class: "form-control"})
+.form-group
+  != form.label("sitio_web", false, {class: "control-label"})
+  != form.input("sitio_web", {class: "form-control"})
+.form-group
+  != form.label("nombre pastor", false, {class: "control-label"})
+  != form.input("nombre_pastor", {class: "form-control"})
+.form-group
+  != form.label("día servicio semana", false, {class: "control-label"})
+  != form.select("dia_servicio_semana", false, {class: "form-control"})
+.form-group
+  != form.label("día servicio principal", false, {class: "control-label"})
+  != form.select("dia_servicio_principal", false, {class: "form-control"})
+.form-group
+  != form.label("información adicional", false, {class: "control-label"})
+  != form.textarea("info_adicional", {class: "form-control", rows:'4'})
+
+!= javascriptIncludeTag('meg/utils/server','meg/utils/select','meg/utils/gui','jquery.chained.min', 'values/defaults','async')
+
+script
+  :coffeescript(minify=true)
+
+    model_id = '#Iglesia_'
+
+    defValues =
+      'model_id' : model_id
+      'barrio' : ''
+      'localidad' : '!{Vars.instanciaModel.localidad}'
+      'provincia' : '!{Vars.instanciaModel.provincia}'
+      'provinciaSelector': model_id + 'provincia'
+    meg.gui.loadGeographicsSelects defValues, () ->
+
+    meg.gui.loadSelectFromValues defaults.dias_semanales, model_id + 'dia_servicio_semana', '!{Vars.instanciaModel.dia_servicio_semana}', false
+    meg.gui.loadSelectFromValues defaults.dias_semanales, model_id + 'dia_servicio_principal', '!{Vars.instanciaModel.dia_servicio_principal}', false

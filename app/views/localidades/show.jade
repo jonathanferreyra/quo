@@ -1,0 +1,72 @@
+- var subtitle = Vars.instanciaModel.name
+include ../includes/show/configs_breadcrumb
+.row
+  .col-md-12
+    a.btn.btn-sm.btn-primary#btBackToList(href="/#{Vars.pluralmodel}", style="margin-right: 5px;")
+      i.fa.fa-arrow-left
+      |  Volver a la lista
+    a.btn.btn-sm.btn-success(href="/barrios/new?p=#{Vars.instanciaModel.id}", style="margin-right: 5px;")
+      i.fa.fa-plus
+      |  Agregar nuevo barrio
+    include ../includes/show/btns_right
+br
+
+.row
+  .col-md-12
+    .box.box-default
+      .box-header
+        h4.box-title Detalles
+      .box-body
+        table.table
+          tbody
+            tr
+              th Código postal
+              td
+                != Vars.instanciaModel.cp
+            tr
+              th Provincia
+              td#provincia
+            tr
+              th Latitud
+              td
+                != Vars.instanciaModel.lat
+            tr
+              th Longitud
+              td
+                != Vars.instanciaModel.long
+            tr
+              th Ver en mapa OSM
+              td
+                - var _lat = Vars.instanciaModel.lat
+                - var _long = Vars.instanciaModel.long
+                a(
+                  target="_blank",
+                  href="http://www.openstreetmap.org/?mlat=#{_lat}&mlon=#{_long}&zoom=12"
+                ) Ver
+
+.row
+  .col-md-12
+    .box.box-info
+      .box-header
+        h4.box-title Barrios
+      .box-body
+        include ../includes/index/table
+        include ../includes/index/coffees
+
+!= javascriptIncludeTag('meg/utils/server','meg/utils/select','meg/utils/gui')
+
+script
+  :coffeescript
+
+    model_id = '#Localidad_'
+    meg.gui.showRefName 'provincias', 'name', '#{Vars.instanciaModel.provincia}', '#provincia', true
+
+    @itemsUrl = '/localidades/getBarrios/#{Vars.instanciaModel.id}'
+    @listaordenada = () ->
+      [
+        name: "name"
+        showname: "Nombre"
+        params: [ "id","name" ]
+        parser: (ide, value) =>
+          '<a href="/barrios/' + ide + '">' + value + '</a>'
+      ]

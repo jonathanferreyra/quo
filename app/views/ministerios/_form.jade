@@ -1,0 +1,10 @@
+include ../includes/forms/errorMessages
+.form-group
+  != form.label("nombre", false, {class: "control-label"})
+  .required-field-block
+    != form.input("nombre", {class:'form-control', autofocus:'', required:''})
+    .required-icon
+      .text *
+.form-group
+  != form.label("descripción", false, {class: "control-label"})
+  != form.textarea("descripcion", {class:'form-control', rows:'3'})

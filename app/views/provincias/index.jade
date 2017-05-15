@@ -1,0 +1,56 @@
+script
+  :coffee
+
+    $('section.content-header').empty().append('''
+      <h1 class="head-title">#{Vars.titlemodel}
+        <a id="btnNew" href="#{Vars.pluralmodel}/new" style="margin-left:5px" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> Nuevo</a>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-home"></i> #{Vars.subsection}</a></li>
+        <li><a href="/paises"> Paises</a></li>
+        <li class="active">#{Vars.titlemodel}</li>
+      </ol>''')
+
+include ../includes/index/filters
+include ../includes/index/container_table
+
+!= javascriptIncludeTag('async','meg/meg-filter')
+
+script
+  :coffeescript(minify=true)
+
+    @fnFormatField =
+      pais:(value) ->
+        meg.data.references['idx']['pais'][value]['name']
+
+    @listaordenada = () ->
+      [
+        name: "name"
+        showname: "Nombre"
+        parser: @showDetails
+        params: [ "id","name" ]
+      ,
+        name: "pais_text"
+        showname: "Pais"
+        params: [ "pais", "pais_text"]
+        parser: (id, text) ->
+          '<a href="/paises/' + id + '">' + text + '</a>'
+      ,
+        name: "accciones"
+        parser: @setActions
+        params: [ "id" ]
+        showname: "Acciones"
+      ]
+
+    @referencesUrls = [
+      {url:'paises.json?f=id,name', name:'pais', attr:'name'}
+    ]
+    @filter_fields_ajax = {
+      'pais':{t:'Pais',u:'/paises.json?f=id,name', ktext:'name'}
+    }
+
+    @load_filter_fields_ajax()
+
+    # init filter plugin
+    @filter_fields = _.sortBy(@filter_fields, 'text')
+    $("#filters").MEGFilter(fields:@filter_fields)

@@ -1,0 +1,21 @@
+.form-actions
+  != form.submit('<i class="fa fa-check"></i> Crear', {class: 'btn btn-success', id: 'btcreate'})
+  
+  button#btcontinue.btn.btn-primary(style="margin-left:5px;", type="submit")
+    i.fa.fa-arrow-right
+    |  Crear y continuar
+  a#btcancel.btn.btn-danger(href='/#{Vars.pluralmodel}', style="margin-left:5px;")
+    i.fa.fa-ban
+    |  Cancelar 
+
+script
+  :coffeescript(minify=true)
+
+    $('#btcontinue').on 'click', ->
+      $('<input type="checkbox"></input>')
+        .attr('id','continue')
+        .attr('name','continue')
+        .attr('style','display:none')
+        .attr('checked',true)
+        .prependTo('form')
+      #$('form').submit()

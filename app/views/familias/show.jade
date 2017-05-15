@@ -1,0 +1,111 @@
+- var subtitle = '#' + Vars.instanciaModel.ide + ' ' + Vars.instanciaModel.nombre
+include ../includes/show/actions
+- var instanciaModel = Vars.instanciaModel
+style.
+  dt { font-size: 18px;}
+  .btn-add-member {margin-top:5px}
+
+.row
+  .col-md-6
+    .box.box-info
+      .box-header
+        h4.box-title Detalles
+      .box-body
+        table.table.table-condensed
+          tbody
+            tr
+              th Dirección
+              td #{instanciaModel.direccion}
+            tr
+              th Barrio
+              td#barrio
+            tr
+              th Localidad
+              td#localidad
+        hr
+        legend Teléfonos
+        #div-telefonos
+  .col-md-6
+    .box.box-success
+      .box-header
+        h4.box-title Integrantes
+      .box-body
+        table.table.table-condensed#tb-members
+          tbody
+
+        a.btn.btn-default.btn-sm.btn-add-member(href="#",data-toggle="modal",data-target="#md-add")
+          i.fa.fa-plus
+          |  Agregar un integrante
+
+        #md-add.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+          .modal-dialog
+            .modal-content
+              .modal-header
+                button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+                h4#myModalLabel.modal-title Agregar integrante
+              .modal-body
+                label.contro-label(for="miembros") Seleccionar miembro
+                select.form-control#miembros
+              .modal-footer
+                button.btn.btn-default(type='button', data-dismiss='modal') Cancelar
+                button.btn.btn-primary.btn-ok(type='button') Aceptar
+
+!= javascriptIncludeTag('meg/utils/server', 'meg/utils/select', 'meg/utils/gui','values/defaults','meg/meg-simpletable','bootbox.min', 'async', 'gui_things')
+
+script
+  :coffeescript(minify=true)
+
+    # load table members
+    loadTableMembers = () ->
+      meg.server.ajax '/familias/getMembers/#{Vars.instanciaModel.id}', {}, (err, res) ->
+        items = ''
+        for m in res
+          t = '#' + m.ide + ' ' + m.apellido + ' ' + m.nombre
+          act = '<td><a title="Quitar miembro" href="#" class="del-member" item="' + m.id + '"><i class="fa fa-trash-o"></i></a><td>'
+          items += '<tr><td><a href="/miembros/' + m.id + '">' + t + '</a></td>' + act + '</tr>'
+        $('#tb-members').empty().append(items)
+        $('.del-member').on 'click', ->
+          itemId = $(@).attr('item')
+          bootbox.confirm "¿Deseas quitar este miembro?", (res) ->
+            if res
+              url = '/familias/delMember'
+              data =
+                miembro : itemId
+              meg.server.ajaxPost url, data, () ->
+                loadTableMembers()
+
+    $('#md-add').on 'show.bs.modal', ->
+      $('#miembros').empty()
+      meg.server.ajax '/miembros/empty_family/id', {}, (err, res) ->
+        _items = []
+        res = _.sortBy(res, 'ide')
+        for item in res
+          _items.push
+            id: item.id
+            nombre : '#' + item.ide + ' ' + item.apellido + ' ' + item.nombre
+        opts = {}
+        meg.select.load '#miembros', _items, opts, () ->
+
+    $('.btn-ok').on 'click', ->
+      if $('#miembros').val().length == 0
+        alert 'Debes seleccionar un miembro para continuar'
+      else
+        data =
+          authenticity_token : $("meta[name=csrf-token]").attr("content")
+          miembro : $('#miembros').val()
+          familia : '#{Vars.instanciaModel.id}'
+        meg.server.ajaxPost '/familias/addMember', data, () ->
+          $('#md-add').modal('hide')
+          loadTableMembers()
+
+    async.series([
+      (cb) ->
+        meg.gui.showRefName 'barrios', 'name', '#{Vars.instanciaModel.barrio}', '#barrio', true, cb
+      , (cb) ->
+        meg.server.ajax '/barrios/#{Vars.instanciaModel.barrio}.json', {}, (err, item) ->
+          meg.gui.showRefName 'localidades', 'name', item.localidad, '#localidad', true, cb
+      , (cb) ->
+      loadTableMembers()
+     ], (err, res) -> )
+
+    gui_things.instanceTelefonosSimpleTable('', '!{Vars.instanciaModel.telefonos}')

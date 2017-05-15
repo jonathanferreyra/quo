@@ -1,0 +1,130 @@
+include ../includes/index/subhead
+include ../includes/index/filters
+
+//- .row
+//-   .col-md-12
+//-     .pull-right
+//-       .btn-group(data-toggle="buttons")
+//-         label.btn.btn-default.active
+//-           input.btn.btn-default.tiempo(type="radio", name='este_mes')
+//-           | Este mes
+//-         label.btn.btn-default
+//-           input.btn.btn-default.tiempo(type="radio", name='mes_pasado')
+//-           | Mes pasado
+//-         label.btn.btn-default
+//-           input.btn.btn-default.tiempo(type="radio", name='pasado')
+//-           | Todas
+//- br
+
+include ../includes/index/container_table
+!= javascriptIncludeTag('async', 'meg/meg-filter')
+
+script
+  :coffeescript(minify=true)
+
+    @fnFormatField =
+      duracion : (inicio, cierre) ->
+        padNmb = (nStr, nLen) ->
+          sRes = String(nStr)
+          sCeros = "0000000000"
+          sCeros.substr(0, nLen - sRes.length) + sRes
+        stringToSeconds = (tiempo) ->
+          sep1 = tiempo.indexOf(":")
+          sep2 = tiempo.lastIndexOf(":")
+          hor = tiempo.substr(0, sep1)
+          min = tiempo.substr(sep1 + 1, sep2 - sep1 - 1)
+          sec = tiempo.substr(sep2 + 1)
+          Number(sec) + (Number(min) * 60) + (Number(hor) * 3600)
+        secondsToTime = (secs) ->
+          hor = Math.floor(secs / 3600)
+          min = Math.floor((secs - (hor * 3600)) / 60)
+          sec = secs - (hor * 3600) - (min * 60)
+          padNmb(hor, 2) + ":" + padNmb(min, 2) + ":" + padNmb(sec, 2)
+        substractTimes = (t1, t2) ->
+          secs1 = stringToSeconds(t1)
+          secs2 = stringToSeconds(t2)
+          secsDif = secs1 - secs2
+          secondsToTime secsDif
+        inicio = inicio.substring(0,5) + ":00"
+        cierre = cierre.substring(0,5) + ":00"
+        resultado = substractTimes(cierre, inicio)
+        resultado.substring(0,5)
+
+    attrs = ['id','grupo','fecha','hora_inicio',
+      'hora_cierre','total_asistencias','tema_compartido']
+    @itemsUrl = '/regsemanalgcs.json?f=' + attrs.join(',')
+    @listaordenada = () ->
+      [
+        name: "grupo_text"
+        showname: "Grupo"
+      ,
+        name: "fecha"
+        showname: "Fecha"
+      ,
+        name: "hora_inicio"
+        showname: "Hora inicio"
+      ,
+        name: "hora_cierre"
+        showname: "Hora cierre"
+      ,
+        name: "duracion"
+        showname: "Duración"
+        params: [ "hora_inicio","hora_cierre" ]
+        parser: @fnFormatField.duracion
+      ,
+        name: "total_asistencias"
+        showname: "Cantidad asistencias"
+      #,
+      #  name: "tema_compartido"
+      #  showname: "Tema compartido"
+      ,
+        name: "accciones"
+        parser: @setActions
+        params: [ "id" ]
+        showname: "Acciones"
+      ]
+
+    refs_urls = [
+      {url:'grupocrecimientos.json?f=id,nro', name:'grupo', attr:'nro'}
+    ]
+
+    @documentReady = (cb=null) ->
+      $('.loader').show()
+      meg.server.ajax @itemsUrl, {}, (err, listadatos) ->
+        if not meg.data?
+          meg.data = {}
+        meg.data.currentItems = listadatos
+        if listadatos.length > 0
+
+          #carga los items referencia indicados en 'refs_urls'
+          async.map refs_urls, (ref, cb) ->
+            meg.server.ajax ref.url, {}, (err, items) ->
+              @references[ref.name] = _.indexBy(items, 'id')
+              for item in listadatos
+                item[ref.name + '_text'] = ''
+                if item.hasOwnProperty(ref.name)
+                  if item[ref.name].length > 0
+                    try
+                      item[ref.name + '_text'] = @references[ref.name][item[ref.name]][ref.attr]
+                    catch e
+                      item[ref.name + '_text'] = ''
+              cb()
+          , (err, res) ->
+            @items = listadatos
+            @reloadTable listadatos, cb
+        else
+          @items = listadatos
+          @reloadTable listadatos, cb
+
+    @filter_fields = [
+        name: 'fecha'
+        text: 'Fecha'
+        type: 'date'
+    ]
+    @filter_fields_ajax = {
+      'grupo':{t:'Grupo',u:'/grupocrecimientos.json?f=id,nro', ktext:'nro'}
+    }
+    @load_filter_fields_ajax()
+    # init filter plugin
+    @filter_fields = _.sortBy(@filter_fields, 'text')
+    $("#filters").MEGFilter(fields:@filter_fields)

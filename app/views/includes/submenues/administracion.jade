@@ -1,0 +1,20 @@
+li#administracionRootMenu.treeview
+  a(href='#')
+    i.fa.fa-group
+    span Administración
+    i.fa.fa-angle-left.pull-right
+  ul.treeview-menu
+    //- li
+      a(href='/settings')
+        i.fa.fa-angle-double-right
+        |  Opciones generales
+    if user.can('users')
+      li#usersMenu
+        a(href='/users')
+          i.fa.fa-angle-double-right
+          |  Usuarios
+    if user.can('roles')
+      li#rolesMenu
+        a(href='/roles')
+          i.fa.fa-angle-double-right
+          |  Roles

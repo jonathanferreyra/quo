@@ -1,0 +1,50 @@
+- var subtitle = Vars.instanciaModel.nombre
+include ../includes/show/actions
+
+.row
+  .col-md-12
+    .box.box-info
+      .box-header
+        h4.box-title Detalles
+      .box-body
+        table.table.table-condensed
+          tbody
+            tr
+              tr
+              td
+                b Descripción
+              td
+                != Vars.instanciaModel.descripcion
+
+.row
+  .col-md-12
+    .box.box-warning
+      .box-header
+        h4.box-title Personas involucradas en esta área
+      .box-body
+        include ../includes/index/table
+        include ../includes/index/coffees
+
+!= javascriptIncludeTag('meg/utils/server')
+
+script
+  :coffeescript(minify=true)
+
+    @itemsUrl = '/ministerios/getMembers/#{Vars.instanciaModel.id}'
+    @listaordenada = () ->
+      [
+        name: 'ide'
+        showname: '#'
+      ,
+        name : 'apellido'
+        showname : 'Apellido y nombre'
+        params: ['id', 'apellido', 'nombre']
+        parser: (id, a, n) ->
+          a = '<a href="/miembros/{id}">{text}</a>'
+            .replace('{id}', id)
+            .replace('{text}', n + ' ' + a)
+          a
+      ,
+        name : 'funcion'
+        showname : 'Función que cumple'
+      ]

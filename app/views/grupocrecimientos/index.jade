@@ -1,0 +1,91 @@
+include ../includes/index/subhead
+include ../includes/index/filters
+include ../includes/index/container_table
+
+!= javascriptIncludeTag('values/defaults', 'meg/meg-filter')
+
+script
+  :coffeescript(minify=true)
+
+    @fnFormatField =
+      nro:(value) ->
+        parseInt(value)
+      dia_de_la_semana:(value) ->
+        defaults.dias_semanales[value]
+      barrio:(value) ->
+        meg.data.references['idx']['barrio'][value]['name']
+      localidad:(value) ->
+        meg.data.references['idx']['localidad'][value]['name']
+
+    @listaordenada = () ->
+      [
+        name: "nro"
+        showname: "Nro"
+      ,
+        name: "timonel"
+        showname: "Líder/encargado"
+      ,
+        name: "timoteo"
+        showname: "Colaborador/ayudante"
+      ,
+        name: "anfitrion"
+        showname: "Anfitrión"
+      ,
+        name: "horario"
+        showname: "Horario"
+      ,
+        name: "dia_de_la_semana"
+        showname: "Día de la semana"
+        params:['dia_de_la_semana']
+        parser: @fnFormatField['dia_de_la_semana']
+      ,
+        name: "accciones"
+        parser: @setActions
+        params: [ "id" ]
+        showname: "Acciones"
+      ]
+
+    attrs = '?f=id,name'
+    @filter_fields_ajax = {
+      'barrio':{t:'Barrio',u:'/barrios.json' + attrs}
+      'localidad':{t:'Localidad',u:'/localidades.json' + attrs + '&force=true'}
+    }
+
+    if not meg.data?
+      meg.data = {}
+    meg.data.references = {all:{}, idx:{}}
+
+    async.map Object.keys(@filter_fields_ajax), (field, mapCb) ->
+      meg.server.ajax @filter_fields_ajax[field].u, {}, (err, items) ->
+        meg.data.references['all'][field] = items
+        meg.data.references['idx'][field] = _.indexBy(items, 'id')
+        mapCb()
+    , (err, res) ->
+
+      # load_filter_fields_values dia_de_la_semana
+      opts = []
+      for k, v of defaults.dias_semanales
+        opts.push({id:k, text:v.replace('...','')})
+      @filter_fields.push({
+        name: 'dia_de_la_semana'
+        text: 'Día de la semana'
+        type: 'opts'
+        options: opts,
+        sort:false
+      })
+
+      for attr, data of @filter_fields_ajax
+        items = meg.data.references['all'][attr]
+        opts = []
+        for item in items
+          opts.push({id:item.id, text:item.name})
+        @filter_fields.push({
+          name: attr
+          text: data.t
+          type: 'opts'
+          options: opts
+        })
+
+      # init filter plugin
+      @filter_fields = _.sortBy(@filter_fields, 'text')
+      $("#filters").MEGFilter(fields:@filter_fields)

@@ -1,0 +1,376 @@
+- var instanciaModel = Vars.instanciaModel
+- var subtitle = '#' + Vars.instanciaModel.ide + ' ' + Vars.instanciaModel.nombre + ' ' + Vars.instanciaModel.apellido
+
+include ../includes/show/subhead
+
+style.
+  .min-margin {margin-right: 5px;}
+  .tab-pane { margin-bottom: 1% }
+  .dl-show dt { padding:3px; width: 180px; color:rgb(45, 75, 108)}
+  .dl-show dd { padding:3px; width: 180px;}
+  .det-title {
+    color:#4D4D4D;
+    margin-left:5px;
+    margin-top:15px;
+    font-weight: bold;
+  }
+  .fa {margin-right: 5px;}
+  address {margin-bottom:0px}
+
+.row.mb5
+  .col-md-12
+    a.btn.btn-sm.btn-primary.min-margin#btBackToList(href="/#{Vars.pluralmodel}")
+      i.fa.fa-arrow-left
+      |  Volver a la lista
+    .btn-group.pull-right
+      button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+        i.fa.fa-cog
+        |  Opciones
+        span.caret
+      ul.dropdown-menu(role='menu')
+        li
+          a#actnEdit(href='/#{Vars.pluralmodel}/#{Vars.instanciaModel.id}/edit')
+            i.fa.fa-pencil.text-warning
+            |  Editar
+        li
+          a.item-del(href="#", item="#{Vars.instanciaModel.id}")
+            i.fa.fa-trash-o.text-danger
+            |  Eliminar
+        li
+          a(href='/reports/miembro/#{Vars.instanciaModel.id}')
+            i.fa.fa-print
+            |  Generar reporte
+        li
+          a.to-ide(href='#')
+            i.fa.fa-external-link
+            |  Ir al miembro...
+        li.divider
+        li
+          a#actnNew(href='/#{Vars.pluralmodel}/new')
+            i.fa.fa-plus.text-success
+            |  Crear nuev#{Vars.letraGenero}
+
+!= javascriptIncludeTag('bootbox.min')
+
+script
+  :coffeescript(minify=true)
+
+    $('.item-del').on 'click', ->
+      item = $(@)
+      item_id = $(@).attr('item')
+      bootbox.confirm 'Confirmar eliminación...', (result) =>
+        if result
+          $('<a>').attr({
+            'href':"/" + '!{Vars.pluralmodel}' + "/" + item_id
+            'data-remote':"true"
+            'data-method':"delete"
+            'data-jsonp':"(function (u) {location.href = u;})"
+          }).appendTo('body').click()
+
+.row
+  .col-md-12
+    .box.box-primary
+      .box-header
+        h3.box-title Detalles del miembro
+        div.pull-right.box-tools
+          button.btn.btn-primary.btn-sm.pull-right(data-widget='collapse', data-toggle='tooltip', title='', style='margin-right: 5px;', data-original-title='Colapsar')
+            i.fa.fa-minus
+      .box-body(style="padding-top:0px")
+        .col-md-12.npl
+          .col-md-6(style="margin-left:5px")
+            blockquote
+              h1(style="margin-top:0px;color:#4c4c4c") #{subtitle}
+              address
+                if instanciaModel.direccion
+                  i.fa.fa-location-arrow(title="Dirección")  #{instanciaModel.direccion}
+                  br
+                if instanciaModel.barrio
+                  i.fa.fa-map-marker(title="Barrio, Localidad")#user-location
+                  br
+                if instanciaModel.fecha_nacimiento
+                  i.fa.fa-gift(title="Fecha de cumpleaños")#user-birthday
+                  br
+                if instanciaModel.emails.length > 0 && instanciaModel.emails != '[]'
+                  i.fa.fa-envelope-o(title="Emails")#user-emails
+                  br
+                if instanciaModel.telefonos.length > 0 && instanciaModel.telefonos != '[]'
+                  i.fa.fa-phone(title="Teléfonos")#user-phones
+                #user-badges
+
+        .nav-tabs-custom
+          ul.nav.nav-tabs
+            li.active(style="margin-left:20px")
+              a(href='#datos_personales', data-toggle='tab')
+                i.fa.fa-user
+                |  Datos personales
+            li
+              a(href='#datos_iglesia', data-toggle='tab')
+                i.fa.fa-home
+                |  Datos de la iglesia
+            li
+              a(href='#ministerios', data-toggle='tab')
+                i.fa.fa-microphone
+                |  Ministerios
+          .tab-content
+            #datos_personales.tab-pane.fade.in.active
+              .row
+                .col-md-12
+                  h4.det-title
+                    i.fa.fa-search-plus
+                    |  Generales
+                  .col-md-12.npl
+                    .col-md-6
+                      dl.dl-horizontal.dl-show
+                        dt Sexo
+                        if instanciaModel.sexo == 'm'
+                          dd Masculino
+                        else
+                          dd Femenino
+                        dt Nro documento
+                        dd
+                          != instanciaModel.nro_documento
+                        dt Fecha de nacimiento
+                        dd#fecha_nacimiento
+                          != instanciaModel.fecha_nacimiento
+                        dt Lugar de nacimiento
+                        dd
+                          != instanciaModel.lugar_nacimiento
+                        dt Estado civil
+                        dd#estado_civil
+                    .col-md-6
+                      dl.dl-horizontal.dl-show
+                        dt Fecha de matrimonio
+                        dd
+                          != instanciaModel.fecha_matrimonio
+                        dt Nacionalidad
+                        dd
+                          != instanciaModel.nacionalidad
+                        dt Familia
+                        dd#familia
+                        dt Relación con la familia
+                        dd#relacion_familia
+                        dt Clasificación social
+                        dd#clasificacion_social
+
+                    if Vars.instanciaModel.tarjeta_bienvenida
+                      div(style="margin-bottom:10px;margin-left:5px")
+                        span
+                          i.fa.fa-file-text-o  Tarjeta de bienvenida asociada
+                        span#tarjeta_bienvenida
+
+
+                  h4.det-title
+                    i.fa.fa-phone-square
+                    |  Contacto
+                  .col-md-12.npl
+                    .col-md-4
+                      h4.mt10
+                        i.fa.fa-phone
+                        |  Teléfonos
+                      #div-telefonos
+                    .col-md-4
+                      h4.mt10
+                        i.fa.fa-envelope
+                        |  Emails
+                      #div-emails
+                    .col-md-4
+                      h4.mt10
+                        i.fa.fa-facebook
+                        |  Redes sociales
+                      #div-redes-soc
+
+                  .col-md-12.npl
+                    .col-md-6.npl
+                      h4.det-title
+                        i.fa.fa-briefcase
+                        |  Ocupación
+                      dl.dl-horizontal.dl-show
+                        dt Profesión u oficio
+                        dd
+                          != instanciaModel.profesion_oficio
+                        dt Lugar de trabajo
+                        dd
+                          != instanciaModel.lugar_trabajo
+                        dt Puesto que ocupa
+                        dd
+                          != instanciaModel.puesto
+                    .col-md-6.npl
+                      h4.det-title
+                        i.fa.fa-medkit
+                        |  Datos de salud
+                      dl.dl-horizontal.dl-show
+                        dt Tipo de sangre
+                        dd
+                          != instanciaModel.tipo_sangre
+                          br
+                          a(href="#",data-toggle="modal",data-target="#md-cs") Ver compatibilidad sanguínea
+                        dt
+                          span Alergias o indicaciones médicas
+                        dd
+                          if instanciaModel.alergias
+                            pre
+                              != instanciaModel.alergias
+                        dt Capacidades diferentes o especiales
+                        dd
+                          if instanciaModel.capacidades_diferentes
+                            pre
+                              != instanciaModel.capacidades_diferentes
+                  #md-cs.modal.fade(tabindex='-1', role='dialog', aria-labelledby="mml",aria-hidden='true')
+                    .modal-dialog
+                      .modal-content
+                        .modal-header
+                          button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+                          h4#mml.modal-title Compatibilidad sanguínea
+                        .modal-body
+                          table.table.table-bordered
+                            thead
+                              tr
+                                th TIPO DE SANGRE
+                                th PUEDE DONAR A:
+                                th PUEDE RECIBIR DE:
+                            tbody
+                              tr
+                                td A+
+                                td A+ AB+
+                                td O+ O- A+ A-
+                              tr
+                                td A-
+                                td A+ A- AB+ AB-
+                                td O- A-
+                              tr
+                                td B+
+                                td B+ AB+
+                                td O+ O- B+ B-
+                              tr
+                                td B-
+                                td B+ B- AB+ AB-
+                                td O- B-
+                              tr
+                                td AB+
+                                td AB+
+                                td TODOS
+                              tr
+                                td AB-
+                                td AB+ AB-
+                                td AB- O- A- B-
+                              tr
+                                td O+
+                                td A+ B+ AB+ O+
+                                td O+ O-
+                              tr
+                                td O-
+                                td TODOS
+                                td O-
+                        .modal-footer
+                          button.btn.btn-default(type='button', data-dismiss='modal') Aceptar
+
+            #datos_iglesia.tab-pane.fade
+              .row
+                .col-md-6
+                  dl.dl-horizontal.dl-show
+                    dt Estado de membresía
+                    dd#estado_membresia
+                    dt Razón del alta
+                    dd#razon_alta
+                    dt Grupo al que pertenece
+                    dd#pertenece_gc
+                    dt Fecha de conversión
+                    dd
+                      != instanciaModel.fecha_conversion
+                    dt Fecha de bautismo
+                    dd
+                      != instanciaModel.fecha_bautismo
+                    dt Lugar e iglesia de bautismo
+                    dd
+                      != instanciaModel.iglesia_bautismo
+                .col-md-6
+                  dl.dl-horizontal.dl-show
+                    dt Ministro que lo/a bautizó
+                    dd
+                      != instanciaModel.ministro_bautizo
+                    dt Fecha inicio membresía aquí
+                    dd
+                      != instanciaModel.fecha_inicio_membresia
+                    dt A que iglesia asistía
+                    dd
+                      != instanciaModel.asistia_otra_iglesia
+                    dt Invitado por
+                    dd
+                      != instanciaModel.invitado_por
+                    dt Forma en que fue contactado
+                    dd
+                      != instanciaModel.forma_contactado
+                    dt Nombre del cónyuge
+                    dd
+                      != instanciaModel.nombre_conyuge
+                    dt Número de hijos
+                    dd
+                      != instanciaModel.nro_hijos
+              .row
+                .col-md-6
+                  table.table
+                    tbody
+                      tr
+                        th Bautizado por inmersión
+                        td
+                          if instanciaModel.bautizado_por_inmersion
+                            p.text-success
+                              b SI
+                          else
+                            p.text-danger
+                              b NO
+                      tr
+                        th Fué bautizado en esta iglesia
+                        td
+                          if instanciaModel.bautizado_en_esta_iglesia
+                            p.text-success
+                              b SI
+                          else
+                            p.text-danger
+                              b NO
+                      tr
+                        th Recibió bautismo del Espíritu Santo
+                        td
+                          if instanciaModel.recibio_bautismo_es
+                            p.text-success
+                              b SI
+                          else
+                            p.text-danger
+                              b NO
+                .col-md-6
+                  table.table
+                    tbody
+                      tr
+                        th Padres son miembros de esta iglesia
+                        td
+                          if instanciaModel.padres_miembros_esta_iglesia
+                            p.text-success
+                              b SI
+                          else
+                            p.text-danger
+                              b NO
+                      tr
+                        th Cónyuge miembro esta iglesia
+                        td
+                          if instanciaModel.conyuge_miembro_esta_iglesia
+                            p.text-success
+                              b SI
+                          else
+                            p.text-danger
+                              b NO
+              .row
+                .col-md-12
+                  br
+                  label
+                    b Observaciones
+                  if instanciaModel.observaciones != ''
+                    pre
+                      != instanciaModel.observaciones
+                  else
+                    pre Sin observaciones
+
+            #ministerios.tab-pane.fade
+              #div-ministerios
+
+!= javascriptIncludeTag('meg/utils/server', 'meg/utils/gui', 'meg/meg-simpletable','gui_things')
+!= javascriptIncludeTag('async', 'values/miembros','values/defaults','shows/miembros')

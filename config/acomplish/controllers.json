@@ -1,0 +1,50 @@
+{
+  "excludes":[
+    "home",
+    "application",
+    "authorization",
+    "login",
+    "error",
+    "useraccesses",
+    "generic",
+    "timespans"
+  ],
+  "exceptions" : {
+    "settings": {
+      "exclude": ["new", "create", "destroy", "show", "index"],
+      "include": []
+    },
+    "administration": {
+      "exclude": ["index", "new", "create", "destroy", "show", "update"],
+      "include": [
+        {
+          "action": "home",
+          "showName": "Ingresar a administracion"
+        }, {
+          "action": "permissions",
+          "showName": "Administrar permisos"
+        }
+      ]
+    },
+    "roles": {
+      "exclude": [],
+      "include": [
+        {
+          "action": "details",
+          "showName": "Ver informe de permisos"
+        }
+      ]
+    }
+  },
+  "shownames" : {
+    "administration": "administracion",
+    "catalogos": "catalogos",
+    "categoria": "categorias",
+    "clientes": "clientes",
+    "pedidos": "pedidos",
+    "productos": "productos",
+    "settings": "configuraciones",
+    "users": "usuarios",
+    "roles": "roles"
+  }
+}

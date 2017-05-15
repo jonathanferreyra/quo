@@ -1,0 +1,177 @@
+/* header logo */
+
+body > .header .logo > img {
+  width: 65px;
+  height: 35px;
+}
+
+body > .header .logo {
+  background-color: #ffffff;
+  border-bottom: 2px solid #eee;
+  font-size: 0px;
+}
+
+.skin-black .right-side > .content-header {
+  background: #fbfbfb;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* required field in forms */
+
+.required-field-block {
+    position: relative;
+}
+
+.required-field-block .required-icon {
+    display: inline-block;
+    vertical-align: middle;
+    margin: -0.25em 0.25em 0em;
+    background-color: #E8E8E8;
+    border-color: #E8E8E8;
+    padding: 0.5em 0.8em;
+    color: rgba(0, 0, 0, 0.65);
+    text-transform: uppercase;
+    font-weight: normal;
+    border-radius: 0.325em;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-transition: background 0.1s linear;
+    -moz-transition: background 0.1s linear;
+    transition: background 0.1s linear;
+    font-size: 75%;
+}
+
+.required-field-block .required-icon {
+    background-color: transparent;
+    position: absolute;
+    top: 0em;
+    right: 0em;
+    z-index: 10;
+    margin: 0em;
+    width: 30px;
+    height: 30px;
+    padding: 0em;
+    text-align: center;
+    -webkit-transition: color 0.2s ease;
+    -moz-transition: color 0.2s ease;
+    transition: color 0.2s ease;
+}
+
+.required-field-block .required-icon:after {
+    position: absolute;
+    content: "";
+    right: 1px;
+    top: 1px;
+    z-index: -1;
+    width: 0em;
+    height: 0em;
+    border-top: 0em solid transparent;
+    border-right: 30px solid transparent;
+    border-bottom: 30px solid transparent;
+    border-left: 0em solid transparent;
+    border-right-color: inherit;
+    -webkit-transition: border-color 0.2s ease;
+    -moz-transition: border-color 0.2s ease;
+    transition: border-color 0.2s ease;
+}
+
+.required-field-block .required-icon .text {
+  color: #B80000;
+  font-size: 26px;
+  margin: -3px 0 0 12px;
+}
+
+/* class utils */
+
+.head-title {
+  font-size: 32px;
+  margin-top: 10px;
+}
+.npl { padding-left: 0px; }
+.npt { padding-top: 0px; }
+.npb { padding-bottom: 0px; }
+.npr { padding-right: 0px; }
+.nml { margin-left: 0px; }
+.nmr { margin-right: 0px; }
+.nmt { margin-top: 0px; }
+.nmb { margin-bottom: 0px; }
+.mb5 { margin-bottom: 5px; }
+.mb8 { margin-bottom: 8px; }
+.mt5 { margin-top: 5px; }
+
+#church-title {color:#7F7F7F}
+
+.skin-black .logo:hover {
+  background: #fff;
+}
+
+// theme 1
+// bg_sidebar_menu = #32404E
+// bg_sidebar_submenu = #2C3845
+// border_submenu = #2986B8
+// a_link = #337ab7
+// a_link_hover = #23527c
+
+// theme2
+// bg_sidebar_menu = #292929
+// bg_sidebar_submenu = #3C3C3C
+// border_submenu = bg_sidebar_submenu
+
+// theme3
+// bg_sidebar_menu = #253340
+// bg_sidebar_submenu = #11283D
+// border_submenu = bg_sidebar_submenu
+// a_link = #28a5a8
+// a_link_hover = #1e7d7f
+
+// theme4 http://themes.3rdwavemedia.com/velocity/1.5/
+bg_sidebar_menu = #2D313F
+bg_sidebar_submenu = #20232F
+border_submenu = bg_sidebar_submenu
+a_link = #34495e
+a_link_hover = #222f3d
+
+a
+  color: a_link;
+
+a:hover
+  color:a_link_hover
+
+.skin-black .treeview-menu > li.active > a
+  color: white
+
+.skin-black .treeview-menu > li > a:hover
+
+.skin-black .sidebar a
+  // color: #9DA5AB
+  // color: #D8E1E8
+  color: #fff
+
+.skin-black .sidebar
+  border-bottom: 1px solid bg_sidebar_menu
+
+.skin-black .sidebar > .sidebar-menu > li
+  border-top: 1px solid bg_sidebar_menu
+  border-bottom: 0px solid bg_sidebar_submenu
+
+.skin-black .left-side
+  background: bg_sidebar_menu
+
+.skin-black .sidebar > .sidebar-menu > li > a:hover
+.skin-black .sidebar > .sidebar-menu > li.active > a
+  color: #f6f6f6
+  background: bg_sidebar_submenu
+
+.skin-black .sidebar > .sidebar-menu > li > .treeview-menu
+  margin: 0 1px
+  background: bg_sidebar_submenu
+  border-left: 4px solid border_submenu
+
+.skin-black .treeview-menu > li.active > a
+  font-weight: 600
+  color: white
+
+.skin-black .treeview-menu > li > a:hover
+  color: white

@@ -1,0 +1,53 @@
+include ../includes/forms/errorMessages
+style.
+  .mid {padding-left:0px;padding-right:0px;}
+
+.form-group
+  != form.label("nombre", false, {class: "control-label"})
+  .required-field-block
+    != form.input("nombre",{class:"form-control", autofocus:'', required:''})
+    .required-icon
+      .text *
+.form-group
+  != form.label("dirección", false, {class: "control-label"})
+  != form.input("direccion",{class:"form-control", placeholder:'Calle, Número, Piso, Dpto.'})
+.row
+  .col-md-12.mid
+    .col-md-4
+      .form-group
+        label.control-label(for="provincia") Provincia
+        select.form-control#provincia(name="provincia")
+    .col-md-4
+      .form-group
+        != form.label("localidad", false, {class: "control-label"})
+        != form.select("localidad", false, {class: "form-control"})
+    .col-md-4
+      .form-group
+        != form.label("barrio", false, {class: "control-label"})
+        != form.select("barrio", false, {class: "form-control"})
+legend Teléfonos
+.form-group.hide
+  != form.label("telefonos", false, {class: "control-label"})
+  != form.input("telefonos",{class:"form-control"})
+#div-telefonos
+
+!= javascriptIncludeTag('meg/utils/server','meg/utils/select','meg/utils/gui', 'values/defaults','meg/meg-simpletable','async', 'gui_things')
+
+script
+  :coffeescript(minify=true)
+
+    model_id = '#Familia_'
+
+    defValues =
+      'model_id' : model_id
+      'barrio' : '!{Vars.instanciaModel.barrio}'
+      'localidad' : '!{Vars.instanciaModel.localidad}'
+      'provincia' : ''
+    meg.gui.loadGeographicsSelects defValues, () ->
+
+    gui_things.instanceTelefonosSimpleTable(model_id)
+
+    $("form").submit (e) ->
+      e.preventDefault()
+      $(model_id + 'telefonos').val(JSON.stringify($('#div-telefonos').MEGSimpleTable('getData')))
+      @submit()

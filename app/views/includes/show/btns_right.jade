@@ -1,0 +1,36 @@
+.btn-group.pull-right
+  button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+    i.fa.fa-cog
+    |  Opciones
+    span.caret
+  ul.dropdown-menu(role='menu')
+    li
+      a#actnEdit(href='/#{Vars.pluralmodel}/#{Vars.instanciaModel.id}/edit')
+        i.fa.fa-pencil.text-warning
+        |  Editar
+    li
+      a.item-del(href="#", item="#{Vars.instanciaModel.id}")
+        i.fa.fa-trash-o.text-danger
+        |  Eliminar
+    li.divider
+    li
+      a#actnNew(href='/#{Vars.pluralmodel}/new')
+        i.fa.fa-plus.text-success
+        |  Crear nuev#{Vars.letraGenero}
+
+!= javascriptIncludeTag('bootbox.min')
+
+script
+  :coffeescript
+
+    $('.item-del').on 'click', ->
+      item = $(@)
+      item_id = $(@).attr('item')
+      bootbox.confirm 'Confirmar eliminación...', (result) =>
+        if result
+          $('<a>').attr({
+            'href':"/" + '!{Vars.pluralmodel}' + "/" + item_id
+            'data-remote':"true"
+            'data-method':"delete"
+            'data-jsonp':"(function (u) {location.href = u;})"
+          }).appendTo('body').click()

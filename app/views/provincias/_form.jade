@@ -1,0 +1,25 @@
+include ../includes/forms/errorMessages
+.form-group
+  != form.label("nombre", false, {class: "control-label"})
+  != form.input("name", {class: "form-control", autofocus:'', required:''})
+.form-group
+  != form.label("país", false, {class: "control-label"})
+  != form.select("pais", false, {class: "form-control"})
+.form-group
+  != form.label("latitud", false, {class: "control-label"})
+  != form.input("lat", {class: "form-control", type:'number'})
+.form-group
+  != form.label("longitud", false, {class: "control-label"})
+  != form.input("long", {class: "form-control", type:'number'})
+
+!= javascriptIncludeTag('meg/utils/server','meg/utils/select','meg/utils/gui')
+
+script
+  :coffeescript
+
+    model_id = '#Provincia_'
+    opts = {showname:'name'}
+    meg.gui.loadSelect '/paises.json', model_id + 'pais', '!{Vars.instanciaModel.pais}', opts, () ->
+      params = meg.gui.getURLParameters()
+      if params['p']
+        $(model_id + 'pais').val(params['p'])

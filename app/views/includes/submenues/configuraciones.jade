@@ -1,0 +1,39 @@
+li#configuracionesRootMenu.treeview
+  a(href='#')
+    i.fa.fa-gear
+    span Configuraciones
+    i.fa.fa-angle-left.pull-right
+  ul.treeview-menu
+    //- li
+    //-  a.ajax-link-sub#tab1(href='/configuraciones/datosiglesia') Datos de la iglesia
+    if user.canCtrls(['clasificacionsocials', 'estadomembresias','estadosciviles'])
+      li#tablasBasicasMenu.treeview
+        a(href='#')
+          i.fa.fa-table
+          span Tablas básicas
+          i.fa.fa-angle-left.pull-right
+        ul.treeview-menu
+          if user.can('clasificacionsocials')
+            li#clasificacionSocialSubMenu
+              a(href="/clasificacionsocials")
+                i.fa.fa-angle-double-right
+                |  Clasificaciones sociales
+          if user.can('estadomembresias')
+            li#estadoMembresiasSubMenu
+              a(href="/estadomembresias")
+                i.fa.fa-angle-double-right
+                |  Estados de membresía
+          if user.can('estadosciviles')
+            li#estadosCivilesSubMenu
+              a(href="/estadosciviles")
+                i.fa.fa-angle-double-right
+                |  Estados civiles
+    //- li#Menu
+      a(href='/settings')
+        i.fa.fa-angle-double-right
+        |  Opciones generales
+    if user.can('iglesias')
+      li#iglesiasMenu
+        a(href='/iglesias')
+          i.fa.fa-angle-double-right
+          |  Datos de la iglesia

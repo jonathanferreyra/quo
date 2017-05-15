@@ -1,0 +1,26 @@
+//- .row
+//-   .col-md-12
+//-     h1
+//-       | #{Vars.titlemodel}
+//-       small   Nuev#{Vars.letraGenero} ##{nextIde}
+//-     ol.breadcrumb
+//-       li
+//-         a(href='/')
+//-           i.fa.fa-home
+//-       li
+//-         a(href='/#{Vars.pluralmodel}') #{Vars.titlemodel}
+//-       li.active Nuev#{Vars.letraGenero}
+
+script
+  :coffee
+
+    $('section.content-header').empty().append('''
+      <h1>#{Vars.singleTitleModel}
+        <small> Nuev#{Vars.letraGenero} ##{nextIde}</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-home"></i></a></li>
+        <li><a href="#">#{Vars.subsection}</a></li>
+        <li><a href="/#{Vars.pluralmodel}">#{Vars.titlemodel}</a></li>
+        <li class="active">Nuev#{Vars.letraGenero}</li>
+      </ol>''')

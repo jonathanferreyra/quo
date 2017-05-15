@@ -1,0 +1,16 @@
+doctype html
+html.bg-black(lang="es-AR")
+  head  
+    title QUO | Ingresar
+    meta(charset='utf-8')
+    meta(content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',name='viewport')
+    link(rel='stylesheet', href='/vendor/AdminLTE/1.2/css/bootstrap.min.all.css')
+    link(rel='stylesheet', href='/vendor/AdminLTE/1.2/css/font-awesome.min.all.css')
+    link(rel='stylesheet', href='/vendor/AdminLTE/1.2/css/AdminLTE.all.css')    
+    != csrfMetaTag()
+  body.bg-black
+    include ../includes/flashdiv 
+    != body
+    
+    script(src='/javascripts/jquery-2.0.3.min.js')
+    script(src='/vendor/AdminLTE/1.2/js/bootstrap.min.js')

@@ -1,0 +1,11 @@
+link(href='/vendor/clockpicker/bootstrap-clockpicker.min.css',rel="stylesheet")
+script(src='/vendor/clockpicker/bootstrap-clockpicker.min.js')
+
+script
+  :coffeescript
+
+    $(document).on 'ready', ->
+      opts = 
+        donetext:'OK'
+      # $('input[type=time]').clockpicker()
+      $('.clockpicker').clockpicker(opts)

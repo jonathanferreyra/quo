@@ -1,0 +1,63 @@
+script
+  :coffee
+
+    $('section.content-header').empty().append('''
+      <h1 class="head-title">
+        <i class="fa fa-tachometer"> Dashboard</i>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-home"></i></a></li>
+        <li class="active">Dashboard</li>
+      </ol>''')
+
+
+.row
+  .col-md-8
+    .box.box-success
+      .box-header
+        h4.box-title Valores
+      .box-body
+        .row
+          .col-md-6
+          .col-md-6
+            .col-md-3
+              h3.nmt.nmb.text-red #{values.accountinfo}
+              p Clientes
+            .col-md-3
+              h3.nmt.nmb.text-aqua #{values.user}
+              p Usuarios
+            .col-md-3
+              h3.nmt.nmb.text-blue #{values.iglesia}
+              p Iglesias
+            .col-md-3
+              h3.nmt.nmb.text-orange #{values.miembro}
+              p Miembros
+  .col-md-4
+    .box.box-default
+      .box-header
+        h4.box-title Acciones
+      .box-body
+        ul
+          li
+            a(href="#mdRefreshCache", data-toggle='modal', data-target='#mdRefreshCache')
+              i.fa.fa-refresh  Recargar modelo en cache
+
+#mdRefreshCache.modal.fade(tabindex='-1', role='dialog', aria-hidden='true')
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+        h4.modal-title
+          i.fa.fa-refresh
+          |   Recargar modelo en cache
+      .modal-body
+        .form-group
+          label.control-label Modelo
+          select.form-control#md-rc-cb-models
+      .modal-footer
+        i.fa.fa-spinner.fa-spin.fa-2x.hide#md-rc-loader
+        button.btn.btn-default(type='button', data-dismiss='modal') Cancelar
+        button.btn.btn-primary.btn-lg#btn-refresh-cache-model(type='button') Refrescar
+
+!= javascriptIncludeTag('meg/utils/server', 'meg/utils/select', 'meg/utils/gui')
+script(src='/javascripts/quo/dash.js')

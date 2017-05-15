@@ -1,0 +1,42 @@
+//- font-size: 600%;
+//- font-family: 'Kaushan Script', cursive;
+//- font-weight: 500;
+style.
+  .btn-circle {margin-left:5px}
+  .logo {
+    height: 180px;
+    margin: 45px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .form-box {
+    margin: 5px auto 0 auto;
+  }
+
+.row
+  img.img-responsive.logo(src="/img/white-logo.png")
+#login-box.form-box
+  .header Ingresar
+  form(action='#', method='post')
+    .body.bg-gray
+      a.btn.bg-red.btn-block(href='/auth/google')
+        |  Ingresar con Gmail
+      a.btn.bg-purple.btn-block(href='/auth/yahoo')
+        |  Ingresar con Yahoo!
+      //- a.btn.bg-blue.btn-block(href='/auth/windowslive')
+        |  Ingresar con Windows Live
+    .footer
+      //- button.btn.bg-olive.btn-block(type='submit') Sign me in
+      //- p
+      //-   a(href='#') I forgot my password
+      //- a.text-center(href='register.html') Register a new membership
+      .text-center
+        span QUO en las redes sociales
+        br
+        a.btn.bg-light-blue.btn-circle(href='https://www.facebook.com/SistemaQuo/')
+          i.fa.fa-facebook
+        a.btn.bg-aqua.btn-circle(href='https://www.twitter.com/SistemaQuo')
+          i.fa.fa-twitter
+        a.btn.bg-red.btn-circle(href='https://plus.google.com/102009379274927530198')
+          i.fa.fa-google-plus

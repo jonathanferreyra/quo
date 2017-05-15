@@ -1,0 +1,6 @@
+.form-actions
+  != form.submit('<i class="fa fa-check"></i> Actualizar', {class: 'btn btn-primary', id:'btcreate'})
+  span= ' o '
+  a.btn.btn-danger#btcancel(href="/#{Vars.pluralmodel}")
+    i.fa.fa-ban
+    |  Cancelar

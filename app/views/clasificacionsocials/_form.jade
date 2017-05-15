@@ -1,0 +1,7 @@
+include ../includes/forms/errorMessages
+.form-group
+  != form.label("nombre", false, {class: "control-label"})
+  != form.input("nombre", {class:'form-control', required:'', autofocus:''})
+.form-group
+  != form.label("características", false, {class: "control-label"})
+  != form.textarea("caracteristicas", {class:'form-control', placeholder:'Una breve descripción de esta clasificación.'})

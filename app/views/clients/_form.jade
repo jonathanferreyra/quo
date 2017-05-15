@@ -1,0 +1,23 @@
+include ../includes/forms/errorMessages
+
+.form-group
+  != form.label("nombre", false, {class: "control-label"})
+  .required-field-block
+    != form.input("nombre", {class: "form-control", required:''})
+    .required-icon
+      .text *
+.form-group
+  != form.label("apellido", false, {class: "control-label"})
+  .required-field-block
+    != form.input("apellido", {class: "form-control", required:''})
+    .required-icon
+      .text *
+.form-group
+  != form.label("telefono", false, {class: "control-label"})
+  != form.input("telefonos", {class: "form-control"})
+.form-group
+  != form.label("email", false, {class: "control-label"})
+  != form.input("emails", {class: "form-control"})
+.form-group
+  != form.label("Pais", false, {class: "control-label"})
+  != form.input("pais", {class: "form-control"})

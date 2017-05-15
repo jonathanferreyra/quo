@@ -1,0 +1,31 @@
+li#membresiaRootMenu.treeview
+  a(href='#')
+    i.fa.fa-user
+    span Membresía
+    i.fa.fa-angle-left.pull-right
+  ul.treeview-menu
+    if user.can('miembros')
+      li#miembrosMenu
+        a(href='/miembros')
+          i.fa.fa-angle-double-right
+          |  Miembros
+    if user.can('familias')
+      li#familiasMenu
+        a(href='/familias')
+          i.fa.fa-angle-double-right
+          |  Familias
+    if user.can('ministerios')
+      li#ministeriosMenu
+        a(href='/ministerios')
+          i.fa.fa-angle-double-right
+          |  Ministerios
+    if user.can('tarjetabienvenidas')
+      li#tarjetabienvenidasMenu
+        a(href='/tarjetabienvenidas')
+          i.fa.fa-angle-double-right
+          |  Tarjetas de bienvenida
+    if user.can('eventos')
+      li#eventosMenu
+        a(href="/eventos")
+          i.fa.fa-angle-double-right
+          |  Eventos

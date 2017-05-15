@@ -1,0 +1,52 @@
+div.modal#md-registrar-seguimiento
+  div.modal-dialog
+    div.modal-content
+      div.modal-header
+        button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+        h4.modal-title Registrar seguimiento
+      div.modal-body
+        form
+          .form-group
+            label.control-label Fecha
+            input.form-control#md-fecha(type='date')
+          .form-group
+            label.control-label Comentarios
+            textarea.form-control#md-comentarios(type='text', rows='6')
+          .form-group
+            label.control-label Estado
+            select.form-control#md-estado(type='text')
+      div.modal-footer
+        button.btn.btn-default(type='button', data-dismiss='modal') Cancelar
+        button.btn.btn-primary.btn-lg.btn-save(type='button') Guardar
+
+include ../includes/import/pickadate_base
+include ../includes/import/pickadate_date
+!= javascriptIncludeTag('meg/utils/server', 'meg/utils/gui', 'meg/utils/select','values/tarjetabienvenidas')
+
+script
+  :coffeescript(minify=true)
+
+    fnReloadTable = @reloadTbSeguimientos
+    meg.gui.loadSelectFromValues values.estados_llamada, '#md-estado', '',false
+
+    $('.btn-save').on 'click', ->
+      data =
+        fecha : $('#md-fecha').val()
+        comentarios : $('#md-comentarios').val()
+        estado : $('#md-estado').val()
+        authenticity_token: $("meta[name=csrf-token]").attr("content")
+        tarjeta_bienvenida: $('.item-id').attr('id')
+      if data.fecha.length > 0 and data.comentarios.length > 0
+        $.ajax
+          url:'/tarjetabienvenidas/storeTracing'
+          data: data
+          method:'POST'
+          dataType:'json'
+          success: (data, textStatus, jqXHR) ->
+            $('#md-registrar-seguimiento').modal('hide')
+            fnReloadTable()
+            $('#md-fecha, #md-comentarios').val('')
+          error: (jqXHR, textStatus, errorThrown) ->
+            $('#md-registrar-seguimiento').modal('hide')
+            bootbox.alert('Oops! Algo ha salido mal. Intenta nuevamente realizar la operación.')
+            window.location.reload()

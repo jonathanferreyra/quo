@@ -1,0 +1,9 @@
+development:
+  baseURL: 'http://localhost:3000/'
+  google: true
+test:
+  baseURL: 'http://localhost:3000/'
+  google: true
+production:
+  baseURL: 'http://localhost:3000/'
+  google: true

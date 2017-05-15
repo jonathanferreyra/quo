@@ -1,0 +1,63 @@
+mixin ownerMenus
+  li.treeview
+    a(href='#')
+      i.fa.fa-eye
+      span Superadmin
+      i.fa.fa-angle-left.pull-right
+    ul.treeview-menu
+      li
+        a(href='/clients/dash/view')
+          i.fa.fa-tachometer
+          |  Dashboard
+      li
+        a(href='/clients')
+          i.fa.fa-money
+          |  Clientes
+      li.treeview
+        a(href='#')
+          i.fa.fa-globe
+          span Datos regionales
+          i.fa.fa-angle-left.pull-right
+        ul.treeview-menu
+          li
+            a(href="/paises")
+              i.fa.fa-angle-double-right
+              |  Paises
+          li
+            a(href="/provincias")
+              i.fa.fa-angle-double-right
+              |  Provincias
+          li
+            a(href="/localidades")
+              i.fa.fa-angle-double-right
+              |  Localidades
+          li
+            a(href="/barrios")
+              i.fa.fa-angle-double-right
+              |  Barrios
+
+section.sidebar
+  ul.sidebar-menu
+    li
+      a(href='/')
+        i.fa.fa-home
+        span Inicio
+    if user
+      - if (user && user.hasOwnProperty('canCtrls')){
+        if user.canCtrls(['grupocrecimientos', 'regsemanalgcs'])
+          include submenues/grupocrecimiento
+        if user.canCtrls(['miembros', 'familias','ministerios','tarjetabienvenidas','eventos'])
+          include submenues/membresia
+        //- include submenues/finanzas
+        if user.canCtrls(['clasificacionsocials', 'estadomembresias','estadosciviles','barrios', 'localidades','provincias'])
+          include submenues/configuraciones
+        if !isDemo
+          if user.canCtrls(['users', 'roles'])
+            include submenues/administracion
+
+        if settings.env == 'development'
+          +ownerMenus
+        if settings.env == 'production'
+          if user.owner
+            +ownerMenus
+      - }

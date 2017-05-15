@@ -1,0 +1,57 @@
+- var subtitle = Vars.instanciaModel.name
+include ../includes/show/subhead
+
+.row.mb8
+  .col-md-12
+    a.btn.btn-sm.btn-primary#btBackToList(href="/#{Vars.pluralmodel}", style="margin-right: 5px;")
+      i.fa.fa-arrow-left
+      |  Volver a la lista
+    a.btn.btn-sm.btn-success(href="/provincias/new?p=#{Vars.instanciaModel.id}", style="margin-right: 5px;")
+      i.fa.fa-plus
+      |  Agregar nueva provincia
+    include ../includes/show/btns_right
+
+.row
+  .col-md-12
+    .box.box-info
+      .box-header
+        h4.box-title Detalles
+      .box-body
+        table.table
+          tbody
+            tr
+              th Idioma
+              td #{Vars.instanciaModel.locale}
+            tr
+              th Prefijo telefónico
+              td +#{Vars.instanciaModel.phonePrefix}
+
+.row
+  .col-md-12
+    .box.box-info
+      .box-header
+        h4.box-title Provincias
+      .box-body
+        include ../includes/index/table
+        include ../includes/index/coffees
+
+!= javascriptIncludeTag('meg/utils/server', 'meg/utils/gui')
+
+script
+  :coffeescript
+
+    # load table miembros
+    @pluralModel = 'provincias'
+    @itemsUrl = '/paises/getProvinces/#{Vars.instanciaModel.id}'
+    @listaordenada = () ->
+      [
+        name: "name"
+        showname: "Nombre"
+        parser: @showDetails
+        params: [ "id","name" ]
+      ,
+        name: "accciones"
+        parser: @setActions
+        params: [ "id" ]
+        showname: "Acciones"
+      ]

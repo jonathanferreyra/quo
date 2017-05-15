@@ -1,0 +1,22 @@
+- var subtitle = Vars.instanciaModel.name
+include ../includes/show/actions
+
+.row
+  .col-md-12
+    .box.box-info
+      .box-header
+        h4.box-title Detalles
+      .box-body
+        table.table
+          tbody
+            tr
+              th Localidad
+              td#localidad
+
+!= javascriptIncludeTag('meg/utils/server','meg/utils/select','meg/utils/gui')
+
+script
+  :coffeescript
+
+    model_id = '#Barrio_'
+    meg.gui.showRefName 'localidades', 'name', '#{Vars.instanciaModel.localidad}', '#localidad', true

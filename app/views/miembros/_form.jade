@@ -1,0 +1,433 @@
+include ../includes/forms/errorMessages
+style.
+
+  legend { margin-bottom: 20px}
+  .tab-pane { margin-bottom: 1% }
+  .mid {
+    padding-left:0px;
+    padding-right:0px;
+  }
+  .box .box-body { padding-top: 0px; }
+  .table > tbody > tr > td {padding-left: 0px;}
+
+.row
+  .col-md-6
+    .form-group
+      != form.label("nombre", false, {class: "control-label"})
+      .required-field-block
+        != form.input("nombre", {required:true, autofocus:'',class:'form-control'})
+        .required-icon
+          .text *
+    .form-group
+      != form.label("apellido", false, {class: "control-label"})
+      .required-field-block
+        != form.input("apellido",{class:'form-control'})
+        .required-icon
+          .text *
+    .form-group
+      != form.label("sexo", false, {class: "control-label"})
+      .input-group
+        span.input-group-addon
+          i.fa.fa-male
+        != form.select("sexo",false, {class:'form-control'})
+    .form-group
+      != form.label("clasificación social", false, {class: "control-label"})
+      != form.select("clasificacion_social",false, {class:'form-control'})
+  .col-md-6
+    .form-group
+      label.control-label(for="provincia") Provincia
+      select.form-control#provincia(name="provincia")
+    .form-group
+      != form.label("localidad", false, {class: "control-label"})
+      != form.select("localidad", false, {class: "form-control"})
+    .form-group
+      != form.label("barrio", false, {class: "control-label"})
+      .input-group
+        != form.select("barrio", false, {class: "form-control"})
+        .input-group-btn
+          button.btn.btn-success#btn-barrio(type="button", title="Agregar nuevo barrio")
+            i.fa.fa-plus
+    .form-group
+      != form.label("dirección", false, {class: "control-label"})
+      != form.input("direccion", {class:'form-control',placeholder:'Calle, Número, Piso, Dpto.'})
+
+button#mas(type="button", class="btn btn-link", data-toggle="button")
+  |  Mostrar más campos
+  i.fa.fa-plus
+br
+br
+.row.mas(style='display:none')
+  .col-md-12
+    .nav-tabs-custom
+      ul.nav.nav-tabs
+        li.active
+          a(href='#datos_personales', data-toggle='tab')
+            i.fa.fa-user
+            |  Datos personales
+        li
+          a(href='#datos_iglesia', data-toggle='tab')
+            i.fa.fa-home
+            |  Datos de la iglesia
+        li
+          a(href='#ministerios', data-toggle='tab')
+            i.fa.fa-microphone
+            |  Ministerios
+      .tab-content
+        #datos_personales.tab-pane.active
+          br
+          .row
+            .col-md-12
+              .nav-tabs-custom
+                ul.nav.nav-tabs
+                  li.active
+                    a(href='#generales', data-toggle='tab')
+                      i.fa.fa-search-plus
+                      |  Generales
+                  li
+                    a(href='#contacto', data-toggle='tab')
+                      i.fa.fa-phone-square
+                      |  Contacto
+                  li
+                    a(href='#ocupacion', data-toggle='tab')
+                      i.fa.fa-briefcase
+                      |  Ocupación
+                  li
+                    a(href='#salud', data-toggle='tab')
+                      i.fa.fa-medkit
+                      |  Datos de salud
+                .tab-content
+                  #generales.tab-pane.active
+                    .row
+                      .col-md-12
+                          .col-md-6
+                            .form-group
+                              != form.label("nro_documento", false, {class: "control-label"})
+                              != form.input("nro_documento",{class:'form-control', type:'number'})
+                            .form-group
+                              != form.label("fecha_nacimiento", false, {class: "control-label"})
+                              .input-group
+                                span.input-group-addon
+                                  i.glyphicon.glyphicon-calendar
+                                != form.input("fecha_nacimiento",{class:'form-control input-small', type:'date'})
+                            .form-group
+                              != form.label("lugar_nacimiento", false, {class: "control-label"})
+                              != form.input("lugar_nacimiento",{class:'form-control'})
+                            .form-group
+                              != form.label("estado_civil", false, {class: "control-label"})
+                              != form.select("estado_civil",false, {class:'form-control'})
+                          .col-md-6
+                            .form-group
+                              != form.label("fecha_matrimonio", false, {class: "control-label"})
+                              .input-group
+                                span.input-group-addon
+                                  i.glyphicon.glyphicon-calendar
+                                != form.input("fecha_matrimonio", {class:'form-control input-small', type:'date'})
+                            .form-group
+                              != form.label("nacionalidad", false, {class: "control-label"})
+                              != form.input("nacionalidad",{class:'form-control'})
+                            .form-group
+                              != form.label("familia", false, {class: "control-label"})
+                              .input-group
+                                != form.select("familia",false, {class:'form-control'})
+                                .input-group-btn
+                                  button.btn.btn-success.ref_familia(type="button", title="Agregar nueva familia")
+                                    i.fa.fa-plus
+                            .form-group
+                              != form.label("relación con la familia", false, {class: "control-label"})
+                              != form.select("relacion_familia",false, {class:'form-control'})
+                  #contacto.tab-pane
+                    .box.box-primary
+                      .box-header
+                        h4.box-title
+                          i.fa.fa-phone
+                          |  Teléfonos
+                      .box-body
+                        .form-group.hide
+                          != form.label("telefonos", false, {class: "control-label"})
+                          != form.input("telefonos",{class:'form-control'})
+                        #div-telefonos
+                    .box.box-primary
+                      .box-header
+                        h4.box-title
+                          i.fa.fa-envelope
+                          |  Emails
+                      .box-body
+                        .form-group.hide
+                          != form.label("correo electrónico", false, {class: "control-label"})
+                          != form.input("emails", {class:'form-control', type:'text'})
+                        #div-emails
+                    .box.box-primary
+                      .box-header
+                        h4.box-title
+                          i.fa.fa-facebook
+                          |  Redes sociales
+                      .box-body
+                        .form-group.hide
+                          != form.label("redes_sociales", false, {class: "control-label"})
+                          != form.input("redes_sociales",{class:'form-control'})
+                        #div-redes-soc
+
+                  #ocupacion.tab-pane
+                    .row
+                      .col-md-12
+                        .form-group
+                          != form.label("profesión u oficio", false, {class: "control-label"})
+                          != form.input("profesion_oficio",{class:'form-control'})
+                        .form-group
+                          != form.label("lugar de trabajo", false, {class: "control-label"})
+                          != form.input("lugar_trabajo",{class:'form-control'})
+                        .form-group
+                          != form.label("puesto que ocupa", false, {class: "control-label"})
+                          != form.input("puesto",{class:'form-control'})
+                  #salud.tab-pane
+                    .row
+                      .col-md-12
+                        .form-group
+                          != form.label("tipo de sangre", false, {class: "control-label"})
+                          != form.select("tipo_sangre",false, {class:'form-control'})
+                        .form-group
+                          != form.label("alergias o indic. médicas", false, {class: "control-label"})
+                          != form.textarea("alergias",{class:'form-control'})
+                        .form-group
+                          != form.label("capacidades diferentes o esp.", false, {class: "control-label"})
+                          != form.textarea("capacidades_diferentes",{class:'form-control'})
+        #datos_iglesia.tab-pane
+          br
+          .panel.panel-default
+            .panel-body
+              .row
+                .col-md-12
+                  .col-md-6
+                    .form-group
+                      != form.label("estado de su membresía", false, {class: "control-label"})
+                      != form.select("estado_membresia",false, {class:'form-control'})
+                    .form-group
+                      != form.label("razón del alta", false, {class: "control-label"})
+                      != form.select("razon_alta",false, {class:'form-control'})
+                    .form-group
+                      != form.label("Grupo al que pertenece", false, {class: "control-label"})
+                      != form.select("pertenece_gc",false, {class:'form-control'})
+                    .form-group
+                      != form.label("fecha de conversión", false, {class: "control-label"})
+                      .input-group
+                        span.input-group-addon
+                          i.glyphicon.glyphicon-calendar
+                        != form.input("fecha_conversion",{class:'form-control', type:'date'})
+                    .form-group
+                      != form.label("fecha de bautismo", false, {class: "control-label"})
+                      .input-group
+                        span.input-group-addon
+                          i.glyphicon.glyphicon-calendar
+                        != form.input("fecha_bautismo",{class:'form-control', type:'date'})
+                    .form-group
+                      != form.label("Lugar e iglesia de bautismo", false, {class: "control-label"})
+                      != form.input("iglesia_bautismo",{class:'form-control'})
+                  .col-md-6
+                    .form-group
+                      != form.label("ministro que lo/a bautizó", false, {class: "control-label"})
+                      != form.input("ministro_bautizo",{class:'form-control'})
+                    .form-group
+                      != form.label("fecha inicio membresia aquí", false, {class: "control-label"})
+                      .input-group
+                        span.input-group-addon
+                          i.glyphicon.glyphicon-calendar
+                        != form.input("fecha_inicio_membresia",{class:'form-control', type:'date'})
+                    .form-group
+                      != form.label("a que iglesia asistía", false, {class: "control-label"})
+                      != form.input("asistia_otra_iglesia",{class:'form-control'})
+                    .form-group
+                      != form.label("invitado por", false, {class: "control-label"})
+                      != form.input("invitado_por",{class:'form-control'})
+                    .form-group
+                      != form.label("forma en que fue contactado", false, {class: "control-label"})
+                      != form.input("forma_contactado",{class:'form-control'})
+                    .form-group
+                      != form.label("nombre del cónyuge", false, {class: "control-label"})
+                      != form.input("nombre_conyuge",{class:'form-control'})
+                    .form-group
+                      != form.label("número de hijos", false, {class: "control-label"})
+                      != form.input("nro_hijos", {type:'number', class:'form-control input-mini'})
+              .row
+                .col-md-12(style="margin-left:2%")
+                  .col-md-6
+                    .checkbox
+                      label
+                        != form.checkbox("bautizado_por_inmersion")
+                        | Bautizado por inmersión
+                    .checkbox
+                      label
+                        != form.checkbox("bautizado_en_esta_iglesia")
+                        | Fué bautizado en esta iglesia
+                    .checkbox
+                      label
+                        != form.checkbox("recibio_bautismo_es")
+                        | Recibio bautismo del Espíritu Santo
+                  .col-md-6
+                    .checkbox
+                      label
+                        != form.checkbox("padres_miembros_esta_iglesia")
+                        | Padres son miembros esta iglesia
+                    .checkbox
+                      label
+                        != form.checkbox("conyuge_miembro_esta_iglesia")
+                        | Cónyuge es miembro de esta iglesia
+              .row
+                .col-md-12
+                  .form-group
+                    != form.label("observaciones", false, {class: "control-label"})
+                    != form.textarea("observaciones", {class:'form-control', rows:'4'})
+        #ministerios.tab-pane
+          .row
+            .form-group.hide
+              != form.label("ministerio", false, {class: "control-label"})
+              != form.input("ministerio", {class:'form-control'})
+            .callout.callout-info
+              p Aquí podrás indicar los ministerios en el que este miembro se encuentra involucrado.
+              p
+                i Si el campo 'Función que cumple' no está rellenado, no se tomará en cuenta ese ministerio.
+            .col-md-12
+              #div-ministerios
+
+include ../includes/import/pickadate_base
+include ../includes/import/pickadate_date
+
+!= javascriptIncludeTag('async', 'meg/utils/server','meg/utils/select','meg/utils/gui','values/miembros','values/defaults','meg/meg-simpletable','meg/meg-referencex','gui_things')
+
+script
+  :coffeescript
+
+    $('#mas').on 'click', ->
+      if $('.mas').is(':visible')
+        $('#mas').text('Mostrar más campos ').append('<i class="fa fa-plus"></i>')
+        $('.mas').fadeOut()
+      else
+        $('#mas').text('Mostrar menos campos ').append('<i class="fa fa-minus"></i>')
+        $('.mas').fadeIn()
+
+script
+  :coffeescript(minify=true)
+
+    model_id = '#Miembro_'
+    meg.gui.loadSelectFromValues values.sexo, model_id + 'sexo', '!{Vars.instanciaModel.sexo}', false
+    meg.gui.loadSelectFromValues values.razon_alta, model_id + 'razon_alta', '!{Vars.instanciaModel.razon_alta}'
+    meg.gui.loadSelectFromValues values.relacion_familia, model_id + 'relacion_familia', '!{Vars.instanciaModel.relacion_familia}'
+    meg.gui.loadSelectFromValues values.tipo_sangre, model_id + 'tipo_sangre', '!{Vars.instanciaModel.tipo_sangre}'
+
+
+    async.series([
+      (cb) ->
+        defValues = 
+          'model_id' : model_id
+          'barrio' : '!{Vars.instanciaModel.barrio}'
+          'localidad' : '!{Vars.instanciaModel.localidad}'
+          'provincia' : ''
+        meg.gui.loadGeographicsSelects defValues, cb
+        #meg.gui.loadChainedSelect opts, cb
+      , (cb) ->
+        meg.gui.loadSelect '/clasificacionsocials.json', model_id + 'clasificacion_social', '!{Vars.instanciaModel.clasificacion_social}', {}, cb
+      , (cb) ->
+        meg.gui.loadSelect '/estadomembresias.json', model_id + 'estado_membresia', '!{Vars.instanciaModel.estado_membresia}', {}, cb
+      , (cb) ->
+        meg.gui.loadSelect '/estadosciviles.json', model_id + 'estado_civil', '!{Vars.instanciaModel.estado_civil}', {}, cb
+      , (cb) ->
+        meg.gui.loadSelect '/grupocrecimientos.json', model_id + 'pertenece_gc', '!{Vars.instanciaModel.pertenece_gc}', {showname:'nro'}, cb
+    ], (err, res) -> )
+
+    # change sex icon
+    $(model_id + 'sexo').on 'change', ->
+      element = $(@).parent().find('i')
+      if $(@).val() == 'm'
+        $(element).removeClass('fa-female').addClass('fa-male')
+      else
+        $(element).removeClass('fa-male').addClass('fa-female')
+
+    if '!{Vars.instanciaModel.sexo}' == 'f'
+      element = $(model_id + 'sexo').parent().find('i')
+      $(element).removeClass('fa-male').addClass('fa-female')
+
+    #### ministerios table
+    meg.server.ajax '/ministerios.json', {}, (err, items) ->
+      items = _.sortBy(items, 'nombre')
+      options =
+        fillAllRow:true
+        columns: [
+          name: 'ministerio'
+          display: 'Ministerio'
+          type: 'select'
+          keyId: 'id'
+          keyText: 'nombre'
+          options: items
+        ,
+          name: 'funcion'
+          display: 'Función que cumple'
+          type: 'text'
+        ]
+      sel_ministerio = model_id + 'ministerio'
+      if $(sel_ministerio).val().length > 0
+        options.data = JSON.parse($(sel_ministerio).val())
+      $('#div-ministerios').MEGSimpleTable(options)
+
+    #### telefonos table
+    gui_things.instanceTelefonosSimpleTable(model_id)
+    gui_things.instanceEmailsSimpleTable(model_id)
+
+    #### redes sociales table
+    options =
+      btAddClass:'btn btn-default btn-sm'
+      fillAllRow:true
+      columns: [
+        name: 'rs'
+        display: 'Red social'
+        type: 'select'
+        keyId: 'id'
+        keyText: 'text'
+        options: defaults.get('redes_sociales')
+      ,
+        name: 'url'
+        display: 'Link / Nombre de usuario'
+        type: 'text'
+      ]
+    sel_redes = model_id + 'redes_sociales'
+    if $(sel_redes).val().length > 0
+      options.data = JSON.parse($(sel_redes).val())
+    $('#div-redes-soc').MEGSimpleTable(options)
+
+    # select familia
+    def_value = '!{Vars.instanciaModel.familia}'
+    url = '/familias.json?f=id,ide,nombre'
+    attr = '#Miembro_familia'
+    customFn = (item) ->
+      return '#' + item.ide + ' ' + item.nombre
+    meg.gui.loadSelectCustomText url, attr, def_value, customFn
+
+    $('.ref_familia').MEGReferencex
+      title: 'Nueva familia'
+      postUrl:'/familias.json'
+      selectRefSelector: attr
+      selectRefFn : (newItemId) ->
+        meg.gui.loadSelectCustomText url, attr, newItemId, customFn
+      fields : [
+          name:'nombre'
+          text:'Nombre'
+          field : 'input'
+          attrs :
+            type : 'text'
+            required : true
+            autofocus:''
+        ,
+          name: 'direccion'
+          text: 'Dirección'
+          field: 'input'
+          attrs:
+            type : 'text'
+      ]
+
+    $("form").submit (e) ->
+      e.preventDefault()
+      $(model_id + 'ministerio').val(JSON.stringify($('#div-ministerios').MEGSimpleTable('getData')))
+      $(model_id + 'emails').val(JSON.stringify($('#div-emails').MEGSimpleTable('getData')))
+      $(model_id + 'telefonos').val(JSON.stringify($('#div-telefonos').MEGSimpleTable('getData')))
+      $(model_id + 'redes_sociales').val(JSON.stringify($('#div-redes-soc').MEGSimpleTable('getData')))
+      @submit()
+
+include ../includes/forms/createBarrioByRef

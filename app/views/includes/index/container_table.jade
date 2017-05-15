@@ -1,0 +1,15 @@
+.box.box-primary
+  .box-header
+    .pull-right.box-tools
+      button.btn.btn-primary.btn-sm.pull-right(data-widget='collapse', data-toggle='tooltip', title='', style='margin-left: 5px;', data-original-title='Minimizar')
+        i.fa.fa-minus
+      if Vars.isExportable
+        button.btn.btn-default.btn-sm.pull-right.btn-export-table(type='button', data-toggle='tooltip', data-original-title='Exportar')
+          i.fa.fa-download
+
+  .box-body(style="padding-top: 0px;")
+    include table
+    include coffees
+
+if Vars.isExportable
+  include md_export

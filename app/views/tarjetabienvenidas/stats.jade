@@ -1,0 +1,57 @@
+script
+  :coffee
+
+    $('section.content-header').empty().append('''
+      <h1 class="head-title">
+        <i class="fa fa-bar-chart-o"></i>  Estadísticas de tarjetas de bienvenida
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-home"></i></a></li>
+        <li><a href="#"> #{Vars.subsection}</a></li>
+        <li><a href="/#{Vars.pluralmodel}"> #{Vars.titlemodel}</a></li>
+        <li class="active"> Estadísticas</li>
+      </ol>''')
+
+style.
+  .center-block {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .text-purple {color:#E554C2}
+  .title-status {font:bold;font-size:24px}
+  .box {border-top: 3px solid #c1c1c1;}
+  .count-items { font-size:200%;font:bold}
+  .min-margin {margin-left:5px;}
+
+mixin toolbuttons(name)
+  .box-tools.pull-right(data-toggle='tooltip', title='')
+    .btn-group(data-toggle='btn-toggle')
+      button.btn.btn-default.btn-xs.switch-view.active(type='button',name=name)
+        i.fa.fa-bar-chart-o.text-red  Gráfico
+      button.btn.btn-default.btn-xs.switch-view(type='button',name=name)
+        i.fa.fa-table.text-primary  Datos
+    button.btn.btn-primary.btn-xs(data-widget='collapse', data-toggle='tooltip', title='', style='margin-left: 5px;', data-original-title='Minimizar')
+      i.fa.fa-minus
+
+.row
+  .col-md-12(style='margin-bottom: 10px')
+    a.btn.btn-sm.btn-primary.min-margin(href="/#{Vars.pluralmodel}")
+      i.fa.fa-arrow-left
+      |  Volver a la lista
+    //- button.btn.btn-default.min-margin#show-filter(type='button', data-toggle="button")
+      i.fa.fa-filter
+      |  Filtrar
+
+.row
+  .col-md-12
+    .callout.callout-info
+      p.text-center
+        i.fa.fa-wrench.fa-4x
+      h2.text-primary Próximamente en esta sección podrás visualizar valores y estadísticas, tales como:
+      ul
+        li Personas nuevas en un período de tiempo
+        li Rango de edades y clasificación social de las personas nuevas
+        li Cantidad de seguimientos realizados
+        li Barrios y localidades de las personas nuevas
+        li Entre otras

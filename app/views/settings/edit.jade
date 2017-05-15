@@ -1,0 +1,23 @@
+.row
+  .col-md-12
+    h1
+      | #{Vars.titlemodel}
+    ol.breadcrumb
+      li
+        a(href='/')
+          i.fa.fa-dashboard
+      li
+        a(href="#") Configuraciones
+      li
+        a(href='/#{Vars.pluralmodel}') #{Vars.titlemodel}
+.row
+  .col-md-12
+    .panel.panel-default
+      .panel-body
+        - var form = formFor(Vars.instanciaModel, {action: '/settings/update/' + Vars.instanciaModel.id, method: 'PUT', id: Vars.model + "_form", role:'form'})
+        != form.begin()
+        include _form
+      .panel-footer
+        .form-actions
+          != form.submit('<i class="fa fa-check"></i> Guardar cambios', {class: 'btn btn-primary'})
+        != form.end()

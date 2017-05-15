@@ -1,0 +1,18 @@
+include ../includes/index/subhead
+include ../includes/index/container_table
+
+script
+  :coffeescript(minify=true)
+
+    @listaordenada = () ->
+      [
+        name: "name"
+        showname: "Nombre"
+        parser: @showDetails
+        params: [ "id","name" ]
+      ,
+        name: "accciones"
+        parser: @setActions
+        params: [ "id" ]
+        showname: "Acciones"
+      ]

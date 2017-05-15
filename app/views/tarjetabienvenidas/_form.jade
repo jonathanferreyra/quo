@@ -1,0 +1,282 @@
+include ../includes/forms/errorMessages
+style.
+  input.otro {
+    margin-top : 1%;
+  }
+  .mid {
+    padding-left:0px;
+    padding-right:0px;
+  }
+  .floor{margin-bottom: 0px;}
+  .table > tbody > tr > td {padding-left: 0px;}
+
+legend Datos de la tarjeta
+.row
+  .col-md-12.mid
+    .col-md-6
+      .form-group
+        != form.label("fecha", false, {class: "control-label"})
+        .input-group
+          span.input-group-addon
+            i.glyphicon.glyphicon-calendar
+          != form.input("fecha", {class: "form-control", type:'date'})
+    .col-md-6
+      .form-group
+        != form.label("nombre del que llenó la tarjeta", false, {class: "control-label"})
+        != form.input("nombre_que_lleno_tarjeta", {class: "form-control", placeholder:'Ej: Perez, Juan'})
+.row
+  .col-md-12.mid
+    .col-md-6
+      .form-group
+        != form.label("Esta tarjeta se llenó en", false, {class: "control-label"})
+        != form.select("lugar_lleno_tarjeta", false, {class: "form-control"})
+    .col-md-6
+      .form-group
+        != form.label("Evento/Actividad especial/Reunión general", false, {class: "control-label"})
+        .input-group
+          != form.select("evento", false, {class: "form-control"})
+          .input-group-btn
+            button.btn.btn-success.ref_evento(type="button", title="Agregar nuevo evento")
+              i.glyphicon.glyphicon-plus
+
+legend Datos de la persona
+.row
+  .col-md-12.mid
+    .col-md-6
+      .form-group
+        != form.label("nombres", false, {class: "control-label"})
+        .required-field-block
+          != form.input("nombre", {class: "form-control", placeholder:'Ej: Juan, Alberto',required:''})
+          .required-icon
+            .text *
+    .col-md-6
+      .form-group
+        != form.label("apellido", false, {class: "control-label"})
+        .required-field-block
+          != form.input("apellido", {class: "form-control", autofocus:'', placeholder:'Ej: Perez',required:''})
+          .required-icon
+            .text *
+.row
+  .col-md-12.mid
+    .col-md-6
+      .form-group
+        != form.label("sexo", false, {class: "control-label"})
+        .input-group
+          span.input-group-addon
+            i.fa.fa-male
+          != form.select("sexo",false, {class:'form-control'})
+    .col-md-6
+      .form-group
+        != form.label("estado civil", false, {class: "control-label"})
+        != form.select("estado_civil", false, {class: "form-control"})
+.row
+  .col-md-12.mid
+    .col-md-6
+      .form-group
+        != form.label("edad", false, {class: "control-label"})
+        .input-group
+          != form.input("edad", {class: "form-control", type:'number', min:"0", max:"150", value:"0"})
+          span.input-group-addon.anios años
+    .col-md-6
+      .form-group
+        != form.label("clasificación social", false, {class: "control-label"})
+        != form.select("clasificacion_social", false, {class: "form-control"})
+.row
+  .col-md-12.mid
+    .col-md-4
+      .form-group
+        label.control-label(for="provincia") Provincia
+        select.form-control#provincia(name="provincia")
+    .col-md-4
+      .form-group
+        != form.label("localidad", false, {class: "control-label"})
+        != form.select("localidad", false, {class: "form-control"})
+    .col-md-4
+      .form-group
+        != form.label("barrio", false, {class: "control-label"})
+        .input-group
+          != form.select("barrio", false, {class: "form-control"})
+          .input-group-btn
+            a.btn.btn-success#btn-barrio(title="Agregar nuevo barrio")
+              i.fa.fa-plus
+.form-group
+  != form.label("dirección", false, {class: "control-label"})
+  != form.input("direccion", {class: "form-control", placeholder:"Calle, Número, Piso, Dpto."})
+legend.floor Teléfonos
+.form-group.hide
+  != form.label("telefonos", false, {class: "control-label"})
+  != form.input("telefonos", {class: "form-control"})
+#div-telefonos
+
+.form-group
+  != form.label("motivo oración", false, {class: "control-label"})
+  != form.textarea("motivo_oracion", {class: "form-control", rows:'4'})
+
+button#mas(type="button", class="btn btn-link", data-toggle="button")
+  |  Mostrar más campos
+  i.fa.fa-plus
+br
+br
+.row.mas(style='display:none')
+  .col-md-12
+    .form-group
+      != form.label("religión", false, {class: "control-label"})
+      != form.select("religion", false, {class: "form-control otro"})
+      != form.input("religion_otro", {class: "form-control otro", placeholder:'Indicar la religión'})
+    .form-group
+      != form.label("tipo de desición", false, {class: "control-label"})
+      != form.select("tipo_desicion", false, {class: "form-control otro"})
+      != form.input("tipo_desicion_otro", {class: "form-control otro", placeholder:'Indicar el tipo de desición'})
+    .row
+      .col-md-12.mid
+        .col-md-6
+          .form-group
+            != form.label("amigo que lo trajo", false, {class: "control-label"})
+            != form.input("amigo_que_trajo", {class: "form-control"})
+        .col-md-6
+          .form-group
+            != form.label("teléfono del amigo", false, {class: "control-label"})
+            .input-group
+              span.input-group-addon
+                i.glyphicon.glyphicon-earphone
+              != form.input("telefono_amigo", {class: "form-control", type:"tel"})
+    .form-group
+      != form.label("mejor horario para llamar", false, {class: "control-label"})
+      .input-group
+        span.input-group-addon
+          i.glyphicon.glyphicon-time
+        != form.input("horario_para_llamar", {class: "form-control"})
+    .form-group
+      != form.label("email", false, {class: "control-label"})
+      != form.input("email", {class: "form-control", placeholder:'usuario@abc.com'})
+    .form-group
+      != form.label("observaciones", false, {class: "control-label"})
+      != form.textarea("observaciones", {class: "form-control", rows:'4'})
+
+include ../includes/import/pickadate_base
+include ../includes/import/pickadate_date
+
+!= javascriptIncludeTag('meg/utils/server','meg/utils/select','meg/utils/gui','values/tarjetabienvenidas', 'meg/meg-referencex')
+!= javascriptIncludeTag('values/defaults', 'meg/meg-simpletable','gui_things', 'async')
+
+script
+  :coffeescript
+
+    $('#mas').on 'click', ->
+      if $('.mas').is(':visible')
+        $('#mas').text('Mostrar más campos ').append('<i class="fa fa-plus"></i>')
+        $('.mas').fadeOut()
+      else
+        $('#mas').text('Mostrar menos campos ').append('<i class="fa fa-minus"></i>')
+        $('.mas').fadeIn()
+
+script
+  :coffeescript(minify=true)
+
+    $('input.otro').hide()
+
+    model_id = '#Tarjetabienvenida_'
+
+    item_edad = '!{Vars.instanciaModel.edad}'
+    if item_edad.length > 0
+      $(model_id + 'edad').val(item_edad).change()
+
+    # change sex icon
+    $(model_id + 'sexo').on 'change', ->
+      element = $(@).parent().find('i')
+      if $(@).val() == 'm'
+        $(element).removeClass('fa-female').addClass('fa-male')
+      else
+        $(element).removeClass('fa-male').addClass('fa-female')
+
+    if '!{Vars.instanciaModel.sexo}' == 'f'
+      element = $(model_id + 'sexo').parent().find('i')
+      $(element).removeClass('fa-male').addClass('fa-female')
+
+    meg.gui.loadSelectFromValues defaults.sexo, model_id + 'sexo', '!{Vars.instanciaModel.sexo}', false
+    meg.gui.loadSelectFromValues values.religion, model_id + 'religion', '!{Vars.instanciaModel.religion}'
+    meg.gui.loadSelectFromValues values.tipo_desicion, model_id + 'tipo_desicion', '!{Vars.instanciaModel.tipo_desicion}'
+    meg.gui.loadSelectFromValues values.lugar_lleno_tarjeta, model_id + 'lugar_lleno_tarjeta', '!{Vars.instanciaModel.lugar_lleno_tarjeta}', false
+
+    defValues =
+      'model_id' : model_id
+      'barrio' : '!{Vars.instanciaModel.barrio}'
+      'localidad' : '!{Vars.instanciaModel.localidad}'
+      'provincia' : ''
+    meg.gui.loadGeographicsSelects defValues, () ->
+
+    #custom load combo eventos
+    loadSelectEventos = (cb) ->
+      url = '/eventos.json'
+      attr = model_id + 'evento'
+      def_value = '!{Vars.instanciaModel.evento}'
+      opts = {}
+      if def_value.length > 0
+        opts.default = def_value
+      meg.server.ajax url, {}, (err, items) ->
+        # check if lodash is loaded
+        if typeof(_) != 'undefined'
+          items = _.sortBy(items, 'nombre')
+
+        options = '<option value="">[Seleccionar]</option>'
+        for item in items
+          text = item.nombre + ' (' + item.fecha + ')'
+          options += '<option value="' + item.id + '">' + text + '</option>'
+        $(attr).empty().append(options)
+
+        if opts.default?
+          $(attr)["val"](opts.default)
+        cb()
+
+    async.series([
+      (cb) ->
+        meg.gui.loadSelect '/clasificacionsocials.json', model_id + 'clasificacion_social', '!{Vars.instanciaModel.clasificacion_social}', {}, cb
+      , (cb) ->
+        meg.gui.loadSelect '/estadosciviles.json', model_id + 'estado_civil', '!{Vars.instanciaModel.estado_civil}', {}, cb
+      , (cb) ->
+        loadSelectEventos(cb)
+    ], (err, res) -> )
+
+    $('select.otro').on 'change', ->
+      $('input.otro').hide()
+      if $(@).val() == 'otro'
+        attr = $(@).attr('name')
+          .replace('Tarjetabienvenida[','')
+          .replace(']','')
+        $(model_id + attr + '_otro').show()
+
+    $('.ref_evento').MEGReferencex
+      title: 'Nuevo evento'
+      postUrl:'/eventos.json'
+      selectRefSelector: model_id + 'evento'
+      selectRefFn : (newItemId) ->
+        meg.gui.loadSelect '/eventos.json', model_id + 'evento', newItemId
+      fields : [
+          name:'fecha'
+          text:'Fecha'
+          field : 'input'
+          attrs :
+            type : 'date'
+        ,
+          name:'nombre'
+          text:'Nombre'
+          field : 'input'
+          attrs :
+            type : 'text'
+            required : true
+            autofocus:''
+        ,
+          name: 'descripcion'
+          text: 'Descripción'
+          field: 'textarea'
+      ]
+
+    #### telefonos table
+    gui_things.instanceTelefonosSimpleTable(model_id)
+
+    $("form").submit (e) ->
+      e.preventDefault()
+      $(model_id + 'telefonos').val(JSON.stringify($('#div-telefonos').MEGSimpleTable('getData')))
+      @submit()
+
+include ../includes/forms/createBarrioByRef

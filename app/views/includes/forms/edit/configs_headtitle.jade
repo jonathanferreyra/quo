@@ -1,0 +1,14 @@
+.row
+  .col-md-12
+    h1
+      | #{Vars.titlemodel}
+      small  Editar
+    ol.breadcrumb
+      li
+        a(href='/')
+          i.fa.fa-home
+      li
+        a(href="#") Configuraciones
+      li
+        a(href='/#{Vars.pluralmodel}') #{Vars.titlemodel}
+      li.active Editar

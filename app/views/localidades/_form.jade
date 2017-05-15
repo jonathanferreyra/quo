@@ -1,0 +1,27 @@
+include ../includes/forms/errorMessages
+.form-group
+  != form.label("nombre", false, {class: "control-label"})
+  != form.input("name", {class: "form-control", autofocus:'', required:''})
+.form-group
+  != form.label("provincia", false, {class: "control-label"})
+  != form.select("provincia", false, {class: "form-control"})
+.form-group
+  != form.label("Código postal", false, {class: "control-label"})
+  != form.input("cp", {class: "form-control", type:'number', placeholder:'1234'})
+.form-group
+  != form.label("latitud", false, {class: "control-label"})
+  != form.input("lat", {class: "form-control", type:'number'})
+.form-group
+  != form.label("longitud", false, {class: "control-label"})
+  != form.input("long", {class: "form-control", type:'number'})
+
+!= javascriptIncludeTag('meg/utils/server','meg/utils/select','meg/utils/gui')
+
+script
+  :coffeescript
+
+    model_id = '#Localidad_'
+    meg.gui.loadSelect '/provincias.json', model_id + 'provincia', '!{Vars.instanciaModel.provincia}', {showname:'name'}, () ->
+      params = meg.gui.getURLParameters()
+      if params['p']
+        $(model_id + 'provincia').val(params['p'])

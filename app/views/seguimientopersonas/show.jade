@@ -1,0 +1,26 @@
+include ../includes/show/actions
+.row
+  .col-md-12
+    .panel.panel-default
+      .panel-heading
+        h4 Seguimiento persona [#{Vars.instanciaModel.nombre}]
+      .panel-body
+
+        table.table.table-bordered
+          tbody
+            tr
+              td fecha
+              td
+                != seguimientopersona.fecha
+              tr
+              td comentarios
+              td
+                != seguimientopersona.comentarios
+              tr
+              td miembro
+              td
+                != seguimientopersona.miembro
+              tr
+              td tarjeta_bienvenida
+              td
+                != seguimientopersona.tarjeta_bienvenida

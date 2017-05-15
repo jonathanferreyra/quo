@@ -1,0 +1,59 @@
+{
+  "development": {
+    "roles": {
+      "admin": {
+        "showName":"Administrador",
+        "rawName":"admin",
+        "description":"",
+        "abilities":[{
+          "controller": "users",
+          "actions": ["create","index","show","update","destroy"]
+        }, {
+          "controller": "roles",
+          "actions": ["create","index","show","update","destroy"]
+        }, {
+          "controller": "settings",
+          "actions": ["create","index","show","update","destroy"]
+        }, {
+          "controller": "administration",
+          "actions": ["create","index","show","update","destroy","home","permissions"]
+        }, {
+          "controller": "grupocrecimientos",
+          "actions": ["create","index","show","update","destroy"]
+        }, {
+          "controller": "regsemanalgcs",
+          "actions": ["create","index","show","update","destroy"]
+        }, {
+          "controller": "miembros",
+          "actions": ["create","index","show","update","destroy"]
+        }, {
+          "controller": "clasificacionsocials",
+          "actions": ["create","index","show","update","destroy"]
+        }, {
+          "controller": "estadomembresias",
+          "actions": ["create","index","show","update","destroy"]
+        }, {
+          "controller": "ministerios",
+          "actions": ["create","index","show","update","destroy"]
+        }, {
+          "controller": "familias",
+          "actions": ["create","index","show","update","destroy"]
+        }, {
+          "controller": "categorias",
+          "actions": ["create","index","show","update","destroy"]
+        }, {
+          "controller": "cuentas",
+          "actions": ["create","index","show","update","destroy"]
+        }, {
+          "controller": "movimientos",
+          "actions": ["create","index","show","update","destroy"]
+        }, {
+          "controller": "iglesia",
+          "actions": ["create","index","show","update","destroy"]
+        }]
+      }
+    }
+  },
+  "to_ignore":{
+  }
+}

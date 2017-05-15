@@ -1,0 +1,119 @@
+br
+br
+.row
+  br
+  br
+  a.btn-save.btn.btn-success Guardar cambios
+  .pull-right 
+    h2.titulo !{title}
+
+style 
+  .ctrl-row{
+    background:#ffffdd;
+  }
+
+  .titulo {
+    margin-top: 0px;
+  }
+
+
+mixin tablaPermisos(role)
+  table.table.table-condensed.table-bordered
+    thead
+      tr
+        th Accion
+        th Permiso
+    tbody
+      for controller in metaControllers
+        tr
+          th.ctrl-row #{controller.showName}
+            
+          td.ctrl-row
+            input(
+              class="main-#{role}",
+              role="#{role}",
+              type="checkbox",
+              value="#{controller.rawName}")
+        for action in controller.actions
+          tr
+            td #{action.showName}
+            td 
+              input(
+                class="#{role} #{controller.rawName}",
+                type="checkbox",
+                value="#{action.action}")
+.row
+  - var _permissions = JSON.parse(permissions)
+    ul#roles-ul.nav.nav-tabs
+      for role in _permissions
+        if role.rawName == 'admin'
+          li.active
+            a(href='##{role.rawName}', data-toggle='tab') #{role.showName}
+        else
+          li
+            a(href='##{role.rawName}', data-toggle='tab') #{role.showName}
+    .tab-content
+      for role in _permissions
+        if role.rawName == 'admin'
+          .tab-pane.fade.in.active(id="#{role.rawName}")
+            +tablaPermisos(role.rawName)
+        else
+          .tab-pane.fade(id="#{role.rawName}")
+            +tablaPermisos(role.rawName)
+
+
+a.btn-save.btn.btn-success Guardar cambios
+
+:coffeescript
+
+  getActionsSelected = (role) ->
+    items = $('.' + role + ':checked')
+    actions = {}
+    for item in items
+      _ctrl = $(item).attr("class").split(' ')[1]
+      _action = $(item).val()
+      if not actions.hasOwnProperty(_ctrl)
+        actions[_ctrl] = []
+      actions[_ctrl].push _action
+    actions
+
+  _roles = `!{permissions}`
+  
+  checkCurrentPermissions = () ->
+    for role, ctrls of _roles
+      ctrls = ctrls.abilities
+      for ctrl in ctrls        
+        name = ctrl.controller
+        for action in ctrl.actions
+          to_check = '.'+role+'.'+name+'[value="'+action+'"]'
+          $(to_check).attr('checked',true)
+
+  checkCurrentPermissions()
+
+  current_roles = Object.keys _roles
+  for r in current_roles
+    $(document).on 'click', '.main-' + r, ->
+      section = $(@).val()
+      checked = if $(@).attr('checked') then true else false
+      _selector = '.' + $(@).attr('role') + '.' + section
+      $(_selector).attr('checked',checked)
+
+  $('.btn-save').on 'click', ->
+    perms = 
+      authenticity_token : $("meta[name=csrf-token]").attr("content")
+    for r in current_roles
+      perms[r] = getActionsSelected( r )
+
+    $.ajax
+      url: "/permissions_update"
+      type: "POST"
+      dataType: "json"
+      data: perms
+      success: (data) ->
+        window.location.reload()
+      error: ->
+        console.log "ERROR RETRIEVE DATA"
+
+  $('#roles-ul a').on 'click', (e) ->
+    e.preventDefault()
+    $(@).tab('show')

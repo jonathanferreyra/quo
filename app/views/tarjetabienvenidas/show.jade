@@ -1,0 +1,375 @@
+- var subtitle = '# ' + Vars.instanciaModel.ide + ' ' + Vars.instanciaModel.nombre + ' ' + Vars.instanciaModel.apellido
+- var tarjetabienvenida = Vars.instanciaModel
+style.
+  .label {font-size: 85%;}
+  .min-margin {margin-right: 5px;}
+
+include ../includes/show/subhead
+
+.row
+  .col-md-12
+    .col-md-6(style="padding-left: 0px;")
+      a.btn.btn-sm.btn-primary.min-margin#btBackToList(href="/#{Vars.pluralmodel}")
+        i.fa.fa-arrow-left
+        |  Volver a la lista
+      a.btn.btn-sm.btn-success(href='#',data-toggle="modal",data-target="#md-registrar-seguimiento")
+        i.fa.fa-phone
+        |  Registrar seguimiento
+    .col-md-6(style="padding-right: 0px;")
+      .btn-group.pull-right
+        button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+          i.fa.fa-cog
+          |  Opciones
+          span.caret
+        ul.dropdown-menu(role='menu')
+          li
+            a#actnEdit(href='/#{Vars.pluralmodel}/#{Vars.instanciaModel.id}/edit')
+              i.fa.fa-pencil.text-warning
+              |  Editar
+          li
+            a.item-del#actnDel(href="#", item="#{Vars.instanciaModel.id}")
+              i.fa.fa-trash-o.text-danger
+              |  Eliminar
+          li
+            a.to-member(href='#')
+              i.fa.fa-user
+              |  Convertir en miembro
+          li
+            a.to-ide(href='#')
+              i.fa.fa-external-link
+              |  Ir a la tarjeta...
+          li.divider
+          li
+            a(href='/#{Vars.pluralmodel}/new')
+              i.fa.fa-plus.text-success
+              |  Crear nueva
+
+script
+  :coffeescript
+
+    $('.item-del').on 'click', ->
+      item = $(@)
+      item_id = $(@).attr('item')
+      bootbox.confirm 'Confirmar eliminación...', (result) =>
+        if result
+          $('<a>').attr({
+            'href':"/" + '!{Vars.pluralmodel}' + "/" + item_id
+            'data-remote':"true"
+            'data-method':"delete"
+            'data-jsonp':"(function (u) {location.href = u;})"
+          }).appendTo('body').click()
+
+.row.mt5
+  .col-md-12
+    .box.box-default
+      .box-header
+        h3.box-title
+          i.fa.fa-file-o
+          |  Datos de la tarjeta
+        div.pull-right.box-tools
+          button.btn.btn-primary.btn-sm.pull-right(data-widget='collapse', data-toggle='tooltip', title='', style='margin-right: 5px;', data-original-title='Minimizar')
+            i.fa.fa-minus
+      .box-body
+        table.table.table-condensed
+          tbody
+            tr
+              th Fecha
+              td
+                != tarjetabienvenida.fecha
+            tr
+              th Nombre del que llenó la tarjeta
+              td
+                != tarjetabienvenida.nombre_que_lleno_tarjeta
+            tr
+              th Lugar donde se llenó la tarjeta
+              td#lugar_lleno_tarjeta
+            tr
+              th Evento
+              td#evento
+            if Vars.instanciaModel.miembro
+              tr
+                th
+                  i.fa.fa-user  Miembro asociado
+                td#miembro
+            tr
+              th
+                i.fa.fa-user  Usuario que cargó la tarjeta
+              td#usuario
+  .col-md-12
+    .box.box-default
+      .box-header
+        h3.box-title
+          i.fa.fa-male
+          |  Datos de la persona
+        .pull-right.box-tools
+          button.btn.btn-primary.btn-sm.pull-right(data-widget='collapse', data-toggle='tooltip', title='', style='margin-right: 5px;', data-original-title='Minimizar')
+            i.fa.fa-minus
+      .box-body
+        table.table.table-condensed
+          tbody
+            tr
+              th Nombres
+              td
+                != tarjetabienvenida.nombre
+            tr
+              th Apellido
+              td
+                != tarjetabienvenida.apellido
+        .row
+          .col-md-12
+            label
+              b Motivo de oración
+            if tarjetabienvenida.motivo_oracion != ''
+              pre
+                != tarjetabienvenida.motivo_oracion
+            else
+              pre Sin motivos de oración
+        .row
+          .col-md-6
+            table.table.table-condensed
+              tbody
+                tr
+                  th Sexo
+                  if tarjetabienvenida.sexo == 'm'
+                    td Masculino
+                  else
+                    td Femenino
+                tr
+                  th Dirección
+                  td
+                    != tarjetabienvenida.direccion
+                tr
+                  th Barrio
+                  td#barrio
+                tr
+                  th Localidad
+                  td#localidad
+                tr
+                  th Edad
+                  td
+                    != tarjetabienvenida.edad
+                tr
+                  th Clasificación social
+                  td#clasificacion_social
+          .col-md-6
+            table.table.table-condensed
+              tbody
+                tr
+                  th Estado civil
+                  td#estado_civil
+                tr
+                  th Email
+                  td
+                    a(href='mailto:#{tarjetabienvenida.email}') #{tarjetabienvenida.email}
+                tr
+                  th Religión
+                  td#religion
+                tr
+                  th Tipo desición
+                  td#tipo_desicion
+                tr
+                  th Amigo que lo trajo
+                  td
+                    != tarjetabienvenida.amigo_que_trajo
+                tr
+                  th Teléfono del amigo
+                  td
+                    != tarjetabienvenida.telefono_amigo
+                tr
+                  th Mejor horario para llamar
+                  td
+                    != tarjetabienvenida.horario_para_llamar
+                tr
+        legend
+          i.fa.fa-phone
+          |  Teléfonos
+        #div-telefonos
+        .row
+          .col-md-12
+            label
+              b Observaciones
+            if tarjetabienvenida.observaciones != ''
+              pre
+                != tarjetabienvenida.observaciones
+            else
+              pre Sin observaciones
+
+.row
+  .col-md-12
+    .box.box-success.item-id(id='#{Vars.instanciaModel.id}')
+      .box-header
+        h3.box-title
+          i.fa.fa-bookmark-o
+          |  Seguimientos realizados
+        div.pull-right.box-tools
+          button.btn.btn-primary.btn-sm.pull-right(data-widget='collapse', data-toggle='tooltip', title='', style='margin-right: 5px;', data-original-title='Minimizar')
+            i.fa.fa-minus
+          //- button.btn.btn-danger.btn-sm.btn-exp.pull-right(data-toggle='tooltip', title='', style='margin-right: 5px;', data-original-title='Exportar')
+          //-   i.fa.fa-download
+          //- script
+          //-   :coffeescript
+          //-     $('.btn-exp').on 'click', =>
+          //-       if @items.length > 0
+          //-         data = @getCSV ['fecha','comentarios'], ';'
+          //-         link = document.createElement("a")
+          //-         link.setAttribute("href", "data:text/csv;charset=utf8," + encodeURIComponent(data))
+          //-         filename = '#{Vars.instanciaModel.apellido} #{Vars.instanciaModel.nombre} - Seguimientos.csv'
+          //-         link.setAttribute('download',filename)
+          //-         link.click()
+          button.btn.btn-success.btn-sm.pull-right.min-margin(title='Registrar seguimiento', data-toggle="modal", data-target="#md-registrar-seguimiento")
+            i.fa.fa-phone
+      .box-body
+        //- table.table
+          tbody
+            tr
+              td
+                label.label.label-default Último seguimiento registrado:
+              td
+                .fecha-ultimo-registrado.distime
+        //- br
+        include ../includes/index/table
+        include ../includes/index/coffees
+
+!= javascriptIncludeTag('meg/utils/server', 'meg/utils/gui', 'values/tarjetabienvenidas', 'values/defaults','bootbox.min')
+!= javascriptIncludeTag('meg/meg-simpletable','gui_things', 'async','date')
+//- script(src="/vendor/disTime/disTime.js")
+//- script(src="/vendor/disTime/disTime.i18n.js")
+
+script
+  :coffeescript(minify=true)
+
+    # load table seguimiento
+    item_id = '#{Vars.instanciaModel.id}'
+    @itemsUrl = '/tarjetabienvenidas/getTracing/' + item_id
+    @listaordenada = () ->
+      [
+        name: 'fecha'
+        showname: 'Fecha'
+      ,
+        name : 'comentarios'
+        showname : 'Comentarios'
+        params: ['comentarios']
+        parser: (c) ->
+          '<blockquote>
+            <p>' + c + '</p>
+          </blockquote>'
+      ,
+        name:'estado'
+        showname:'Estado'
+        params: ['estado']
+        parser: (e) ->
+          estados =
+            volver_llamar:'<span class="label label-success">Volver a llamar</span>'
+            dejar_llamar:'<span class="label label-danger">Dejar de llamar</span>'
+          estados[e]
+      ,
+        name: "accciones"
+        showname: " "
+        params: [ "id" ]
+        parser: (id) =>
+          '<a class="btn item-del" href="#" title="Eliminar" onclick="deleteSeguimiento(this)" item="' + id + '"><i class="fa fa-trash-o"></i></a>'
+      ]
+
+    getLastTracing = (cb=null) ->
+      meg.server.ajax '/tarjetabienvenidas/lastTracing/' + meg.data.currentItem.id, {}, (err, doc) ->
+        to_append = '<span>Todavía no se han registrado seguimientos</span>'
+        if not _.isEmpty(doc)
+          dt = Date.parseExact(doc.fecha, "yyyy-M-d")
+          values = doc.fecha.split('-')
+          dia = defaults.days[dt.toString('ddd')]
+          mes = defaults.months[dt.toString('MMM')]
+          to_append = dia + ', ' + [values[2], mes, values[0]].join(' ')
+        $('.fecha-ultimo-registrado').empty().append(to_append)
+      if cb
+        cb()
+
+    @reloadTbSeguimientos = () =>
+      #getLastTracing () ->
+      @documentReady () ->
+
+    @deleteSeguimiento = (_this) ->
+      item_id = $(_this).attr('item')
+      opts =
+        url:'/seguimientopersonas/' + item_id + '.json'
+        type:'DELETE'
+        data: {authenticity_token:$("meta[name=csrf-token]").attr("content")}
+        success: () =>
+          @documentReady () ->
+            @bindEvents()
+      bootbox.confirm 'Confirmar eliminación...', (result) =>
+        if result
+          $.ajax(opts)
+          #getLastTracing () ->
+
+    meg.server.ajax '/tarjetabienvenidas/getItem/id', {}, (err, item) ->
+      meg.gui.showFromValueName '#religion', values.religion, item.religion
+      meg.gui.showFromValueName '#tipo_desicion', values.tipo_desicion, item.tipo_desicion
+      meg.gui.showFromValueName '#lugar_lleno_tarjeta', values.lugar_lleno_tarjeta, item.lugar_lleno_tarjeta
+      if !meg.data
+        meg.data = {}
+      meg.data.currentItem = item
+
+      async.series([
+        (cb) ->
+          if typeof item.miembro != 'undefined' or item.miembro != null
+            meg.server.ajax '/miembros/' + item.miembro + '.json', {}, (err, m) ->
+              $('#miembro').append(
+                '<a href="/miembros/' + m.id + '">#' + [m.ide, m.nombre, m.apellido].join(' ') + '</a>')
+              cb()
+          else
+            cb()
+        , (cb) ->
+          meg.server.ajax '/tarjetabienvenidas/getUserName/' + item.id, {}, (err, item) ->
+            $('#usuario').text(item.nombre)
+            cb()
+        , (cb) ->
+          meg.gui.showRefName 'barrios', 'name', item.barrio, '#barrio', false, cb
+        , (cb) ->
+          meg.gui.showRefName 'localidades', 'name', item.localidad, '#localidad', false, cb
+        , (cb) ->
+          meg.gui.showRefName 'estadosciviles', 'nombre', item.estado_civil, '#estado_civil', false, cb
+        , (cb) ->
+          meg.gui.showRefName 'clasificacionsocials', 'nombre', item.clasificacion_social, '#clasificacion_social', false, cb
+        , (cb) ->
+          meg.gui.showRefName 'eventos', 'nombre', item.evento, '#evento', false, cb
+      ], (err, res) -> )
+
+
+      gui_things.instanceTelefonosSimpleTable('', item.telefonos)
+
+      #timestamp = parseInt(Date.now() / 1000, 10)
+      #elementtime = parseInt(1404874800000, 10)
+      #console.log disTimeObject.parseTimestamp(languages['es'], elementtime, timestamp ,true )
+
+      # Convertir en miembro
+      $('.to-member').on 'click', ->
+        message = '<h3><i class="fa fa-hand-o-right fa-1x"></i>  Procederás a crear un miembro a partir de los datos de la ficha actual</h3>'
+        bootbox.confirm message, (res) ->
+          if res
+            o = {}
+            o.type = 'POST'
+            o.dataType = 'json'
+            o.url = '/tarjetabienvenidas/createMember'
+            o.data =
+              authenticity_token : $("meta[name=csrf-token]").attr("content")
+              id: item.id
+            o.success = (data, textStatus, jqXHR) ->
+              if data.err
+                message = '<h3><i class="fa fa-ban fa-1x"></i>  ' + data.err.message + '</h3>'
+                bootbox.alert message
+              else
+                _item = data.item
+                n = '#' + _item.ide + ' ' + _item.nombre + ' ' + _item.apellido
+                a = '<a href="/miembros/' + data.item.id + '">' + n + '</a>'
+                bootbox.alert "Operación realiza con éxito. Se creó el miembro " + a
+                window.location.reload()
+            $.ajax(o)
+
+      # Ir a la tarjeta
+      $('.to-ide').on 'click', ->
+        bootbox.prompt "Ingresa el número de tarjeta a la que deseas ir", (result) ->
+          if result != null
+            if not isNaN(result)
+              window.location = '/tarjetabienvenidas/goTo/' + result
+
+include md_registrar_seguimiento

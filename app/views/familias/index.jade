@@ -1,0 +1,80 @@
+include ../includes/index/subhead
+include ../includes/index/filters
+include ../includes/index/container_table
+
+!= javascriptIncludeTag('async','meg/meg-filter')
+
+script
+  :coffeescript(minify=true)
+
+    @fnFormatField =
+      barrio:(value) ->
+        meg.data.references['idx']['barrio'][value]['nombre']
+      localidad:(value) ->
+        meg.data.references['idx']['localidad'][value]['nombre']
+
+    @listaordenada = () ->
+      [
+        name: "ide"
+        showname: "#"
+      ,
+        name: "nombre"
+        showname: "Nombre"
+        parser: @showDetails
+        params: [ "id","nombre"]
+      ,
+        name: "barrio_text"
+        showname: "Barrio"
+      ,
+        name: "localidad_text"
+        showname: "Localidad"
+      ,
+        name: "accciones"
+        parser: @setActions
+        params: [ "id" ]
+        showname: "Acciones"
+      ]
+    @references = {}
+    refs_urls = [
+      {url:'barrios.json', name:'barrio', attr:'nombre'}
+      {url:'localidades.json', name:'localidad', attr:'nombre'}
+    ]
+    @documentReady = (cb=null) ->
+      $('.loader').show()
+      meg.server.ajax @itemsUrl, {}, (err, listadatos) ->
+        if listadatos.length > 0
+
+          if not meg.data?
+            meg.data = {}
+          meg.data.references = {all:{}, idx:{}}
+
+          async.map refs_urls, (ref, cb) ->
+            meg.server.ajax ref.url, {}, (err, items) ->
+
+              meg.data.references['all'][ref.name] = items
+              meg.data.references['idx'][ref.name] = _.indexBy(items, 'id')
+              @references[ref.name] = meg.data.references['idx'][ref.name]
+
+              for item in listadatos
+                item[ref.name + '_text'] = ''
+                if item.hasOwnProperty(ref.name)
+                  if item[ref.name].length > 0
+                    item[ref.name + '_text'] = @references[ref.name][item[ref.name]][ref.attr]
+              cb()
+          , (err, res) ->
+            @items = listadatos
+            @reloadTable listadatos, cb
+        else
+          @items = listadatos
+          @reloadTable listadatos, cb
+
+    @filter_fields_ajax = {
+      'barrio':{t:'Barrio',u:'/barrios.json?f=id,nombre'}
+      'localidades':{t:'Localidad',u:'/localidades.json?f=id,nombre'}
+      }
+
+    @load_filter_fields_ajax()
+
+    # init filter plugin
+    @filter_fields = _.sortBy(@filter_fields, 'text')
+    $("#filters").MEGFilter(fields:@filter_fields)

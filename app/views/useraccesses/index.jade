@@ -1,0 +1,88 @@
+//- index deps
+!= contentFor('css-up',stylesheetLinkTag('meg/index'))
+//- storage deps
+
+br
+.row
+  br
+  br
+  .pull-right 
+      h2.titulo !{title}
+  br
+  br
+div(style="display:none")
+  label El registro de accesos esta 
+  span='   ' 
+  a#bt_log_state.btn.btn-danger(href='#',data-style="contract",data-size="l") Desactivado
+hr
+.well
+  h4 Posteriormente irán graficos aqui
+  
+include ../templates/index/table
+
+!= contentFor('js-up',javascriptIncludeTag('meg/utils/storage-deps/jx_compressed','meg/utils/storage-deps/aes','meg/utils/storage-deps/lawnchair-0.6.1.min','meg/utils/storage-deps/jsonMask.min','meg/utils/storage'))
+
+:coffeescript
+  @getModel = (id,model,opts = {},cb) ->
+    opts.id = 'id' if !opts.id?
+    opts.showname = 'nombre' if !opts.showname?
+    meg.storage.getItem model,id,(err,item)->
+      if item?
+        cb '<a class="show_'+model+'" item="'+item[opts.id]+'" href="">'+item[opts.showname]+'</a>'
+      else
+        cb "    -    "
+
+  @setActions = (id)->
+    showAct =   {title:"Ver detalles", url:"",                            class:"col-md-4 show_item", icon:"glyphicon-search", extra:"item="+id};
+    editAct =   {title:"Editar",       url:"/!{Vars.pluralmodel}/"+id+"/edit", class:"col-md-4",           icon:"glyphicon-edit",   extra:""}
+    deleteAct = {title:"Eliminar",     url:"/!{Vars.pluralmodel}/"+id,         class:"col-md-4",           icon:"glyphicon-trash",  extra:'data-confirm="¿Desea eliminar este item?" data-rel="tooltip" data-remote="true" data-method="delete" data-jsonp="(function (u) {location.href = u;})"'};
+    htmlActions = ''
+    for item in [showAct,editAct,deleteAct]
+      htmlActions += '<a class="btn '+item.class+'" href="'+item.url+'" title="'+item.title+'" '+item.extra+'><i class="glyphicon glyphicon-color '+item.icon+'"></i></a>'
+    '<div class="btn-group">' + htmlActions + '</div>'
+
+  @listaordenada = ->
+   [
+    {name:'datetime', showname:'Date'},
+    {name:'user_email',       showname:'User'},
+    {name:'controller',       showname:'Controller'},
+    {name:'action',       showname:'Action'},
+    {name:'method',       showname:'Method'},
+   ]
+
+  meg.server.ajax '/get_useraccess_log_state', {}, (err, res) ->
+    toggleState(res.state)
+    text = if res.state then 'Activado' else 'Desactivado'
+    $('#bt_log_state').text(text)
+    $('#bt_log_state').parent().show()
+
+  toggleState = (state) ->
+    add = if state then 'btn-success' else 'btn-danger'
+    rem = if state then 'btn-danger' else 'btn-success'
+    text = if state then 'Activado' else 'Desactivado'
+
+    $('#bt_log_state').removeClass(rem)
+    $('#bt_log_state').addClass(add)
+    $('#bt_log_state').text(text)
+
+  $('#bt_log_state').on 'click', ->
+    _state = $(@).text() == 'Activado'    
+    toggleState(!_state)
+
+    _params = 
+      authenticity_token: $("meta[name=csrf-token]").attr("content")
+      state: !_state
+    $.ajax
+      url: "/set_useraccess_log_state"
+      type: "POST"
+      dataType: "json"
+      data: _params
+      success: (data) ->
+        
+      error: ->
+        console.log "ERROR RETRIEVE DATA"
+
+  $ -> 
+    meg.server.ajax('/!{Vars.pluralmodel}.json', {}, (err, listadatos) ->
+      meg.table.create("#table",@listaordenada(), listadatos)
+    )

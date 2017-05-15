@@ -1,0 +1,24 @@
+include ../includes/index/subhead
+include ../includes/index/filters
+
+style.
+  .tname { font-size: 1.4em;}
+
+.box.box-primary
+  .box-header
+    .pull-right.box-tools
+      button.btn.btn-primary.btn-sm.pull-right(data-widget='collapse', data-toggle='tooltip', title='', style='margin-left: 5px;', data-original-title='Minimizar')
+        i.fa.fa-minus
+      if !isDemo
+        button.btn.btn-default.btn-sm.pull-right.btn-export-table(type='button', data-toggle='tooltip', data-original-title='Exportar', style='margin-left: 5px;')
+          i.fa.fa-download
+      a.btn.btn-default.btn-sm.pull-right(data-toggle='tooltip', data-original-title='Ver estadísticas', href='/miembros/stats/view')
+        i.fa.fa-bar-chart-o  Estadísticas
+
+  .box-body(style="padding-top: 0px;")
+    include ../includes/index/table
+    include ../includes/index/coffees
+
+include ../includes/index/md_export
+
+!= javascriptIncludeTag('meg/meg-filter','values/miembros', 'indexs/miembros')

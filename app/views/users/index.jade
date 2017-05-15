@@ -1,0 +1,117 @@
+style.
+  .img-user {
+    position: relative;
+    margin-right: 15px;
+    max-width: 50px;
+    float: left;
+    border-radius: 50%;
+  }
+  .user-name {
+    padding-top: 3px;
+    font-size: 1.4em;
+
+  }
+  .user-role {
+    position: relative;
+    float: left;
+    margin-top:5px;
+    font-style: italic;
+  }
+  .user-email {
+    color:gray;
+    font-size: 14px;
+  }
+  tr.even {padding-top: 0px;}
+  .table tbody > tr > td {
+    font-size: 0.875em;
+    vertical-align: middle;
+    border-top: 1px solid #e7ebee;
+    padding: 12px 8px;
+  }
+  .label {
+    border-radius: 3px;
+    background-clip: padding-box;
+    font-size: 0.875em;
+    font-weight: 600;
+  }
+
+include ../includes/index/subhead
+.box.box-primary
+  .box-header
+    .pull-right.box-tools
+      button.btn.btn-primary.btn-sm.pull-right(data-widget='collapse', data-toggle='tooltip', title='', style='margin-left: 5px;', data-original-title='Minimizar')
+        i.fa.fa-minus
+  .box-body(style="padding-top: 0px;")
+    include ../includes/index/table
+    include ../includes/index/coffees
+
+!= javascriptIncludeTag('async')
+
+script
+  :coffeescript(minify=true)
+    @listaordenada = () ->
+      [
+        name: "displayName"
+        showname: "Usuario"
+        params: [ "id", "displayName","email","account_emails","avatar_url","roles_text"]
+        parser: (id, name, email, account_emails, avatar, rt) ->
+          tmpl = '
+            <img src="{avatar}" class="img-responsive img-user">
+            <a class="user-name" href="{id}">{name}</a><br>
+            <span class="user-role">{rn}</span>'
+          if avatar.length == 0 or avatar == 'avatar_url'
+            avatar = '/images/user-profile.jpg'
+          tmpl = tmpl.replace('{id}','/users/' + id)
+          tmpl = tmpl.replace('{name}',name)
+          #tmpl = tmpl.replace(/{email}/g,text_email)
+          tmpl = tmpl.replace('{avatar}',avatar)
+          tmpl = tmpl.replace('{rn}',rt)
+          tmpl
+      ,
+        name:"email"
+        showname:"Email"
+        params: [ "email","account_emails"]
+        parser: (email, account_emails) ->
+          text_email = email
+          if email == 'email' or email.length == 0
+            emails = JSON.parse(account_emails)
+            if emails.length > 0
+              text_email = emails[0]
+          '<a class="user-email" href="mailto:{email}">{email}</a>'.replace(/{email}/g,text_email)
+      ,
+        name:"deleted"
+        showname:"Estado"
+        params: [ "deleted"]
+        parser: (value) ->
+          res = ''
+          if !value
+            res = '<span class="label label-success text-center">Activo</span>'
+          else
+            res = '<span class="label label-default text-center">Deshabilitado</span>'
+          res
+      ]
+
+    @references = {}
+    refs_urls = [
+      {url:'roles.json?f=id,name,raw_name', name:'roles', attr:'id'}
+    ]
+    @documentReady = (cb=null) ->
+      $('.loader').show()
+      meg.server.ajax @itemsUrl, {}, (err, listadatos) ->
+        if listadatos.length > 0
+
+          async.map refs_urls, (ref, cb) ->
+            meg.server.ajax ref.url, {}, (err, items) ->
+              @references[ref.name] = _.indexBy(items, 'id')
+              for item in listadatos
+                item[ref.name + '_text'] = ''
+                if item.hasOwnProperty(ref.name)
+                  if item[ref.name].length > 0
+                    item[ref.name + '_text'] = @references[ref.name][item[ref.name]]['name']
+              cb()
+          , (err, res) ->
+            @items = listadatos
+            @reloadTable listadatos, cb
+        else
+          @items = listadatos
+          @reloadTable listadatos, cb

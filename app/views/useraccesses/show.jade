@@ -1,0 +1,38 @@
+ul.breadcrumb
+    li
+       a(href='/') Home
+       span.divider /
+    li
+       != link_to('useraccesses', pathTo.useraccesses)
+       span.divider /
+    li.active
+       a(href='#') Details of useraccess
+
+.page-header
+  h1 Details of useraccess
+
+div(about=path_to.useraccess(useraccess))
+  table.table.table-bordered
+    tbody
+      tr
+        td user
+        td
+          != useraccess.user
+        tr
+        td datetime
+        td
+          != useraccess.datetime
+        tr
+        td action
+        td
+          != useraccess.action
+        tr
+        td controller
+        td
+          != useraccess.controller
+
+.well
+  != linkTo('<i class="icon-edit icon-white"></i> Edit', pathTo.edit_useraccess(useraccess), {class: 'btn btn-primary'}) + ' '
+  != linkTo('<i class="icon-remove icon-white"></i> Delete', pathTo.useraccess(useraccess), {class: 'btn btn-danger', method: 'delete', remote: true, jsonp: '(function (u) { location.href = u; })'})
+  span= ' or '
+  != linkTo('Back to index', pathTo.useraccesses)

@@ -1,0 +1,101 @@
+- var subtitle = Vars.instanciaModel.name
+style.
+  .img-user {
+    margin-top: 10px;
+  }
+  h3.user-name {margin-top: 10px;}
+  tr.even {padding-top: 0px;}
+
+include ../includes/show/subhead
+.row.mb8
+  .col-md-12
+    a.btn.btn-sm.btn-primary#btBackToList(href="/#{Vars.pluralmodel}", style="margin-right: 5px;")
+      i.fa.fa-arrow-left
+      |  Volver a la lista
+    a.btn.btn-sm.btn-default(href="#", style="margin-right: 5px;", data-toggle="modal", data-target="#md-set-role")
+      i.fa.fa-hand-o-right
+      |  Establecer rol a usuario
+    include ../includes/show/btns_right
+
+.row
+  .col-md-12
+    .box.box-info
+      .box-header
+        h3.box-title Detalles
+      .box-body
+        blockquote.role-details.hide
+        .tabbable
+          ul.nav.nav-pills
+            li.active
+              a(href='#permisos', data-toggle='tab')
+                i.fa.fa-gears
+                |  Permisos
+            li
+              a(href='#usuarios', data-toggle='tab')
+                i.fa.fa-users
+                |  Usuarios
+        .tab-content
+          #permisos.tab-pane.fade.in.active
+            br
+            .callout.callout-info
+              p Lista de permisos concedidos para este rol
+            div#perms-list
+
+          #usuarios.tab-pane.fade
+            br
+            .callout.callout-info
+              p Lista de usuarios que poseen este rol
+
+            include ../includes/index/table
+            include ../includes/index/coffees
+
+#md-set-role.modal(tabindex='-1', role='dialog', aria-hidden='true')
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+        h2.modal-title
+          i.fa.fa-hand-o-right  Establecer rol a usuario
+      .modal-body
+        .callout.callout-warning
+          h4 El rol elegido sera reemplazado por el actual rol del usuario
+
+        form.form-horizontal
+          .control-group
+            label.control-label Selecciona un usuario
+          select.form-control#cb-users
+      .modal-footer
+        button.btn.btn-default(type="button", data-dismiss="modal") Cancelar
+        button.btn.btn-primary.btn-lg.pull-right#btn-set-role(type='button')
+          |  Establecer
+
+!= javascript_include_tag('meg/utils/server','meg/utils/select','values/roles', 'shows/roles')
+
+script
+  :coffeescript(minify=true)
+
+    @itemsUrl = '/roles/users/#{Vars.instanciaModel.id}'
+    @listaordenada = () ->
+      [
+        name: ""
+        showname: ""
+        params: [ "id", "displayName","email", "avatar_url"]
+        parser: (id, name, email, avatar) ->
+          tmpl = '<div class="row">
+            <div class="col-sm-1">
+              <img src="{{avatar}}" class="img-circle img-responsive img-user">
+            </div>
+            <div class="col-sm-11">
+              <h3 class="user-name"><a href="{{id}}">{{name}}</a></h3><p>{{email}}</p>
+            </div>
+          </div>'
+          if email == 'email'
+            email = ''
+          if avatar.length == 0 or avatar == 'avatar_url'
+            avatar = '/images/user-profile.jpg'
+          tmpl = tmpl.replace('{{id}}','/users/' + id)
+          tmpl = tmpl.replace('{{name}}',name)
+          tmpl = tmpl.replace('{{email}}',email)
+          tmpl = tmpl.replace('{{avatar}}',avatar)
+          tmpl
+      ]

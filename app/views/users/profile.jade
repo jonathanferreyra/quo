@@ -1,0 +1,149 @@
+style.
+  .img-user{
+    width: 70%;
+    margin-left: 30px;
+  }
+br
+.box.box-info
+  .box-header
+    h3.box-title
+      i.fa.fa-user
+      |  Perfil del usuario
+  .box-body
+    .row
+      .col-md-2
+        if user.avatar_url
+          img.img-circle.img-responsive.img-user(src='#{user.avatar_url}')
+        else
+          img.img-circle.img-responsive.img-user(src='/images/user-profile.jpg')
+      .col-md-10
+        blockquote
+          p #{user.displayName}
+          span.label.label-default #{user.rolesNames}
+          footer(style='margin-top:10px') #{user.email}
+    form(action="")
+      .form-group
+        label.control-label(for='displayName') Nombre para mostrar
+        input.form-control#displayName(value="#{user.displayName}")
+      a.btn.btn-primary.btn-sm.btn-save-changes Guardar cambios
+      hr
+      legend Cuentas de correo
+      .callout.callout-info
+        p.text-primary
+          b Puedes agregar varias cuentas de correo asociadas a tu usuario. Podrás ingresar al sistema con cualquiera de ellas.
+      table.table.table-responsive.user-emails
+        tbody
+      br
+      .form-group.nmb
+        .input-group
+          input.form-control#newEmail(type="email",placeholder="Añadir una cuenta de correo")
+          span.input-group-addon @
+          select.form-control#domainEmail
+            //- for email in ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'live.com']
+            for email in ['gmail.com', 'yahoo.com']
+              option(value="#{email}") #{email}
+        .control-label
+          label#info-msg
+        a.btn.btn-default.btn-add-email(disabled)
+          i.fa.fa-plus
+          |  Añadir
+
+!= javascriptIncludeTag('meg/utils/server','bootbox.min')
+
+script
+  :coffeescript(minify=true)
+
+    typingTimer = null
+    doneTypingInterval = 1000
+
+    $("#newEmail").keyup ->
+      clearTimeout(typingTimer)
+      typingTimer = setTimeout(doneTyping, doneTypingInterval)
+
+    $("#newEmail").keydown ->
+      clearTimeout(typingTimer)
+
+    $("#domainEmail").on 'change', ->
+      doneTyping()
+
+    doneTyping = ->
+      value = $("#newEmail").val().toLowerCase() + '@' + $("#domainEmail").val()
+      emails = false
+      #for e in ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'live.com']
+      for e in ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'live.com']
+        emails = value.indexOf(e) != -1
+        if emails
+          break
+      if (value.length > 0) and emails
+        meg.server.ajax '/users/existEmail/' + value, {}, (err, res) ->
+          $("#newEmail").parent().parent()
+            .removeClass('has-error').removeClass('has-success')
+          if not res.exist
+            $('.btn-add-email').removeAttr('disabled')
+            $("#newEmail").parent().parent().addClass('has-success')
+            $('label#info-msg').text('Cuenta de correo disponible')
+          else
+            $('.btn-add-email').attr('disabled', 'disabled')
+            $("#newEmail").parent().parent().addClass('has-error')
+            $('label#info-msg').text('Cuenta de correo en uso en otra cuenta')
+
+
+    _items = null
+    bootbox.setDefaults({locale:'es'})
+    loadTableEmails = (cb) ->
+      meg.server.ajax '/users/get_user_account_emails/id', {}, (err, res) ->
+        _items = res
+        trs = ''
+        tr = '<tr>
+          <td>{email}</td>
+          <td><a href="#" name="{email}" class="del-user-email">Eliminar</a></td>
+        </tr>'
+        for email in res
+          trs += tr.replace('{email}', email)
+            .replace('{email}', email)
+        $('.user-emails > tbody').empty().append(trs)
+        cb()
+
+    bindDelEmail = () ->
+      $('.del-user-email').on 'click', ->
+        item = $(@).attr('name')
+        if $('.del-user-email').length > 1
+          bootbox.confirm "Confirmar eliminación...", (res) ->
+            if res
+              data =
+                email: item.attr('name')
+              meg.server.ajaxPost '/users/remove_account_email', data, () ->
+                loadTableEmails () ->
+        else
+          bootbox.alert "Este correo no puede ser eliminado.\nDebes tener una cuenta de correo como mínimo."
+
+    loadTableEmails () ->
+      bindDelEmail()
+
+      $('.btn-add-email').on 'click', ->
+        value = $("#newEmail").val().toLowerCase() + '@' + $("#domainEmail").val()
+        if value.length > 0
+          if _items.indexOf(value) == -1
+            emails = false
+            for e in ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'live.com']
+              emails = value.indexOf(e) != -1
+              if emails
+                break
+            if emails
+              data =
+                email: value
+              meg.server.ajaxPost '/users/add_account_email', data, () ->
+                loadTableEmails () ->
+                  bindDelEmail()
+                  $('#newEmail').val('')
+                  $("#newEmail").parent().parent()
+                    .removeClass('has-error').removeClass('has-success')
+                  $('label#info-msg').text('')
+
+      $('.btn-save-changes').on 'click', ->
+        value = $('#displayName').val()
+        if value.length > 0
+          data =
+            dn: value
+          meg.server.ajaxPost '/users/upd_profile', data, () ->
+            window.location.reload()

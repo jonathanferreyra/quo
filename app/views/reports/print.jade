@@ -1,0 +1,113 @@
+doctype html
+html(lang="es-AR")
+  head  
+    title= 'print '
+    meta(charset='utf-8')
+    link(href="http://necolas.github.io/normalize.css/3.0.1/normalize.css", rel="stylesheet", type="text/css")
+    style(type="text/css", media="print")
+      :stylus
+        @page 
+          size: auto;   /* auto is the current printer page size */
+          margin: 0mm;  /* this affects the margin in the printer settings */
+        
+        body  
+          font-family: Arial, Helvetica, sans-serif
+          margin:0px
+        p 
+          font-size:13px
+
+        _margin(n, l, t)
+          .{n} 
+            margin-left: l cm
+            margin-top: t cm
+            position: absolute;
+        diff_print = 0.4
+
+        ml_vendedor = 0.8
+        ml_empresa = ml_vendedor + 5
+        ml_pasajero_1 = ml_vendedor + 9.8
+        ml_pasajero_2 = ml_vendedor + 13.2
+        ml_pasajero_3 = ml_vendedor + 16.7
+        
+        row1 = 6.8
+        row2 = 6.2
+        row3 = 10.6
+
+        v = (fecha 3.6) (horario 4.7) (asiento 5.7) (partida row1) (destino row1) (pasajero_name 8.2) (importe-neto row3) (caja row3)
+        for val in v
+          _margin('v-' + val[0], ml_vendedor, val[1] - diff_print)
+        for val in v
+          _margin('e-' + val[0], ml_empresa, val[1] - diff_print)
+
+        pas_col_1 = (origen 3.6) (fecha 4.7) (pasajero 6.3) (fecha_emision 10.7) (nro_boleto 11.8)
+        pas_col_2 = (destino 3.6) (horario 4.7) (base_tarifa 10.7) (importe-neto 11.8) 
+        pas_col_3 = (asiento 4.7) (porcentaje 10.7) (caja 11.8)
+
+        dp_init = 7 
+        dp_space = 0.5
+        rows = (dp1 dp_init) (dp2 (dp_init + dp_space)) (dp3 (dp_init + (2*dp_space))) (dp4 (dp_init + (3*dp_space))) (dp5 (dp_init + (4*dp_space))) 
+        
+        for val in pas_col_1
+          _margin('p-' + val[0], ml_pasajero_1, val[1] - diff_print)
+        for val in pas_col_2
+          _margin('p-' + val[0], ml_pasajero_2, val[1] - diff_print)
+        for val in pas_col_3
+          _margin('p-' + val[0], ml_pasajero_3, val[1] - diff_print)
+
+        for val in rows
+          _margin('p-' + val[0], ml_pasajero_1, val[1] - diff_print)
+
+        .v-destino {margin-left: 2.7cm}
+        .v-caja {margin-left: 3cm}
+        .e-destino {margin-left: 7.7cm}
+        .e-caja {margin-left: 8cm}
+        _margin('v-pasajero_doc', ml_vendedor, 8.4)
+        _margin('e-pasajero_doc', ml_empresa, 8.4)
+        _margin('code', 10.5, 12.8)
+        _margin('p-viaja_por', 10.5, 12.3)
+
+        .hide {display:none}
+  body
+    .vendedor
+      p.v-fecha #{item.fecha}
+      p.v-horario #{item.horario}
+      p.v-asiento #{item.asiento}
+      p.v-partida  #{item.partida}
+      p.v-destino #{item.destino}
+      p.v-pasajero_name #{item.pasajero_name}
+      p.v-pasajero_doc #{item.pasajero_doc}
+      p.v-importe-neto #{item.imp_neto}
+      p.v-caja #{item.caja}
+    .empresa
+      p.e-fecha #{item.fecha}
+      p.e-horario #{item.horario}
+      p.e-asiento #{item.asiento}
+      p.e-partida #{item.partida}
+      p.e-destino #{item.destino}
+      p.e-pasajero_name #{item.pasajero_name}
+      p.e-pasajero_doc #{item.pasajero_doc}
+      p.e-importe-neto #{item.imp_neto}
+      p.e-caja #{item.caja}
+    .pasaje
+      p.p-origen #{item.origen}
+      p.p-destino #{item.destino}
+      p.p-fecha #{item.fecha}
+      p.p-horario #{item.horario}
+      p.p-asiento #{item.asiento}
+
+      p.hide.p-pasajero #{item.pasajero}
+      //- dp -> datos personales
+      p.p-dp1 #{item.row1}
+      p.p-dp2 #{item.row2}
+      p.p-dp3 #{item.row3}
+      p.p-dp4 #{item.row4}
+      p.p-dp5 #{item.row5}
+
+      p.p-fecha_emision #{item.fecha_emision}
+      p.p-base_tarifa #{item.base_tarifa}
+      p.p-porcentaje #{item.porcentaje}
+      p.p-nro_boleto #{item.nro_boleto}
+      p.p-importe-neto #{item.imp_neto}
+      p.p-caja #{item.caja}
+      p.p-viaja_por #{item.viaja_por}
+      | <img class="code" src="data:image/gif;base64,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" alt="pdf417" title="000001241436007223067242593603275,00   2106201407153300338000722-23000Fernandez Emiliano Horacio              1348199806029066" style="width: 7cm; height: 1.2cm;">

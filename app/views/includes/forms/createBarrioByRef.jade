@@ -1,0 +1,130 @@
+//- .modal#mdBarrio(aria-hidden="true",tabindex="-1",role="dialog",aria-labelledby="myModalLabel")
+//-   .modal-dialog
+//-     .modal-content
+//-       .modal-header
+//-         button(type="button", data-dismiss="modal", aria-hidden="true", class="close") ×
+//-         h3.modal-title#myModalLabel Nuevo barrio
+//-       .modal-body
+//-         .callout.callout-info
+//-           p Por favor, escriba el nombre correcto del barrio. 
+//-         form#form-barrio
+//-           .form-group
+//-             label.control-label(for="mdb-nombre") Nombre
+//-             input.form-control(id="mdb-name", autofocus='', required='', placeholder="Nombre del barrio")
+//-           .form-group
+//-             label.control-label(for="mdb-localidad") Localidad
+//-             input.form-control(id="mdb-localidad", readonly)
+//-           .form-group
+//-             label.control-label(for="mdb-provincia") Provincia
+//-             input.form-control(id="mdb-provincia", readonly)
+//-       .modal-footer
+//-         button(type="button", data-dismiss="modal", class="btn btn-default") Cancelar
+//-         button(type="button", id="btn-barrio-save", class="btn btn-primary btn-lg") Guardar
+
+include ../../includes/import/humane
+
+script
+  :coffeescript(minify=true)
+
+    $(document).on 'ready', ->
+
+      htmlModal = '''
+      <div id="mdBarrio" aria-hidden="true" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" class="modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" data-dismiss="modal" aria-hidden="true" class="close">×</button>
+              <h3 id="myModalLabel" class="modal-title">Nuevo barrio</h3>
+            </div>
+            <div class="modal-body">
+              <div class="callout callout-info">
+                <p>Por favor, escriba el nombre correcto del barrio. </p>
+              </div>
+              <form id="form-barrio">
+                <div class="form-group">
+                  <label for="mdb-nombre" class="control-label">Nombre</label>
+                  <input id="mdb-name" autofocus="" required="" placeholder="Nombre del barrio" class="form-control"/>
+                </div>
+                <div class="form-group">
+                  <label for="mdb-localidad" class="control-label">Localidad</label>
+                  <input id="mdb-localidad" readonly="readonly" class="form-control"/>
+                </div>
+                <div class="form-group">
+                  <label for="mdb-provincia" class="control-label">Provincia</label>
+                  <input id="mdb-provincia" readonly="readonly" class="form-control"/>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" data-dismiss="modal" class="btn btn-default">Cancelar</button>
+              <button type="button" id="btn-barrio-save" class="btn btn-primary btn-lg">Guardar</button>
+            </div>
+          </div>
+        </div>
+      </div>'''
+
+      addModal = () ->
+        $('form').append(htmlModal)
+
+        $('#mdBarrio').on 'shown.bs.modal', ->
+          $('#mdb-name').focus()
+          
+        $('#mdBarrio').on 'hidden.bs.modal', ->
+          $('#mdBarrio')
+            .off('shown.bs.modal')
+            .remove()
+
+        #$('#mdBarrio').on 'hide.bs.modal', ->
+        #  $('#mdBarrio').off('shown.bs.modal')
+        #  $('#mdBarrio').off('hide.bs.modal')
+        #  $('#btn-barrio-save').off('click')
+        #  $('#mdBarrio').empty()
+
+          #$('#mdb-name').val('')
+          #$('#mdb-localidad').val('')
+          #$('#mdb-provincia').val('')
+
+        $('#btn-barrio-save').on 'click', ->      
+          model_id = '#' + '#{Vars.Model}' + '_'
+          data = 
+            authenticity_token : $("meta[name=csrf-token]").attr("content")
+            localidad : $(model_id + 'localidad').val()        
+            name: $('#mdb-name').val()
+          if data.name.length > 0 && data.localidad.length > 0
+            $.post('/barrios.json', data)
+              .done (data, textStatus, jqXHR) ->
+                if data.code
+                  if data.code == 200 #success
+                    humane.ok 'Barrio creado correctamente'
+                    meg.gui.loadSelect(
+                      '/barrios.json?f=id,name&q=' + JSON.stringify({localidad:data.data.localidad})
+                      , model_id + 'barrio'
+                      , data.data.id
+                      , {showname:'name'}
+                      , () ->
+                    )
+                  else if data.code == 500 #error
+                    humane.error data.error              
+                else
+                  humane.ok 'Barrio creado correctamente'
+                $('#mdBarrio').modal('hide')
+
+              .fail (jqXHR, textStatus, errorThrown) ->
+                humane.error 'Ha ocurrido un error al intentar crear el barrio'
+                $('#mdBarrio').modal('hide')
+      
+      $('#btn-barrio').on 'click', ->
+        model_id = '#' + '#{Vars.Model}' + '_'
+        localidadId = $(model_id + 'localidad').val()
+
+        errMsg = 'Debes seleccionar una localidad'
+        if not (localidadId == null)
+          if localidadId.length > 0
+            addModal()
+            $('#mdb-localidad').val($(model_id + 'localidad option:selected').text())
+            $('#mdb-provincia').val($('#provincia option:selected').text())
+            $('#mdBarrio').modal('show')
+          else
+            humane.error errMsg
+        else
+            humane.error errMsg      

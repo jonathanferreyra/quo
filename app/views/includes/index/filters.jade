@@ -1,0 +1,29 @@
+!= stylesheetLinkTag('meg-filter')
+
+.row#row-filter
+  .col-md-12
+    .box#box-filters
+      .box-header
+        h3.box-title
+          i.fa.fa-filter
+          |  Filtros
+        div.pull-right.box-tools
+          button.btn.btn-primary.btn-xs.pull-right#btn-filter-minus(data-widget='collapse', data-toggle='tooltip', title='', style='margin-right: 5px;', data-original-title='Colapsar')
+            i.fa.fa-minus
+
+      .box-body.panel-filters
+        .row
+          .col-md-12
+            #filters
+        .row
+          .col-md-12
+            button.btn.btn-default.btn-sm.btn-filter(type='button',data-loading-text="Filtrando...")
+              i.fa.fa-check
+              |  Filtrar
+            a.btn.btn-default.btn-sm.btn-reload
+              i.fa.fa-refresh
+              |  Recargar todo
+            i.fa.fa-spinner.fa-spin#filtering-state
+
+!= javascriptIncludeTag('taffy','meg/meg-filter-utils')
+script(src="/vendor/parallel/parallel.js")

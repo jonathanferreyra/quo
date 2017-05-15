@@ -1,0 +1,11 @@
+.row.main-header
+  .col-xs-12
+    h3.main-title #{iglesia.nombre}
+      small.pull-right.current-date
+    address
+      | #{iglesia.direccion}
+      br
+      | #{iglesia.telefonos}
+      br
+      | #{iglesia.localidad.nombre} #{iglesia.provincia.nombre}
+    hr

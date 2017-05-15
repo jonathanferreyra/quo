@@ -1,0 +1,13 @@
+script
+  :coffee
+
+    $('section.content-header').empty().append('''
+      <h1>#{Vars.singleTitleModel}
+        <small> Editar ##{Vars.instanciaModel.ide}</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-home"></i></a></li>
+        <li><a href="#">#{Vars.subsection}</a></li>
+        <li><a href="/#{Vars.pluralmodel}">#{Vars.titlemodel}</a></li>
+        <li class="active">Editar</li>
+      </ol>''')

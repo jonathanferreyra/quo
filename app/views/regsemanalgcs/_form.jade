@@ -1,0 +1,252 @@
+include ../includes/forms/errorMessages
+
+style.
+
+  .mid {
+    padding-left:0px;
+    padding-right:0px;
+  }
+  .money{
+    width:80px
+  }
+  .checkbox {margin-left: 20px;}
+
+ul.nav.nav-pills
+    li.active
+        a(href='#datos_grupo') Datos del grupo
+.tab-content
+  .tab-pane.active#datos_grupo
+    br
+    control-label
+    .form-group
+      != form.label("Nro de grupo", false, {class:'control-label'})
+      select.form-control#Regsemanalgc_grupo(name="Regsemanalgc[grupo]")
+    .row
+      .col-md-6
+        .form-group
+          != form.label("Líder/encargado", false, {class:'control-label'})
+          != form.input("timonel" ,{class:'form-control',"type":"text","readonly":"readonly"})
+      .col-md-6.npl
+        .form-group
+          != form.label("Colaborador/ayudante", false, {class:'control-label'})
+          != form.input("timoteo" ,{class:'form-control',"type":"text","readonly":"readonly"})
+    .form-group
+      != form.label("anfitrión", false, {class:'control-label'})
+      != form.input("anfitrion" ,{class:'form-control',"type":"text"})
+    .form-group
+      != form.label("dirección", false, {class:'control-label'})
+      != form.input("direccion" ,{class:'form-control',"type":"text", placeholder:"Dirección donde se realizó la reunión"})
+hr
+.row-fluid
+  .nav-tabs-custom
+    ul.nav.nav-tabs
+      li.active
+        a(href='#lA', data-toggle='tab') General
+      li
+        a(href='#lB', data-toggle='tab') Asistentes
+      li
+        a(href='#lC', data-toggle='tab') Actividades
+      li
+        a(href='#lD', data-toggle='tab') Ofrendas
+      li
+        a(href='#lF', data-toggle='tab') Observaciones
+    .tab-content
+      #lA.tab-pane.active
+        fliedset
+          label
+          .row
+            .col-md-4
+              .form-group
+                != form.label("fecha", false, {class:'control-label'})
+                .input-group
+                  span.input-group-addon
+                    i.glyphicon.glyphicon-calendar
+                  != form.input("fecha" ,{class:'form-control', type:'date', required:''})
+            .col-md-4
+              .form-group
+                != form.label("hora_inicio", false, {class:'control-label'})
+                .input-group
+                  != form.input("hora_inicio" ,{class:'form-control clockpicker', required:''})
+                  span.input-group-addon
+                    i.glyphicon.glyphicon-time
+            .col-md-4
+              .form-group
+                != form.label("hora_cierre", false, {class:'control-label'})
+                .input-group
+                  != form.input("hora_cierre" ,{class:'form-control clockpicker', required:''})
+                  span.input-group-addon
+                    i.glyphicon.glyphicon-time
+          .form-group
+            != form.label("tema_compartido", false, {class:'control-label'})
+            != form.textarea("tema_compartido" , {class:"form-control","type":"text",rows:'4', placeholder:"Tema compartido, versículos, pasajes usados..."})
+          .form-group
+            .checkbox
+              label
+                input(id='Regsemanalgc_reunion_suspendida', type='checkbox',name='Regsemanalgc[reunion_suspendida]')
+                | Reunión suspendida
+          .form-group
+            != form.label("motivo de la suspensión", false, {class:'control-label'})
+            != form.textarea("motivo_reunion_suspendida",{class:"form-control","type":"text",placeholder:'Descripción del motivo...', disabled:''})
+      #lB.tab-pane
+        .callout.callout-info
+          p
+            b Indica aquí los nombres de las personas que han asistido
+          p Escribe el nombre en formato:
+            i Nombre Apellido
+            |  y presiona Enter para aceptar
+
+        fieldset.asistentes
+          .row
+            .col-md-6
+              .form-group
+                != form.label("anfitriones", false, {class:'control-label'})
+                != form.input("anfitriones",{class:"form-control","type":"text"})
+            .col-md-6
+              .form-group
+                != form.label("miembros de equipo", false, {class:'control-label'})
+                != form.textarea("miembros_de_equipo" ,{class:"form-control","type":"text"})
+          .row
+            .col-md-6
+              .form-group
+                != form.label("asistentes frecuentes", false, {class:'control-label'})
+                != form.textarea("asistentes_frecuentes" ,{class:"form-control","type":"text"})
+            .col-md-6
+              .form-group
+                != form.label("personas por primera vez", false, {class:'control-label'})
+                != form.textarea("personas_por_primera_vez" ,{class:"form-control","type":"text"})
+          .row
+            .col-md-6
+              .form-group
+                != form.label("nuevos de esta iglesia", false, {class:'control-label'})
+                != form.textarea("nuevos_iglesia" ,{class:"form-control","type":"text"})
+            .col-md-6
+              .form-group
+                != form.label("De otras iglesias", false, {class:'control-label'})
+                != form.textarea("otras_iglesias" ,{class:"form-control","type":"text"})
+          .form-group
+            != form.label("niños menores de 10 años", false, {class:'control-label'})
+            != form.input("ninios_menores" ,{class:"form-control","type":"number"})
+      #lC.tab-pane
+        fieldset
+          label
+          .form-group
+            != form.label("Quién dirigió el devocional", false, {class:'control-label'})
+            != form.input("dirigio_el_devocional" ,{class:"form-control","type":"text"})
+          .form-group
+            != form.label("Quién oró por las necesidades", false, {class:'control-label'})
+            != form.input("oro_por_las_necesidades" ,{class:"form-control","type":"text"})
+          .form-group
+            != form.label("Quién recogió la ofrenda", false, {class:'control-label'})
+            != form.input("recogio_la_ofrenda" ,{class:"form-control","type":"text"})
+          .form-group
+            != form.label("Quién oró por la silla vacía", false, {class:'control-label'})
+            != form.input("oro_por_la_silla_vacia" ,{class:"form-control","type":"text"})
+      #lD.tab-pane
+        fieldset
+          label
+          .form-group
+            != form.label("ofrenda_habitual", false, {class:'control-label'})
+            .input-group
+              span.input-group-addon $
+              != form.input("ofrenda_habitual" ,{"class":"form-control money", "type":"text"})
+          .form-group
+            != form.label("ofrenda_misionera", false, {class:'control-label'})
+            .input-group
+              span.input-group-addon $
+              != form.input("ofrenda_misionera" ,{"class":"form-control money", "type":"text"})
+          .form-group
+            != form.label("otras_ofrendas", false, {class:'control-label'})
+            .input-group
+              span.input-group-addon $
+              != form.input("otras_ofrendas" ,{"class":"form-control money", "type":"text"})
+          .form-group
+            != form.label("diezmos", false, {class:'control-label'})
+            .input-group
+              span.input-group-addon $
+              != form.input("diezmos" ,{"class":"form-control money", "type":"text"})
+          .form-group
+            != form.label("nro_sobres")
+            != form.input("nro_sobres" ,{"class":"form-control number", "type":"text"})
+      #lF.tab-pane
+        fieldset
+          label
+          .form-group
+            != form.label("Observaciones, inquietudes, motivos de oración", false, {class:'control-label'})
+            != form.textarea("observaciones" ,{class:'form-control',"type":"text", rows: 4})
+
+include ../includes/import/pickadate_base
+include ../includes/import/pickadate_date
+include ../includes/import/clockpicker
+include ../includes/import/select2
+
+!= javascript_include_tag('jquery.numeric','meg/utils/server', 'meg/utils/select', 'date', 'meg/utils/gui')
+include ../includes/import/humane
+
+script
+  :coffeescript(minify=true)
+
+    model_id = '#Regsemanalgc_'
+    $(".money").numeric({ decimal : ".", negative : false, decimalPlaces : 2});
+    $(".number").numeric({ decimal : false, negative : false  });
+
+    $(model_id + 'reunion_suspendida').on 'change', ->
+      if $(@).is(':checked')
+        $(model_id + 'motivo_reunion_suspendida').removeAttr('disabled')
+      else
+        $(model_id + 'motivo_reunion_suspendida').attr('disabled','disabled')
+
+    $("form").submit ->
+      if $(model_id + 'grupo').val().length == 0
+        $(model_id + 'grupo').parent().addClass('has-error')
+        humane.error 'Debes indicar a que Nro de grupo pertenece esta asistencia.'
+        return false
+      else if $(model_id + 'fecha').val().length == 0
+        $(model_id + 'fecha').parent().addClass('has-error')
+        humane.error 'Debes indicar la fecha a la que pertenece esta asistencia.'
+        return false
+      true
+
+    ides = model_id + "anfitriones," +
+      model_id + "miembros_de_equipo," +
+      model_id + "asistentes_frecuentes," +
+      model_id + "personas_por_primera_vez," +
+      model_id + "nuevos_iglesia," +
+      model_id + "otras_iglesias"
+    meg.server.ajax "/regsemanalgcs/asistentes/id",{}, (err, data)->
+      meg.select.loadMultiple ides, data, () ->
+
+    # LOAD COMBOS
+    select_gc = model_id + 'grupo'
+
+    # muestra los datos del gc al cambiar de nro
+    $(select_gc).on 'change', () ->
+      itemId = $(@).val()
+      keys = ['timoteo','timonel','direccion','anfitrion']
+      if itemId.length != 0
+        for _gc in _data_gcs
+          if itemId == _gc.id
+            for _key in keys
+              $(model_id + _key).val(_gc[_key])
+            if _gc.horario
+              $(model_id + 'hora_inicio').val(_gc.horario)
+      else
+        for _key in keys
+          $('#Regsemanalgc_'+_key).val('')
+
+    # carga el combo de nros de gc
+    _data_gcs = null
+    meg.server.ajax '/grupocrecimientos.json', {}, (err, data) ->
+      for item in data
+        item['nro'] = parseInt(item['nro'])
+      _data_gcs = _.sortBy data, 'nro'
+      opts =
+        select2 : false
+        showname : 'nro'
+      nro = '#{Vars.instanciaModel.grupo}'
+      if nro.length > 0
+        opts.default = nro
+      params = meg.gui.getURLParameters()
+      if params['g']
+        opts.default = params['g']
+      meg.select.load select_gc, _data_gcs, opts, () ->
+        $(select_gc).change()

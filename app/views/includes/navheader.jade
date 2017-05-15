@@ -1,0 +1,96 @@
+header.header
+  a.logo(href='/')
+    img(src="/img/blogo.png")
+  nav.navbar.navbar-static-top(role='navigation')
+    a.navbar-btn.sidebar-toggle(href='#', data-toggle='offcanvas', role='button')
+      span.sr-only Toggle navigation
+      span.icon-bar
+      span.icon-bar
+      span.icon-bar
+    //- .collapse.navbar-collapse
+    .hidden-xs.hidden-sm
+      ul.nav.navbar-nav
+        li.active
+          a#church-title(href='#')
+            i.fa.fa-home  #{user.churchTitle}
+
+    .navbar-right
+      ul.nav.navbar-nav
+        if isDemo
+          li
+            a(href="/site")
+              i.fa.fa-globe  Sitio QUO
+        if isTesting
+          li.dropdown.messages-menu#clients-menu
+            a.dropdown-toggle(href='#', data-toggle='dropdown')
+              i.fa.fa-users
+            ul.dropdown-menu
+              li.header
+                p.text-center Usar QUO como:
+              ul.menu
+                for c in clients
+                  li
+                    a.one-client(href='#', item="#{c.id}")
+                      i.fa.fa-user
+                      |  #{c.displayName}
+                      p.help-block #{c.email}
+        script
+          :coffee
+
+            $('.one-client').on 'click', ->
+              item = $(@).attr('item')
+              data =
+                'authenticity_token': $("meta[name=csrf-token]").attr("content")
+                'id': item
+              $.post '/switchClient', data, (data, status) ->
+                window.location.href = '/'
+
+        li.dropdown.user.user-menu
+          a.dropdown-toggle(href='#', data-toggle='dropdown')
+            i.glyphicon.glyphicon-user
+            span
+              | #{user.displayName}
+              i.caret
+          ul.dropdown-menu
+            li.user-header.bg-navy
+              if user.avatar_url
+                img.img-circle(src='#{user.avatar_url}')
+              else
+                img.img-circle(src='/images/user-profile.jpg')
+              p
+                span.user-name #{user.displayName}
+                small.user-email #{user.email}
+            li.user-footer
+              //- .text-center
+                if user.owner
+                  span.label.label-default Owner
+                else
+                  span.label.label-default #{user.rolesNames}
+              if is_desktop
+                a.btn.btn-default.btn-flat#bt-shortcuts
+                  i.fa.fa-keyboard-o
+                  |  Atajos de teclado
+              hr(style="margin-top: 5px; margin-bottom: 5px;")
+              a.btn.btn-default.btn-flat(href='/profile', style="margin-bottom: 5px;")
+                i.fa.fa-user
+                |  Perfil
+              a.btn.btn-default.btn-flat(href='/logout')
+                i.fa.fa-sign-in
+                |  Cerrar sesión
+
+      //-if settings.env == 'development'
+        a.btn.btn-xs.btn-danger.toggleDebug.notLoad(href="#") Debug Mode
+        style
+          :stylus(minify=true)
+            .debug * {
+              -webkit-box-shadow: 0px 0px 3px red;
+            }
+            .toggleDebug{
+              margin-top: 15px;
+            }
+        script
+          :coffeescript(minify=true)
+            @develop = true
+            $(document).on "click", ".toggleDebug", (e) ->
+              $("body").toggleClass "debug"
+              e.preventDefault()

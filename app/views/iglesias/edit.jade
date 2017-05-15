@@ -1,0 +1,24 @@
+script
+  :coffee
+
+    $('section.content-header').empty().append('''
+      <h1> Datos de la iglesia
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-home"></i></a></li>
+        <li><a href="#">Configuraciones</a></li>
+        <li class="active">Datos de la iglesia</li>
+      </ol>''')
+
+
+.row
+  .col-md-12
+    .panel.panel-default
+      .panel-body
+        include ../includes/forms/edit/form
+        != form.begin()
+        include _form
+      .panel-footer
+        .form-actions
+          != form.submit('<i class="fa fa-check"></i> Guardar cambios', {class: 'btn btn-primary'})
+        != form.end()
